@@ -25,7 +25,7 @@ const Clutter = imports.gi.Clutter;
 const MAX_CHARS = 100;
 const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️"];
 //const SNOWFLAKES = ["❄", "❅", "❆"];
-//const SF_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; "
+const FC_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; ";
 //const SF_STYLES = ["font-size: 29px; ", "font-size: 26px; ", "font-size: 23px; "];
 const END_X_MDIFF = 50;
 const TIME = 5;
@@ -35,10 +35,14 @@ const ROTATION_MDIFF = 180;
 let button;
 
 class FallCharacter extends St.Label {
-  constructor(something) {
-    super(something);
+  constructor(description, fcm) {
+    super(description);
     //this.opacity = 255;
-    //this.connect('transitions-completed', FallCharsManager.fallen.bind(FallCharsManager));
+    
+    this.fcm = fcm; //reference back to the FallCharsManager
+    
+    //this._fall = () => this.fall(); //lets FCM work properly
+    //this.prototype.fall = this.fall.bind(this); //lets FCM work properly
     
     let monitor = Main.layoutManager.primaryMonitor;
     let startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
@@ -60,8 +64,10 @@ class FallCharacter extends St.Label {
 	  this.set_position(endX, endY);
 	  this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
 	  this.restore_easing_state();
-	  
-	  //Main.uiGroup.remove_actor(this);
+    
+    this.connect('transitions-completed', fcm.fallen.bind(fcm));
+    
+    //Main.uiGroup.remove_actor(this);
 	  //this.destroy();
   }
   
@@ -83,8 +89,8 @@ class FallCharsManager {
 		while (this.countChars < this.maxChars) {
 		  this.countChars++;
 		  
-			var whichChar = Math.floor((Math.random() * FALLCHARS.length));
-			var newSf = new FallCharacter({text:FALLCHARS[whichChar]});
+			var whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length)) ];
+			var newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
 			
 		}
 		
