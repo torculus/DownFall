@@ -23,30 +23,23 @@ const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
 
 const MAX_CHARS = 100;
-const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️","❄", "❅", "❆"];
-const FC_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; font-size: 26px"
+const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️"];
+//const SNOWFLAKES = ["❄", "❅", "❆"];
+//const SF_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; "
 //const SF_STYLES = ["font-size: 29px; ", "font-size: 26px; ", "font-size: 23px; "];
 const END_X_MDIFF = 50;
 const TIME = 5;
 const TIME_MDIFF = 2;
 const ROTATION_MDIFF = 180;
 
-let button, toggleSwitch;
+let button;
 
 class FallCharacter extends St.Label {
-  constructor(description, fcm) {
-    super(description);
+  constructor(something) {
+    super(something);
     //this.opacity = 255;
+    //this.connect('transitions-completed', FallCharsManager.fallen.bind(FallCharsManager));
     
-    this.fcm = fcm; //reference back to the FallCharsManager
-    
-    //this._fall = () => this.fall(); //lets FCM work properly
-    //this.prototype.fall = this.fall.bind(this); //lets FCM work properly
-    
-    this.connect('transitions-completed', fcm.fallen.bind(fcm));
-  }
-  
-  fall() {
     let monitor = Main.layoutManager.primaryMonitor;
     let startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
     let startY = monitor.y - this.height;
@@ -56,84 +49,78 @@ class FallCharacter extends St.Label {
     
     let time = (TIME + (Math.random() * TIME_MDIFF * 2) - TIME_MDIFF) * 1000;
     let rotation = Math.floor((Math.random() * ROTATION_MDIFF * 2) - ROTATION_MDIFF);
+    
     this.set_position(startX, startY);
     
     Main.uiGroup.add_actor(this);
-
-    this.save_easing_state();
-    this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
-    this.set_easing_duration(time);
-    this.set_position(endX, endY);
-    this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
-    this.restore_easing_state();
+    
+	  this.save_easing_state();
+	  this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
+	  this.set_easing_duration(time);
+	  this.set_position(endX, endY);
+	  this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
+	  this.restore_easing_state();
+	  
+	  //Main.uiGroup.remove_actor(this);
+	  //this.destroy();
   }
   
 }
 
 class FallCharsManager {
-	constructor() {
-	  this.countChars = 0;
-		//this.maxChars = 50;
+  constructor() {
+    this.countChars = 0;
+		this.maxChars = 50;
 		this.sliderValue = 0.3;
-		toggleSwitch = 0;
-		this.toggle();
+		this.changed(0.3);
+		this.toggleSwitch = 0;
+  }
+  
+  changed(newValue) {
+		this.sliderValue = newValue;
+		this.maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
+		
+		while (this.countChars < this.maxChars) {
+		  this.countChars++;
+		  
+			var whichChar = Math.floor((Math.random() * FALLCHARS.length));
+			var newSf = new FallCharacter({text:FALLCHARS[whichChar]});
+			
+		}
+		
+	}
+	
+	fallen(snowflake) {
+		if (this.maxChars < this.countChars) { // too many snowflakes
+			this.countChars--;
+		}
+		else { // fall again
+			//snowflake.falldown();
+		}
 	}
 	
 	toggle() {
-		if (toggleSwitch == 0) {
-	    	//enable
-	    	toggleSwitch = 1;
-	    	
-	    	this.maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
-
-	    	while (this.countChars < this.maxChars) {
-	    		var whichChar = FALLCHARS[ Math.floor((Math.random()* FALLCHARS.length)) ];
-	    		var newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
-	    		//SF_STYLE + SF_STYLES[Math.floor(Math.random() * SF_STYLES.length)]
-    			/* Style here instead of in stylesheet.css? It's (unfortunately) an ugly hack.
-		    	   Problem? `disable()` is invoked when showflakes are in the air:
-		    	   `disable()` can't stop them falling thus they will be destroyed only
-		    	   when they finally fall down, but the stylesheet is unloaded now.
-		    	*/
-		    	newFc.fall();
-	    		
-	    		this.countChars++;
-	    	}
-	    } else {
-	    	//disable
-	    	toggleSwitch = 0;
-	    	
-	    	this.countChars = 0;
-	    	this.maxChars = 0;
-	    }
-	}
-	
-	fallen(fc) {
-	  if (this.countChars > this.maxChars) { //too many FallChars
-	    this.countChars--;
-	    Main.uiGroup.remove_actor(fc);
-	    fc.destroy();
+	  if (this.toggleSwitch == 0) {
+	    //enable
+	    this.changed(this.sliderValue);
+	    this.toggleSwitch = 1;
 	  } else {
-	    fc.fall();
+	    //disable
+	    this.maxChars = 0;
+	    this.toggleSwitch = 0;
 	  }
 	}
+  
 }
 
 class Extension {
     constructor() {
-      button = new St.Button({style_class: 'panel-button',
+      button = new St.Bin({style_class: 'panel-button',
                 reactive: true,
                 can_focus: true,
                 x_fill: true,
                 y_fill: false,
                 track_hover: true});
-      /*button = new St.Bin({style_class: 'panel-button',
-                reactive: true,
-                can_focus: true,
-                x_fill: true,
-                y_fill: false,
-                track_hover: true,
-                text: "hello"});*/
       let icon = new St.Icon({icon_name:'system-run-symbolic',
                 style_class: 'system-status-icon'});
       
@@ -141,8 +128,7 @@ class Extension {
       
       var fcm = new FallCharsManager();
       
-      button.connect('clicked', fcm.toggle.bind(this) );
-      //button.connect('button-press-event', fcm.toggle );
+      button.connect('button-press-event', fcm.toggle );
     }
 
     enable() {
