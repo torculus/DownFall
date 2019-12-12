@@ -25,7 +25,7 @@ const Clutter = imports.gi.Clutter;
 const MAX_CHARS = 100;
 const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️"];
 //const SNOWFLAKES = ["❄", "❅", "❆"];
-const FC_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; ";
+const FC_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; opacity: 255";
 //const SF_STYLES = ["font-size: 29px; ", "font-size: 26px; ", "font-size: 23px; "];
 const END_X_MDIFF = 50;
 const TIME = 5;
@@ -37,7 +37,6 @@ let button;
 class FallCharacter extends St.Label {
   constructor(description, fcm) {
     super(description);
-    //this.opacity = 255;
     
     this.fcm = fcm; //reference back to the FallCharsManager
     
@@ -65,10 +64,7 @@ class FallCharacter extends St.Label {
 	  this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
 	  this.restore_easing_state();
     
-    this.connect('transitions-completed', fcm.fallen.bind(fcm));
-    
-    //Main.uiGroup.remove_actor(this);
-	  //this.destroy();
+    this.connect('transitions-completed', fcm.removeChars.bind(fcm));
   }
   
 }
@@ -86,23 +82,18 @@ class FallCharsManager {
 		this.sliderValue = newValue;
 		this.maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
 		
-		while (this.countChars < this.maxChars) {
-		  this.countChars++;
-		  
-			var whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length)) ];
+		while (this.countChars < this.maxChars) { //limits rate
+			var whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
 			var newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
-			
+		  this.countChars++;
 		}
 		
 	}
 	
-	fallen(snowflake) {
-		if (this.maxChars < this.countChars) { // too many snowflakes
-			this.countChars--;
-		}
-		else { // fall again
-			//snowflake.falldown();
-		}
+	removeChars(lastfc) {
+		Main.uiGroup.remove_actor(lastfc);
+		lastfc.destroy();
+		this.countChars--;
 	}
 	
 	toggle() {
