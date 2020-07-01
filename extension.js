@@ -78,26 +78,21 @@ var FCM = GObject.registerClass({
   },
   class FCM extends GObject.Object {
     _init() {
-		  disable = 0;
 		  this.sliderValue = 0.3;
-		  
-		  // start the effect
-		  this.dropChars();
-		  
     }
     
     dropChars() {
-      this.countChars = 0;
-      this.maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
+      let countChars = 0;
+      let maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
       
       //only create 'maxChars' number of FallChars
-		  while (this.countChars < this.maxChars) {
+		  while (countChars < maxChars) {
 			  let whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
 			  let newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
 			  
 			  newFc.fall();
 			  
-		    this.countChars++;
+		    countChars++;
 		  }
       
     }
@@ -107,12 +102,14 @@ var FCM = GObject.registerClass({
 	  }
 	  
 	  checkFall(fc) {
+	    //remove the FallChar from the screen
 		  Main.uiGroup.remove_actor(fc);
 		  
 		  if (disable == 1) {
+		    //destroy the FallChar when it finishes falling
 		    fc.destroy();
-		    //this.countChars--;
 		  } else {
+		    //reset the FallChar
 		    fc.fall();
 		  }
 	  }
@@ -146,6 +143,7 @@ var Extension = GObject.registerClass({
     enable() {
       Main.panel._rightBox.insert_child_at_index(button, 0);
       disable = 0;
+      this.fcm.dropChars();
     }
 
     disable() {
