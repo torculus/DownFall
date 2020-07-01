@@ -23,17 +23,16 @@ const GObject = imports.gi.GObject;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
 
-const MAX_CHARS = 100;
-const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️"];
-//const SNOWFLAKES = ["❄", "❅", "❆"];
-const FC_STYLE = "text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; opacity: 255";
-//const SF_STYLES = ["font-size: 29px; ", "font-size: 26px; ", "font-size: 23px; "];
+const MAX_CHARS = 10;
+const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆"];
+const FC_STYLE = "font-size: 29px; text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; opacity: 255";
 const END_X_MDIFF = 50;
 const TIME = 5;
 const TIME_MDIFF = 2;
 const ROTATION_MDIFF = 180;
 
 let button;
+let disable;
 
 var FallCharacter = GObject.registerClass({
   GTypeName: 'FallCharacter',
@@ -43,12 +42,10 @@ var FallCharacter = GObject.registerClass({
   class FallCharacter extends St.Label {
     _init(description, fcm) {
       super._init(description);
-      
       this.fcm = fcm; //reference back to the FallCharsManager (FCM)
-      
-      //this._fall = () => this.fall(); //lets FCM work properly
-      //this.prototype.fall = this.fall.bind(this); //lets FCM work properly
-      
+    }
+    
+    fall() {
       let monitor = Main.layoutManager.primaryMonitor;
       let startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
       let startY = monitor.y - this.height;
@@ -70,7 +67,7 @@ var FallCharacter = GObject.registerClass({
 	    this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
 	    this.restore_easing_state();
       
-      this.connect('transitions-completed', fcm.removeChars.bind(fcm));
+      this.connect('transitions-completed', this.fcm.checkFall.bind(this.fcm));
     }
   });
 
@@ -81,42 +78,45 @@ var FCM = GObject.registerClass({
   },
   class FCM extends GObject.Object {
     _init() {
-      this.countChars = 0;
-		  this.maxChars = 50;
+		  disable = 0;
 		  this.sliderValue = 0.3;
-		  this.changed(0.3);
-		  this.toggleSwitch = 0;
+		  
+		  // start the effect
+		  this.dropChars();
+		  
+    }
+    
+    dropChars() {
+      this.countChars = 0;
+      this.maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
+      
+      //only create 'maxChars' number of FallChars
+		  while (this.countChars < this.maxChars) {
+			  let whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
+			  let newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
+			  
+			  newFc.fall();
+			  
+		    this.countChars++;
+		  }
+      
     }
     
     changed(newValue) {
 		  this.sliderValue = newValue;
-		  this.maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
+	  }
+	  
+	  checkFall(fc) {
+		  Main.uiGroup.remove_actor(fc);
 		  
-		  while (this.countChars < this.maxChars) { //limits rate
-			  var whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
-			  var newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
-		    this.countChars++;
+		  if (disable == 1) {
+		    fc.destroy();
+		    //this.countChars--;
+		  } else {
+		    fc.fall();
 		  }
-		  
 	  }
 	  
-	  removeChars(lastfc) {
-		  Main.uiGroup.remove_actor(lastfc);
-		  lastfc.destroy();
-		  this.countChars--;
-	  }
-	  
-	  toggle() {
-	    if (this.toggleSwitch == 0) {
-	      //enable
-	      this.changed(this.sliderValue);
-	      this.toggleSwitch = 1;
-	    } else {
-	      //disable
-	      this.maxChars = 0;
-	      this.toggleSwitch = 0;
-	    }
-	  }
   });
 
 var Extension = GObject.registerClass({
@@ -138,16 +138,19 @@ var Extension = GObject.registerClass({
       button.set_child(icon);
       
       var fcm = new FCM();
+      this.fcm = fcm;
       
-      button.connect('button-press-event', fcm.toggle );
+      //button.connect('button-press-event', fcm.toggle );
     }
 
     enable() {
       Main.panel._rightBox.insert_child_at_index(button, 0);
+      disable = 0;
     }
 
     disable() {
       Main.panel._rightBox.remove_child(button);
+      disable = 1;
     }
   });
 
