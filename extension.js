@@ -22,10 +22,20 @@ const St = imports.gi.St;
 const GObject = imports.gi.GObject;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
+/*const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Utils = Me.imports.utils;
 
-const MAX_CHARS = 10;
-const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆"];
-const FC_STYLE = "font-size: 29px; text-shadow: 1px 1px rgba(0, 0, 0, 0.4); color: #ffffff; opacity: 255";
+let settings = Utils.getSettings();
+FONT_SIZE = settings.get_string("font-size");
+*/
+const MAX_CHARS = 100;
+const FALLCHARS = ["A", "B"];
+//const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆", "", "B", "C"];
+const FC_STYLE = `font-size: 29px;
+                  text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+                  color: #ffffff;
+                  opacity: 255`;
 const END_X_MDIFF = 50;
 const TIME = 5;
 const TIME_MDIFF = 2;

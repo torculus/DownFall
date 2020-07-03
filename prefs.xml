@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<!-- DownFall – Gnome Shell Extension
+ * Copyright (C) 2020 Benjamin S Osenbach
+ *
+ * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<interface domain="DownFall">
+
+<object class="GtkAdjustment" id="Adjust_1">
+	<property name="lower">1</property>
+	<property name="upper">6</property>
+	<property name="step_increment">1</property>
+</object>
+<object class="GtkAdjustment" id="Adjust_2">
+	<property name="lower">0</property>
+	<property name="upper">360</property>
+	<property name="step_increment">30</property>
+</object>
+
+<object class="GtkNotebook" id="prefs_widget">
+	<property name="expand">true</property>
+
+	<child>
+		<object class="GtkGrid">
+			<property name="margin">18</property>
+			<property name="row-spacing">18</property>
+			<property name="row-homogeneous">false</property>
+			<property name="orientation">vertical</property>
+
+			<child>
+				<object class="GtkVBox">
+				<property name="spacing">6</property>
+
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Text Appearance</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+									<attributes>
+										<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
+									</attributes>
+								</object>
+							</child>
+						</object>
+					</child>
+				  
+				<child>
+				<object class="GtkVBox">
+					<property name="spacing">6</property>
+					<child>
+						<object class="GtkLabel">
+							<property name="label" translatable="yes">Characters to use (no separator)</property>
+							<property name="hexpand">true</property>
+							<property name="halign">1</property>
+						</object>
+					</child>
+					<child>
+						<object class="GtkEntry" id="characters">
+						</object>
+					</child>
+				</object>
+			</child>
+				  
+				  <child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Text Color</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkColorButton" id="text_color">
+								</object>
+							</child>
+						</object>
+					</child>
+				  
+				  <child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Text Font</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkFontButton" id="text_font">
+								</object>
+							</child>
+						</object>
+					</child>
+
+				</object>
+			</child>
+
+		</object>
+	</child>
+
+	<child type="tab">
+		<object class="GtkLabel">
+			<property name="label" translatable="yes">Appearance</property>
+		</object>
+	</child>
+
+	<child>
+		<object class="GtkGrid">
+			<property name="margin">18</property>
+			<property name="row-spacing">18</property>
+			<property name="row-homogeneous">false</property>
+			<property name="orientation">vertical</property>
+
+					<child>
+						<object class="GtkLabel">
+							<property name="label" translatable="yes">Falling Behavior</property>
+							<property name="hexpand">true</property>
+							<property name="halign">1</property>
+							<attributes>
+								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
+							</attributes>
+						</object>
+					</child>
+		  
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Fall on all Monitors</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSwitch" id="field_transient">
+									<property name="active">true</property>
+								</object>
+							</child>
+						</object>
+					</child>
+		  
+					<child>
+						<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Falling Speed</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSpinButton" id="falling_speed">
+									<property name="adjustment">Adjust_1</property>
+								</object>
+							</child>
+						</object>
+					</child>
+		  
+					<child>
+						<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Falling Rotation</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSpinButton" id="field_interval">
+									<property name="adjustment">Adjust_2</property>
+								</object>
+							</child>
+						</object>
+					</child>
+		  
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Ending effect</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkComboBoxText" id="field_howmuch">
+									<items>
+										<item translatable="yes" id="0">Disappear</item>
+										<item translatable="yes" id="1">Fireworks</item>
+										<item translatable="yes" id="2">Something</item>
+									</items>
+								</object>
+							</child>
+						</object>
+					</child>
+
+		</object>
+	</child>
+
+	<child type="tab">
+		<object class="GtkLabel">
+			<property name="label" translatable="yes">Behavior</property>
+		</object>
+	</child>
+
+</object>
+
+</interface>
