@@ -71,7 +71,7 @@
 						</object>
 					</child>
 					<child>
-						<object class="GtkEntry" id="characters">
+						<object class="GtkEntry" id="characters">"ABC"
 						</object>
 					</child>
 				</object>
@@ -223,6 +223,29 @@
 						</object>
 					</child>
 
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Fall Direction</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkComboBoxText" id="field_direction">
+									<items>
+										<item translatable="yes" id="0">Down</item>
+										<item translatable="yes" id="1">Up</item>
+										<item translatable="yes" id="2">Left</item>
+										<item translatable="yes" id="3">Right</item>
+									</items>
+								</object>
+							</child>
+						</object>
+					</child>
 		</object>
 	</child>
 

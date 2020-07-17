@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.downfall" path="/org/gnome/shell/extensions/downfall/">
+  	<key type="s" name="characters">
+  		<default>":)"</default>
+  		<summary>Characters to use (no separator)</summary>
+  		<description>Characters to use (no separator)</description>
+  	</key>
+  	
+  </schema>
+</schemalist>

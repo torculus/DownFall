@@ -3,6 +3,6 @@
   "description": "Drops text characters of your choice down the screen",
   "uuid": "downfall@torculus.github.com",
   "shell-version": [
-    "3.34"
+    "3.36"
   ]
 }
