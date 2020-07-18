@@ -22,15 +22,15 @@ const St = imports.gi.St;
 const GObject = imports.gi.GObject;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
-/*const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Utils = Me.imports.utils;
 
-let settings = Utils.getSettings();
-FONT_SIZE = settings.get_string("font-size");
-*/
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+
+let settings = Me.imports.prefs.getSettings();
+var FALLTEXT = settings.get_string("characters");
+
 const MAX_CHARS = 100;
-const FALLCHARS = ["A", "B"];
+const FALLCHARS = ["A", FALLTEXT];
 //const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆", "", "B", "C"];
 const FC_STYLE = `font-size: 29px;
                   text-shadow: 1px 1px rgba(0, 0, 0, 0.4);

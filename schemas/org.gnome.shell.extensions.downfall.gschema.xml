@@ -2,9 +2,15 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.downfall" path="/org/gnome/shell/extensions/downfall/">
   	<key type="s" name="characters">
-  		<default>":)"</default>
+  		<default>"❄️"</default>
   		<summary>Characters to use (no separator)</summary>
   		<description>Characters to use (no separator)</description>
+  	</key>
+  	
+  	<key type="s" name="textcolor">
+  		<default>"#5294e2"</default>
+  		<summary>Color of the text</summary>
+  		<description>Color of the text</description>
   	</key>
   	
   </schema>

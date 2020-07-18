@@ -63,6 +63,7 @@ function buildPrefsWidget() {
   
   //settings.bind('GSCHEMA.XML THING' , buildable.get_object('PREFS.XML THING') , 'value' , Gio.SettingsBindFlags.DEFAULT);
   settings.bind('characters' , buildable.get_object('char_field') , 'text' , Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('textcolor', buildable.get_object('text_color'), 'sensitive', Gio.SettingsBindFlags.DEFAULT);
   
 	/* Bind fields to settings
 	settings.bind('check-interval' , buildable.get_object('field_interval') , 'value' , Gio.SettingsBindFlags.DEFAULT);
