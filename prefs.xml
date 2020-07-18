@@ -71,7 +71,7 @@
 						</object>
 					</child>
 					<child>
-						<object class="GtkEntry" id="characters">"ABC"
+						<object class="GtkEntry" id="char_field">"ABC"
 						</object>
 					</child>
 				</object>
