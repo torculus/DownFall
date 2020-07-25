@@ -20,6 +20,7 @@
 
 const Gtk = imports.gi.Gtk;
 const Gio = imports.gi.Gio;
+const Gdk = imports.gi.Gdk;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 
 function getSettings() {
@@ -51,6 +52,38 @@ function getSettings() {
 	return new Gio.Settings({settings_schema: schemaObj});
 }
 
+/**
+ * This function was copied from the activities-config extension
+ * https://github.com/nls1729/acme-code/tree/master/activities-config
+ * by Norman L. Smith.
+ */
+function cssHexString(css) {
+    let rrggbb = '#';
+    let start;
+    for (let loop = 0; loop < 3; loop++) {
+        let end = 0;
+        let xx = '';
+        for (let loop = 0; loop < 2; loop++) {
+            while (true) {
+                let x = css.slice(end, end + 1);
+                if ((x == '(') || (x == ',') || (x == ')'))
+                    break;
+                end++;
+            }
+            if (loop == 0) {
+                end++;
+                start = end;
+            }
+        }
+        xx = parseInt(css.slice(start, end)).toString(16);
+        if (xx.length == 1)
+            xx = '0' + xx;
+        rrggbb += xx;
+        css = css.slice(end);
+    }
+    return rrggbb;
+}
+
 function buildPrefsWidget() {
   
   let settings = this.getSettings(Me);
@@ -61,23 +94,27 @@ function buildPrefsWidget() {
   
   let prefsWidget = buildable.get_object('prefs_widget');
   
-  //settings.bind('GSCHEMA.XML THING' , buildable.get_object('PREFS.XML THING') , 'value' , Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('characters' , buildable.get_object('char_field') , 'text' , Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('textcolor', buildable.get_object('text_color'), 'sensitive', Gio.SettingsBindFlags.DEFAULT);
+  //bind settings from prefs.xml to schema keys
+  settings.bind('falltext' , buildable.get_object('display_field') , 'text' , Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('monfall', buildable.get_object('monitors_fall'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('fallspeed', buildable.get_object('fall_speed'), 'value', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('endeffect', buildable.get_object('end_effect'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
   
-	/* Bind fields to settings
-	settings.bind('check-interval' , buildable.get_object('field_interval') , 'value' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('always-visible' , buildable.get_object('field_visible') , 'active' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('show-count' , buildable.get_object('field_count') , 'active', Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('notify' , buildable.get_object('field_notify') , 'active' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('howmuch', buildable.get_object('field_howmuch'), 'active', Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('transient', buildable.get_object('field_transient'), 'active', Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('strip-versions' , buildable.get_object('field_stripversions') , 'active' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('check-cmd' , buildable.get_object('field_checkcmd') , 'text' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('update-cmd' , buildable.get_object('field_updatecmd') , 'text' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('pacman-dir' , buildable.get_object('field_pacmandir') , 'text' , Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('auto-expand-list', buildable.get_object('field_autoexpandlist'), 'value', Gio.SettingsBindFlags.DEFAULT);
-	settings.bind('package-manager' , buildable.get_object('field_packagemanager') , 'text' , Gio.SettingsBindFlags.DEFAULT);*/
+  //set color button from settings
+  let rgba = new Gdk.RGBA();
+  rgba.parse(settings.get_string('textcolor'));
+  buildable.get_object('text_color').set_rgba(rgba);
+  
+  //bind text color to key
+  buildable.get_object('text_color').connect('notify::rgba', (button) => {
+            let rgba1 = button.get_rgba();
+            let hexString = cssHexString(rgba1.to_string());
+            settings.set_string('textcolor', hexString);
+        });
+  
   
   prefsWidget.show_all();
   return prefsWidget;

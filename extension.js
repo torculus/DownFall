@@ -27,7 +27,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 let settings = Me.imports.prefs.getSettings();
-var FALLTEXT = settings.get_string("characters");
+var FALLTEXT = settings.get_string("falltext");
 
 const MAX_CHARS = 100;
 const FALLCHARS = ["A", FALLTEXT];

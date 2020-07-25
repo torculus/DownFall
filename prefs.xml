@@ -65,13 +65,13 @@
 					<property name="spacing">6</property>
 					<child>
 						<object class="GtkLabel">
-							<property name="label" translatable="yes">Characters to use (no separator)</property>
+							<property name="label" translatable="yes">Text to Display</property>
 							<property name="hexpand">true</property>
 							<property name="halign">1</property>
 						</object>
 					</child>
 					<child>
-						<object class="GtkEntry" id="char_field">"ABC"
+						<object class="GtkEntry" id="display_field">"ABC"
 						</object>
 					</child>
 				</object>
@@ -155,7 +155,7 @@
 								</object>
 							</child>
 							<child>
-								<object class="GtkSwitch" id="field_transient">
+								<object class="GtkSwitch" id="monitors_fall">
 									<property name="active">true</property>
 								</object>
 							</child>
@@ -174,7 +174,7 @@
 								</object>
 							</child>
 							<child>
-								<object class="GtkSpinButton" id="falling_speed">
+								<object class="GtkSpinButton" id="fall_speed">
 									<property name="adjustment">Adjust_1</property>
 								</object>
 							</child>
@@ -193,7 +193,7 @@
 								</object>
 							</child>
 							<child>
-								<object class="GtkSpinButton" id="field_interval">
+								<object class="GtkSpinButton" id="fall_rot">
 									<property name="adjustment">Adjust_2</property>
 								</object>
 							</child>
@@ -212,7 +212,7 @@
 								</object>
 							</child>
 							<child>
-								<object class="GtkComboBoxText" id="field_howmuch">
+								<object class="GtkComboBoxText" id="end_effect">
 									<items>
 										<item translatable="yes" id="0">Disappear</item>
 										<item translatable="yes" id="1">Fireworks</item>
@@ -235,7 +235,7 @@
 								</object>
 							</child>
 							<child>
-								<object class="GtkComboBoxText" id="field_direction">
+								<object class="GtkComboBoxText" id="fall_direc">
 									<items>
 										<item translatable="yes" id="0">Down</item>
 										<item translatable="yes" id="1">Up</item>
