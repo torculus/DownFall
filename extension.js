@@ -27,19 +27,22 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
 let settings = Me.imports.prefs.getSettings();
-var FALLTEXT = settings.get_string("falltext");
 
-const MAX_CHARS = 100;
-const FALLCHARS = ["A", FALLTEXT];
-//const FALLCHARS = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆", "", "B", "C"];
-const FC_STYLE = `font-size: 29px;
+let FALLTEXT;// = settings.get_string("falltext");
+let COLOR;// = settings.get_string('textcolor');
+let FONT;// = settings.get_string('textfont');
+
+let MAX_CHARS = 30;
+let FALLCHARS;// = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆"];
+let FC_STYLE = `font: Comic Sans MS Regular;
+		  font-size: 29px;
                   text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
-                  color: #ffffff;
+                  color: ${COLOR};
                   opacity: 255`;
-const END_X_MDIFF = 50;
-const TIME = 5;
-const TIME_MDIFF = 2;
-const ROTATION_MDIFF = 180;
+let END_X_MDIFF = 50;
+let TIME = 5;
+let TIME_MDIFF = 2;//settings.get_int('fallspeed');
+let ROTATION_MDIFF;// = settings.get_int('fallrot');
 
 let button;
 let disable;
@@ -70,12 +73,12 @@ var FallCharacter = GObject.registerClass({
       
       Main.uiGroup.add_actor(this);
       
-	    this.save_easing_state();
-	    this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
-	    this.set_easing_duration(time);
-	    this.set_position(endX, endY);
-	    this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
-	    this.restore_easing_state();
+      this.save_easing_state();
+      this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
+      this.set_easing_duration(time);
+      this.set_position(endX, endY);
+      this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
+      this.restore_easing_state();
       
       this.connect('transitions-completed', this.fcm.checkFall.bind(this.fcm));
     }
@@ -88,12 +91,13 @@ var FCM = GObject.registerClass({
   },
   class FCM extends GObject.Object {
     _init() {
-		  this.sliderValue = 0.3;
+    	settings.connect('changed', this.settingsChanged.bind(this));
+      	this.settingsChanged();
     }
     
     dropChars() {
       let countChars = 0;
-      let maxChars = Math.floor(this.sliderValue * MAX_CHARS) * Main.layoutManager.monitors.length;
+      let maxChars = MAX_CHARS * Main.layoutManager.monitors.length;
       
       //only create 'maxChars' number of FallChars
 		  while (countChars < maxChars) {
@@ -107,8 +111,19 @@ var FCM = GObject.registerClass({
       
     }
     
-    changed(newValue) {
-		  this.sliderValue = newValue;
+    settingsChanged() {
+		  FALLTEXT = settings.get_string("falltext");
+		  FALLCHARS = [FALLTEXT];
+		  COLOR = settings.get_string('textcolor');
+		  FONT = settings.get_string('textfont');
+		  TIME_MDIFF = 2;//settings.get_int('fallspeed');
+		  ROTATION_MDIFF = settings.get_int('fallrot');
+		  
+		  FC_STYLE = `font: Comic Sans MS Regular;
+		  		font-size: 29px;
+                  		text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+                  		color: ${COLOR};
+                  		opacity: 255`;
 	  }
 	  
 	  checkFall(fc) {

@@ -14,7 +14,7 @@
   	</key>
   	
   	<key type="s" name="textfont">
-  		<default>"Arial"</default>
+  		<default>"Arial 12"</default>
   		<summary>Display text font</summary>
   		<description>Display text font</description>
   	</key>
