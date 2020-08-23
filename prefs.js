@@ -97,11 +97,11 @@ function buildPrefsWidget() {
   //bind settings from prefs.xml to schema keys
   settings.bind('falltext' , buildable.get_object('display_field') , 'text' , Gio.SettingsBindFlags.DEFAULT);
   settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('monfall', buildable.get_object('monitors_fall'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fallspeed', buildable.get_object('fall_speed'), 'value', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('endeffect', buildable.get_object('end_effect'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('fallmon', buildable.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('falltime', buildable.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('falldrift', buildable.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
   
   //set color button from settings
   let rgba = new Gdk.RGBA();

@@ -2,7 +2,7 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.downfall" path="/org/gnome/shell/extensions/downfall/">
   	<key type="s" name="falltext">
-  		<default>"❄️"</default>
+  		<default>"ABC"</default>
   		<summary>Text to display</summary>
   		<description>Text to display</description>
   	</key>
@@ -19,36 +19,37 @@
   		<description>Display text font</description>
   	</key>
   	
-  	<key type="b" name="monfall">
-  		<default>true</default>
-  		<summary>Fall on all Monitors</summary>
-  		<description>Fall on all Monitors</description>
-  	</key>
-  	
-  	<key type="i" name="fallspeed">
-  		<default>2</default>
-  		<summary>Falling speed</summary>
-  		<description>Falling speed</description>
-  		<range min="1" max="6"/>
-  	</key>
-  	
-  	<key type="i" name="fallrot">
-  		<default>2</default>
-  		<summary>Falling rotation in degrees</summary>
-  		<description>Falling rotation in degrees</description>
-  		<range min="0" max="360"/>
-  	</key>
-  	
-  	<key type="i" name="endeffect">
+  	<key type="i" name="fallmon">
   		<default>0</default>
-  		<summary>Effect after text has fallen</summary>
-  		<description>Effect after text has fallen</description>
+  		<summary>Which monitor(s) to fall on</summary>
+  		<description>Which monitor(s) to fall on</description>
   	</key>
   	
   	<key type="i" name="falldirec">
   		<default>0</default>
   		<summary>Fall direction</summary>
   		<description>Fall direction</description>
+  	</key>
+  	
+  	<key type="i" name="falltime">
+  		<default>5</default>
+  		<summary>Average fall time</summary>
+  		<description>Average fall time</description>
+  		<range min="1" max="6"/>
+  	</key>
+  	
+  	<key type="i" name="fallrot">
+  		<default>180</default>
+  		<summary>Falling rotation in degrees</summary>
+  		<description>Falling rotation in degrees</description>
+  		<range min="0" max="360"/>
+  	</key>
+  	
+  	<key type="i" name="falldrift">
+  		<default>50</default>
+  		<summary>Average Fall drift in pixels</summary>
+  		<description>Average Fall drift in pixels</description>
+  		<range min="0" max="360"/>
   	</key>
   	
   </schema>

@@ -28,21 +28,18 @@ const Me = ExtensionUtils.getCurrentExtension();
 
 let settings = Me.imports.prefs.getSettings();
 
-let FALLTEXT;// = settings.get_string("falltext");
-let COLOR;// = settings.get_string('textcolor');
-let FONT;// = settings.get_string('textfont');
-
 let MAX_CHARS = 30;
-let FALLCHARS;// = ["🍁️","🍂️","🐘️","🇹🇬️", "❄", "❅", "❆"];
-let FC_STYLE = `font: Comic Sans MS Regular;
-		  font-size: 29px;
-                  text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
-                  color: ${COLOR};
-                  opacity: 255`;
-let END_X_MDIFF = 50;
-let TIME = 5;
-let TIME_MDIFF = 2;//settings.get_int('fallspeed');
-let ROTATION_MDIFF;// = settings.get_int('fallrot');
+let FALLTEXT;
+let COLOR;
+let FONT;
+let FALLCHARS;// = ["🐘️","🇹🇬️"];
+let FC_STYLE;
+let MONITORS;
+let DIRECTION;
+let AVG_TIME;
+let AVG_ROT;
+let AVG_DRIFT;
+let TIME_MDIFF = 2;
 
 let button;
 let disable;
@@ -63,11 +60,11 @@ var FallCharacter = GObject.registerClass({
       let startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
       let startY = monitor.y - this.height;
       
-      let endX = startX + Math.floor((Math.random() * END_X_MDIFF * 2) - END_X_MDIFF);
+      let endX = startX + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
       let endY = monitor.y + monitor.height - this.height;
       
-      let time = (TIME + (Math.random() * TIME_MDIFF * 2) - TIME_MDIFF) * 1000;
-      let rotation = Math.floor((Math.random() * ROTATION_MDIFF * 2) - ROTATION_MDIFF);
+      let time = (AVG_TIME + (Math.random() * TIME_MDIFF * 2) - TIME_MDIFF) * 1000;
+      let rotation = Math.floor((Math.random() * AVG_ROT * 2) - AVG_ROT);
       
       this.set_position(startX, startY);
       
@@ -100,44 +97,46 @@ var FCM = GObject.registerClass({
       let maxChars = MAX_CHARS * Main.layoutManager.monitors.length;
       
       //only create 'maxChars' number of FallChars
-		  while (countChars < maxChars) {
-			  let whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
-			  let newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
-			  
-			  newFc.fall();
-			  
-		    countChars++;
-		  }
+      while (countChars < maxChars) {
+      	let whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
+      	let newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
+      	newFc.fall();
+      	countChars++;
+      }
       
     }
     
     settingsChanged() {
-		  FALLTEXT = settings.get_string("falltext");
-		  FALLCHARS = [FALLTEXT];
-		  COLOR = settings.get_string('textcolor');
-		  FONT = settings.get_string('textfont');
-		  TIME_MDIFF = 2;//settings.get_int('fallspeed');
-		  ROTATION_MDIFF = settings.get_int('fallrot');
-		  
-		  FC_STYLE = `font: Comic Sans MS Regular;
-		  		font-size: 29px;
-                  		text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
-                  		color: ${COLOR};
-                  		opacity: 255`;
-	  }
+    	FALLTEXT = settings.get_string("falltext");
+    	FALLCHARS = [FALLTEXT];
+    	COLOR = settings.get_string('textcolor');
+    	FONT = settings.get_string('textfont');
+    	
+    	FC_STYLE = `font-family: "Impact", "Cantarell Bold";
+    		font-size: 29px;
+    		text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+    		color: ${COLOR};
+    		opacity: 255`;
+    	
+    	MONITORS = settings.get_int('fallmon');
+    	DIRECTION = settings.get_int('falldirec'); //0=Down, 1=Up, 2=Left, 3=Right
+    	AVG_TIME = settings.get_int('falltime');
+    	AVG_ROT = settings.get_int('fallrot');
+    	AVG_DRIFT = settings.get_int('falldrift');
+    	}
 	  
-	  checkFall(fc) {
-	    //remove the FallChar from the screen
-		  Main.uiGroup.remove_actor(fc);
-		  
-		  if (disable == 1) {
-		    //destroy the FallChar when it finishes falling
-		    fc.destroy();
-		  } else {
-		    //reset the FallChar
-		    fc.fall();
-		  }
+    checkFall(fc) {
+	//remove the FallChar from the screen
+	Main.uiGroup.remove_actor(fc);
+	
+	if (disable == 1) {
+	    //destroy the FallChar when it finishes falling
+	    fc.destroy();
+	} else {
+	    //reset the FallChar
+	    fc.fall();
 	  }
+    }
 	  
   });
 

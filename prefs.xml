@@ -19,15 +19,22 @@
 -->
 <interface domain="DownFall">
 
-<object class="GtkAdjustment" id="Adjust_1">
-	<property name="lower">1</property>
-	<property name="upper">6</property>
+<object class="GtkAdjustment" id="time_adjust">
+	<property name="lower">2</property>
+	<property name="upper">10</property>
 	<property name="step_increment">1</property>
 </object>
-<object class="GtkAdjustment" id="Adjust_2">
+
+<object class="GtkAdjustment" id="rot_adjust">
 	<property name="lower">0</property>
 	<property name="upper">360</property>
-	<property name="step_increment">30</property>
+	<property name="step_increment">1</property>
+</object>
+
+<object class="GtkAdjustment" id="drift_adjust">
+	<property name="lower">0</property>
+	<property name="upper">500</property>
+	<property name="step_increment">1</property>
 </object>
 
 <object class="GtkNotebook" id="prefs_widget">
@@ -142,87 +149,29 @@
 							</attributes>
 						</object>
 					</child>
-		  
+					
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
 							<property name="margin-left">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property translatable="yes" name="label">Fall on all Monitors</property>
+									<property translatable="yes" name="label">Fall on</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>
 							</child>
 							<child>
-								<object class="GtkSwitch" id="monitors_fall">
-									<property name="active">true</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		  
-					<child>
-						<object class="GtkBox">
-							<property name="margin-left">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Falling Speed</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSpinButton" id="fall_speed">
-									<property name="adjustment">Adjust_1</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		  
-					<child>
-						<object class="GtkBox">
-							<property name="margin-left">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Falling Rotation</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSpinButton" id="fall_rot">
-									<property name="adjustment">Adjust_2</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		  
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Ending effect</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkComboBoxText" id="end_effect">
+								<object class="GtkComboBoxText" id="fall_monitor">
 									<items>
-										<item translatable="yes" id="0">Disappear</item>
-										<item translatable="yes" id="1">Fireworks</item>
-										<item translatable="yes" id="2">Something</item>
+										<item translatable="yes" id="0">All monitors</item>
+										<item translatable="yes" id="1">Primary monitor only</item>
 									</items>
 								</object>
 							</child>
 						</object>
 					</child>
-
+					
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
@@ -242,6 +191,63 @@
 										<item translatable="yes" id="2">Left</item>
 										<item translatable="yes" id="3">Right</item>
 									</items>
+								</object>
+							</child>
+						</object>
+					</child>
+		  
+					<child>
+						<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Average Fall Time (seconds)</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSpinButton" id="fall_time">
+									<property name="adjustment">time_adjust</property>
+								</object>
+							</child>
+						</object>
+					</child>
+		  
+					<child>
+						<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Average Fall Rotation (degrees)</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSpinButton" id="fall_rot">
+									<property name="adjustment">rot_adjust</property>
+								</object>
+							</child>
+						</object>
+					</child>
+					
+					<child>
+						<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Average Fall Drift (px)</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSpinButton" id="fall_drift">
+									<property name="adjustment">drift_adjust</property>
 								</object>
 							</child>
 						</object>
