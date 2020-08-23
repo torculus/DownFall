@@ -41,7 +41,6 @@ let AVG_ROT;
 let AVG_DRIFT;
 let TIME_MDIFF = 2;
 
-let button;
 let disable;
 
 var FallCharacter = GObject.registerClass({
@@ -56,12 +55,41 @@ var FallCharacter = GObject.registerClass({
     }
     
     fall() {
-      let monitor = Main.layoutManager.primaryMonitor;
-      let startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
-      let startY = monitor.y - this.height;
+      let monitor;
       
-      let endX = startX + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
-      let endY = monitor.y + monitor.height - this.height;
+      if (MONITORS == 1) { //falling on primary monitor only
+        monitor = Main.layoutManager.primaryMonitor;
+      } else {
+        monitor = Main.layoutManager.monitors;
+      }
+      
+      let startX;
+      let startY;
+      let endX;
+      let endY;
+      
+      //set start and end points for falling
+      if (DIRECTION == 0) { //Down
+        startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
+        startY = monitor.y - this.height;
+        endX = startX + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
+        endY = monitor.y + monitor.height - this.height;
+      } else if (DIRECTION == 1) { //Up
+        startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
+        startY = monitor.y + monitor.height - this.height;
+        endX = startX + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
+        endY = monitor.y - this.height;
+      } else if (DIRECTION == 2) { //Left
+        startX = monitor.x + monitor.width - this.width;
+        startY = monitor.y + Math.floor(Math.random() * (monitor.height - this.height));
+        endX = monitor.x - this.width;
+        endY = startY + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
+      } else { //Right
+        startX = monitor.x - this.width;
+        startY = monitor.y + Math.floor(Math.random() * (monitor.height - this.height));
+        endX = monitor.x + monitor.width - this.width;
+        endY = startY + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
+      }
       
       let time = (AVG_TIME + (Math.random() * TIME_MDIFF * 2) - TIME_MDIFF) * 1000;
       let rotation = Math.floor((Math.random() * AVG_ROT * 2) - AVG_ROT);
@@ -147,31 +175,16 @@ var Extension = GObject.registerClass({
   },
   class Extension extends GObject.Object {
     _init() {
-      button = new St.Bin({style_class: 'panel-button',
-                reactive: true,
-                can_focus: true,
-                x_fill: true,
-                y_fill: false,
-                track_hover: true});
-      let icon = new St.Icon({icon_name:'system-run-symbolic',
-                style_class: 'system-status-icon'});
-      
-      button.set_child(icon);
-      
       var fcm = new FCM();
       this.fcm = fcm;
-      
-      //button.connect('button-press-event', fcm.toggle );
     }
 
     enable() {
-      Main.panel._rightBox.insert_child_at_index(button, 0);
       disable = 0;
       this.fcm.dropChars();
     }
 
     disable() {
-      Main.panel._rightBox.remove_child(button);
       disable = 1;
     }
   });
