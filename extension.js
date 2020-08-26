@@ -32,6 +32,7 @@ let MAX_CHARS = 30;
 let FALLTEXT;
 let COLOR;
 let FONT;
+let SIZE;
 let FALLCHARS;// = ["🐘️","🇹🇬️"];
 let FC_STYLE;
 let MONITORS;
@@ -135,13 +136,21 @@ var FCM = GObject.registerClass({
     }
     
     settingsChanged() {
-    	FALLTEXT = settings.get_string("falltext");
-    	FALLCHARS = [FALLTEXT];
+    	FALLTEXT = settings.get_string("falltext"); //makes multiple chars work
+    	FALLCHARS = [FALLTEXT]; //makes emojis work
     	COLOR = settings.get_string('textcolor');
-    	FONT = settings.get_string('textfont');
     	
-    	FC_STYLE = `font-family: "Impact", "Cantarell Bold";
-    		font-size: 29px;
+    	//get the size from the GtkFontButton
+    	SIZE = settings.get_string('textfont').slice(-2).trim();
+    	
+    	if (SIZE.length == 1) {
+    	    FONT = settings.get_string('textfont').slice(0,-1).trim();
+    	} else {
+    	    FONT = settings.get_string('textfont').slice(0,-2).trim();
+    	}
+    	
+    	FC_STYLE = `font-family: ${FONT};
+    		font-size: ${SIZE + "px"};
     		text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
     		color: ${COLOR};
     		opacity: 255`;
