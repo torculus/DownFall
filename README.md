@@ -5,5 +5,6 @@ DownFall can be used to render multiple effects, such as:
 
 * Snow (❄, ❅, ❆)
 * Leaves (🍁️, 🍂️) falling or breezing across the screen
-* Digital rain from The Matrix® series
 * The opening crawls from Star Wars®
+* Digital rain from The Matrix® series (forthcoming)
+* Fireworks (forthcoming)
