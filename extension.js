@@ -60,7 +60,7 @@ var FallCharacter = GObject.registerClass({
       if (MONITORS == 1) { //falling on primary monitor only
         monitor = Main.layoutManager.primaryMonitor;
       } else {
-        monitor = Main.layoutManager.monitors;
+        monitor = Main.layoutManager.currentMonitor;
       }
       
       let startX;

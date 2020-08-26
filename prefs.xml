@@ -164,8 +164,8 @@
 							<child>
 								<object class="GtkComboBoxText" id="fall_monitor">
 									<items>
-										<item translatable="yes" id="0">All monitors</item>
-										<item translatable="yes" id="1">Primary monitor only</item>
+										<item translatable="yes" id="0">Current monitor</item>
+										<item translatable="yes" id="1">Primary monitor</item>
 									</items>
 								</object>
 							</child>
@@ -258,6 +258,32 @@
 	<child type="tab">
 		<object class="GtkLabel">
 			<property name="label" translatable="yes">Behavior</property>
+		</object>
+	</child>
+	
+	<child>
+		<object class="GtkGrid">
+			<property name="margin">18</property>
+			<property name="row-spacing">18</property>
+			<property name="row-homogeneous">false</property>
+			<property name="orientation">vertical</property>
+
+					<child>
+						<object class="GtkLabel">
+							<property name="label" translatable="yes">Credits</property>
+							<property name="hexpand">true</property>
+							<property name="halign">1</property>
+							<attributes>
+								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
+							</attributes>
+						</object>
+					</child>
+		</object>
+	</child>
+	
+	<child type="tab">
+		<object class="GtkLabel">
+			<property name="label" translatable="yes">About</property>
 		</object>
 	</child>
 
