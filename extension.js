@@ -29,15 +29,15 @@ const Utils = Me.imports.utils;
 
 let settings = Me.imports.utils.getSettings();
 
-let MAX_CHARS = 30;
+let FALLCHARS;
 let FALLTEXT;
 let COLOR;
 let FONT;
 let SIZE;
-let FALLCHARS;
 let FC_STYLE;
 let MONITORS;
 let DIRECTION;
+let MAX_CHARS;
 let AVG_TIME;
 let AVG_ROT;
 let AVG_DRIFT;
@@ -103,10 +103,9 @@ var FCM = GObject.registerClass({
     
     dropChars() {
       let countChars = 0;
-      let maxChars = MAX_CHARS * Main.layoutManager.monitors.length;
       
-      //only create 'maxChars' number of FallChars
-      while (countChars < maxChars) {
+      //only create MAX_CHARS number of FallChars
+      while (countChars < MAX_CHARS) {
       	let whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
       	let newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
       	newFc.fall();
@@ -137,6 +136,7 @@ var FCM = GObject.registerClass({
     	
     	MONITORS = settings.get_int('fallmon');
     	DIRECTION = settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
+    	MAX_CHARS = settings.get_int('maxchars');
     	AVG_TIME = settings.get_int('falltime');
     	AVG_ROT = settings.get_int('fallrot');
     	AVG_DRIFT = settings.get_int('falldrift');

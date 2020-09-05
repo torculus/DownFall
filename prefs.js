@@ -39,6 +39,7 @@ function buildPrefsWidget() {
   settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fallmon', buildable.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('maxchars', buildable.get_object('max_chars'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falltime', buildable.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldrift', buildable.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);

@@ -19,6 +19,12 @@
 -->
 <interface domain="DownFall">
 
+<object class="GtkAdjustment" id="max_adjust">
+	<property name="lower">1</property>
+	<property name="upper">100</property>
+	<property name="step_increment">1</property>
+</object>
+
 <object class="GtkAdjustment" id="time_adjust">
 	<property name="lower">2</property>
 	<property name="upper">10</property>
@@ -199,6 +205,25 @@
 							</child>
 						</object>
 					</child>
+					
+					<child>
+						<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property name="label" translatable="yes">Maximum number of elements</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSpinButton" id="max_chars">
+									<property name="adjustment">max_adjust</property>
+								</object>
+							</child>
+						</object>
+					</child>
 		  
 					<child>
 						<object class="GtkBox">
@@ -274,7 +299,7 @@
 
 					<child>
 						<object class="GtkLabel">
-							<property name="label" translatable="yes">Credits</property>
+							<property name="label" translatable="yes">Website</property>
 							<property name="hexpand">true</property>
 							<property name="halign">1</property>
 							<attributes>
@@ -289,7 +314,7 @@
 							<property name="margin-left">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property translatable="yes" name="label">Ben Osenbach (torculus@github)</property>
+									<property translatable="yes" name="label">https://github.com/torculus/DownFall</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>
