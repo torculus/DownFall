@@ -33,7 +33,7 @@
 
 <object class="GtkAdjustment" id="drift_adjust">
 	<property name="lower">0</property>
-	<property name="upper">500</property>
+	<property name="upper">100</property>
 	<property name="step_increment">1</property>
 </object>
 
@@ -244,7 +244,7 @@
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property name="label" translatable="yes">Average Fall Drift (px)</property>
+									<property name="label" translatable="yes">Average Fall Drift (percentage)</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>

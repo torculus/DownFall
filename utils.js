@@ -90,43 +90,50 @@ function startEndPoints(direction, monitor, drift, fallc) {
     if (direction == 0) { //Down
         startX = monitor.x + Math.floor(Math.random() * (monitor.width - fallc.width));
         startY = monitor.y - fallc.height;
-        endX = startX + Math.floor((Math.random() * drift * 2) - drift);
+        endX = startX + Math.floor( (2*Math.random()-1) * drift/100 * monitor.width);
         endY = monitor.y + monitor.height - fallc.height;
+        
     } else if (direction == 1) { //Up
         startX = monitor.x + Math.floor(Math.random() * (monitor.width - fallc.width));
         startY = monitor.y + monitor.height - fallc.height;
-        endX = startX + Math.floor((Math.random() * drift * 2) - drift);
+        endX = startX + Math.floor( (2*Math.random()-1) * drift/100 * monitor.width);
         endY = monitor.y - fallc.height;
+        
     } else if (direction == 2) { //Right
         startX = monitor.x - fallc.width;
         startY = monitor.y + Math.floor(Math.random() * (monitor.height - fallc.height));
         endX = monitor.x + monitor.width - fallc.width;
-        endY = startY + Math.floor((Math.random() * drift * 2) - drift);
+        endY = startY + Math.floor( (2*Math.random()-1) * drift/100 * monitor.height);
+        
     } else if (direction == 3) { //Left
         startX = monitor.x + monitor.width - fallc.width;
         startY = monitor.y + Math.floor(Math.random() * (monitor.height - fallc.height));
         endX = monitor.x - fallc.width;
-        endY = startY + Math.floor((Math.random() * drift * 2) - drift);
+        endY = startY + Math.floor( (2*Math.random()-1) * drift/100 * monitor.height);
+        
     } else if (direction == 4) { //Up-Right
-        startX = monitor.x + Math.floor((Math.random() * drift * 2) - drift);
-        startY = monitor.y + monitor.height + Math.floor((Math.random() * drift * 2) - drift);
-        endX = monitor.x + monitor.width - fallc.width + Math.floor((Math.random() * drift * 2) - drift);
-        endY = monitor.y - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
+        startX = monitor.x + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        startY = monitor.y + monitor.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        endX = monitor.x + monitor.width - fallc.width + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        endY = monitor.y - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        
     } else if (direction == 5) { //Up-Left
-        startX = monitor.x + monitor.width - fallc.width + Math.floor((Math.random() * drift * 2) - drift);
-        startY = monitor.y + monitor.height - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
-        endX = monitor.x + Math.floor((Math.random() * drift * 2) - drift);
-        endY = monitor.y - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
+        startX = monitor.x + monitor.width - fallc.width + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        startY = monitor.y + monitor.height - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        endX = monitor.x + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        endY = monitor.y - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        
     } else if (direction == 6) { //Down-Right
-        startX = monitor.x + Math.floor((Math.random() * drift * 2) - drift);
-        startY = monitor.y - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
-        endX = monitor.x + monitor.width - fallc.width + Math.floor((Math.random() * drift * 2) - drift);
-        endY = monitor.y + monitor.height - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
+        startX = monitor.x + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        startY = monitor.y - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        endX = monitor.x + monitor.width - fallc.width + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        endY = monitor.y + monitor.height - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        
     } else { //Down-Left
-        startX = monitor.x + monitor.width - fallc.width + Math.floor((Math.random() * drift * 2) - drift);
-        startY = monitor.y - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
-        endX = monitor.x + Math.floor((Math.random() * drift * 2) - drift);
-        endY = monitor.y + monitor.height - fallc.height + Math.floor((Math.random() * drift * 2) - drift);
+        startX = monitor.x + monitor.width - fallc.width + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        startY = monitor.y - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
+        endX = monitor.x + Math.floor( (2*Math.random()-1) * drift/200 * monitor.width);
+        endY = monitor.y + monitor.height - fallc.height + Math.floor( (2*Math.random()-1) * drift/200 * monitor.height);
     }
     
     return [startX, startY, endX, endY];

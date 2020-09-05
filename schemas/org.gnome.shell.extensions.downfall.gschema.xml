@@ -33,8 +33,8 @@
   	
   	<key type="i" name="falltime">
   		<default>5</default>
-  		<summary>Average fall time</summary>
-  		<description>Average fall time</description>
+  		<summary>Average fall time in seconds</summary>
+  		<description>Average fall time in seconds</description>
   		<range min="1" max="6"/>
   	</key>
   	
@@ -47,9 +47,9 @@
   	
   	<key type="i" name="falldrift">
   		<default>50</default>
-  		<summary>Average Fall drift in pixels</summary>
-  		<description>Average Fall drift in pixels</description>
-  		<range min="0" max="360"/>
+  		<summary>Average Fall drift in percentage</summary>
+  		<description>Average Fall drift in percentage</description>
+  		<range min="0" max="100"/>
   	</key>
   	
   </schema>
