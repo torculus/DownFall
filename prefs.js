@@ -22,71 +22,11 @@ const Gtk = imports.gi.Gtk;
 const Gio = imports.gi.Gio;
 const Gdk = imports.gi.Gdk;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-
-function getSettings() {
-	let schema = 'org.gnome.shell.extensions.downfall';
-
-	const GioSSS = Gio.SettingsSchemaSource;
-
-	// check if this extension was built with "make zip-file", and thus
-	// has the schema files in a subfolder
-	// otherwise assume that extension has been installed in the
-	// same prefix as gnome-shell (and therefore schemas are available
-	// in the standard folders)
-	let schemaDir = Me.dir.get_child('schemas');
-	let schemaSource;
-	if (schemaDir.query_exists(null)) {
-		schemaSource = GioSSS.new_from_directory(schemaDir.get_path(),
-				GioSSS.get_default(),
-				false);
-	} else {
-		schemaSource = GioSSS.get_default();
-	}
-
-	let schemaObj = schemaSource.lookup(schema, true);
-	if (!schemaObj) {
-		throw new Error('Schema ' + schema + ' could not be found for extension ' +
-				Me.metadata.uuid + '. Please check your installation.');
-	}
-
-	return new Gio.Settings({settings_schema: schemaObj});
-}
-
-/**
- * This function was copied from the activities-config extension
- * https://github.com/nls1729/acme-code/tree/master/activities-config
- * by Norman L. Smith.
- */
-function cssHexString(css) {
-    let rrggbb = '#';
-    let start;
-    for (let loop = 0; loop < 3; loop++) {
-        let end = 0;
-        let xx = '';
-        for (let loop = 0; loop < 2; loop++) {
-            while (true) {
-                let x = css.slice(end, end + 1);
-                if ((x == '(') || (x == ',') || (x == ')'))
-                    break;
-                end++;
-            }
-            if (loop == 0) {
-                end++;
-                start = end;
-            }
-        }
-        xx = parseInt(css.slice(start, end)).toString(16);
-        if (xx.length == 1)
-            xx = '0' + xx;
-        rrggbb += xx;
-        css = css.slice(end);
-    }
-    return rrggbb;
-}
+const Utils = Me.imports.utils;
 
 function buildPrefsWidget() {
   
-  let settings = this.getSettings(Me);
+  let settings = Utils.getSettings();
   
   let buildable = new Gtk.Builder();
   
@@ -111,7 +51,7 @@ function buildPrefsWidget() {
   //bind text color to key
   buildable.get_object('text_color').connect('notify::rgba', (button) => {
             let rgba1 = button.get_rgba();
-            let hexString = cssHexString(rgba1.to_string());
+            let hexString = Utils.cssHexString(rgba1.to_string());
             settings.set_string('textcolor', hexString);
         });
   

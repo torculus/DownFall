@@ -25,15 +25,16 @@ const Clutter = imports.gi.Clutter;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
+const Utils = Me.imports.utils;
 
-let settings = Me.imports.prefs.getSettings();
+let settings = Me.imports.utils.getSettings();
 
 let MAX_CHARS = 30;
 let FALLTEXT;
 let COLOR;
 let FONT;
 let SIZE;
-let FALLCHARS;// = ["🐘️","🇹🇬️"];
+let FALLCHARS;
 let FC_STYLE;
 let MONITORS;
 let DIRECTION;
@@ -58,39 +59,18 @@ var FallCharacter = GObject.registerClass({
     fall() {
       let monitor;
       
-      if (MONITORS == 1) { //falling on primary monitor only
-        monitor = Main.layoutManager.primaryMonitor;
-      } else {
+      if (MONITORS == 0) {
         monitor = Main.layoutManager.currentMonitor;
+      } else {
+        monitor = Main.layoutManager.primaryMonitor;
       }
       
-      let startX;
-      let startY;
-      let endX;
-      let endY;
-      
-      //set start and end points for falling
-      if (DIRECTION == 0) { //Down
-        startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
-        startY = monitor.y - this.height;
-        endX = startX + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
-        endY = monitor.y + monitor.height - this.height;
-      } else if (DIRECTION == 1) { //Up
-        startX = monitor.x + Math.floor(Math.random() * (monitor.width - this.width));
-        startY = monitor.y + monitor.height - this.height;
-        endX = startX + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
-        endY = monitor.y - this.height;
-      } else if (DIRECTION == 2) { //Left
-        startX = monitor.x + monitor.width - this.width;
-        startY = monitor.y + Math.floor(Math.random() * (monitor.height - this.height));
-        endX = monitor.x - this.width;
-        endY = startY + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
-      } else { //Right
-        startX = monitor.x - this.width;
-        startY = monitor.y + Math.floor(Math.random() * (monitor.height - this.height));
-        endX = monitor.x + monitor.width - this.width;
-        endY = startY + Math.floor((Math.random() * AVG_DRIFT * 2) - AVG_DRIFT);
-      }
+      //get coordinates for the start and end points
+      let startEndpoints = Utils.startEndPoints(DIRECTION, monitor, AVG_DRIFT, this);
+      let startX = startEndpoints[0];
+      let startY = startEndpoints[1];
+      let endX = startEndpoints[2];
+      let endY = startEndpoints[3];
       
       let time = (AVG_TIME + (Math.random() * TIME_MDIFF * 2) - TIME_MDIFF) * 1000;
       let rotation = Math.floor((Math.random() * AVG_ROT * 2) - AVG_ROT);
@@ -156,7 +136,7 @@ var FCM = GObject.registerClass({
     		opacity: 255`;
     	
     	MONITORS = settings.get_int('fallmon');
-    	DIRECTION = settings.get_int('falldirec'); //0=Down, 1=Up, 2=Left, 3=Right
+    	DIRECTION = settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
     	AVG_TIME = settings.get_int('falltime');
     	AVG_ROT = settings.get_int('fallrot');
     	AVG_DRIFT = settings.get_int('falldrift');

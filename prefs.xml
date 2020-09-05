@@ -186,10 +186,14 @@
 							<child>
 								<object class="GtkComboBoxText" id="fall_direc">
 									<items>
-										<item translatable="yes" id="0">Down</item>
-										<item translatable="yes" id="1">Up</item>
-										<item translatable="yes" id="2">Left</item>
-										<item translatable="yes" id="3">Right</item>
+										<item translatable="yes" id="0">Down (↓)</item>
+										<item translatable="yes" id="1">Up (↑)</item>
+										<item translatable="yes" id="2">Right (→)</item>
+										<item translatable="yes" id="3">Left (←)</item>
+										<item translatable="yes" id="4">Up-right (↗)</item>
+										<item translatable="yes" id="5">Up-left (↖)</item>
+										<item translatable="yes" id="6">Down-right (↘)</item>
+										<item translatable="yes" id="7">Down-left (↙)</item>
 									</items>
 								</object>
 							</child>
@@ -276,6 +280,20 @@
 							<attributes>
 								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
 							</attributes>
+						</object>
+					</child>
+					
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Ben Osenbach (torculus@github)</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
 						</object>
 					</child>
 		</object>
