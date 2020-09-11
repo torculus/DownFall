@@ -51,8 +51,9 @@ var FallCharacter = GObject.registerClass({
   Signals: {},
   },
   class FallCharacter extends St.Label {
-    _init(description, fcm) {
-      super._init(description);
+    _init(whichChar, fcm) {
+      super._init();
+      this.whichChar = whichChar;
       this.fcm = fcm; //reference back to the FallCharsManager (FCM)
     }
     
@@ -78,6 +79,9 @@ var FallCharacter = GObject.registerClass({
       this.set_position(startX, startY);
       
       Main.uiGroup.add_actor(this);
+      
+      this.set_text(this.whichChar);
+      this.set_style(FC_STYLE);
       
       this.save_easing_state();
       this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
@@ -107,7 +111,7 @@ var FCM = GObject.registerClass({
       //only create MAX_CHARS number of FallChars
       while (countChars < MAX_CHARS) {
       	let whichChar = FALLCHARS[Math.floor((Math.random() * FALLCHARS.length))];
-      	let newFc = new FallCharacter({style: FC_STYLE, text: whichChar}, this);
+      	let newFc = new FallCharacter(whichChar, this);
       	newFc.fall();
       	countChars++;
       }
