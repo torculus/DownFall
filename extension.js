@@ -66,6 +66,8 @@ var FallCharacter = GObject.registerClass({
         monitor = Main.layoutManager.primaryMonitor;
       }
       
+      Main.uiGroup.add_actor(this);
+      
       //get coordinates for the start and end points
       let startEndpoints = Utils.startEndPoints(DIRECTION, monitor, AVG_DRIFT, this);
       let startX = startEndpoints[0];
@@ -77,8 +79,6 @@ var FallCharacter = GObject.registerClass({
       let rotation = Math.floor((Math.random() * AVG_ROT * 2) - AVG_ROT);
       
       this.set_position(startX, startY);
-      
-      Main.uiGroup.add_actor(this);
       
       this.set_text(this.whichChar);
       this.set_style(FC_STYLE);
