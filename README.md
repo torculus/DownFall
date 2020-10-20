@@ -1,8 +1,19 @@
 # DownFall
 DownFall is a GNOME Shell extension that moves text of your choice across the screen  
 
-DownFall can be used to render multiple effects, such as:  
+Text items can fall in eight directions on either the primary or current monitor:  
+* Down (↓)
+* Up (↑)
+* Right (→)
+* Left (←)
+* Up-right (↗)
+* Up-left (↖)
+* Down-right (↘)
+* Down-left (↙)
 
+Additional configuration options include color, font, size, fall speed/time, rotation, and drift
+
+DownFall can be used to render multiple effects such as:  
 * Snow (❄, ❅, ❆)
 * Leaves (🍁️, 🍂️) falling or breezing across the screen
 * The opening crawls from Star Wars®
