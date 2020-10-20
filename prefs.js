@@ -35,7 +35,7 @@ function buildPrefsWidget() {
   let prefsWidget = buildable.get_object('prefs_widget');
   
   //bind settings from prefs.xml to schema keys
-  settings.bind('falltext' , buildable.get_object('display_field') , 'text' , Gio.SettingsBindFlags.DEFAULT);
+  //settings.bind('falltext' , buildable.get_object('display_field') , 'text' , Gio.SettingsBindFlags.DEFAULT);
   settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fallmon', buildable.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -43,6 +43,18 @@ function buildPrefsWidget() {
   settings.bind('falltime', buildable.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldrift', buildable.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
+  
+  //set display_field from key
+  let dispfield = settings.get_strv('falltext');
+  let disptext = dispfield.toString();
+  buildable.get_object('display_field').set_text(disptext);
+  
+  //bind display_field to key
+  buildable.get_object('display_field').connect('notify::text', (entry) => {
+  	let typed = entry.get_text();
+  	let falltext = typed.split(',');
+  	settings.set_strv('falltext', falltext);
+  });
   
   //set color button from settings
   let rgba = new Gdk.RGBA();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.downfall" path="/org/gnome/shell/extensions/downfall/">
-  	<key type="s" name="falltext">
-  		<default>"ABC"</default>
+  	<key type="as" name="falltext">
+  		<default>["ABC"]</default>
   		<summary>Text to display</summary>
   		<description>Text to display</description>
   	</key>

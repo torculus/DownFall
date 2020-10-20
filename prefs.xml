@@ -78,13 +78,13 @@
 					<property name="spacing">6</property>
 					<child>
 						<object class="GtkLabel">
-							<property name="label" translatable="yes">Text to Display</property>
+							<property name="label" translatable="yes">Text to Display (separate items with commas)</property>
 							<property name="hexpand">true</property>
 							<property name="halign">1</property>
 						</object>
 					</child>
 					<child>
-						<object class="GtkEntry" id="display_field">"ABC"
+						<object class="GtkEntry" id="display_field">"A,B,C"
 						</object>
 					</child>
 				</object>

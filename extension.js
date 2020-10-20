@@ -119,8 +119,8 @@ var FCM = GObject.registerClass({
     }
     
     settingsChanged() {
-    	FALLTEXT = settings.get_string("falltext"); //makes multiple chars work
-    	FALLCHARS = [FALLTEXT]; //makes emojis work
+    	FALLCHARS = settings.get_strv("falltext"); //makes multiple chars work
+    	//FALLCHARS = [FALLTEXT]; //makes emojis work
     	COLOR = settings.get_string('textcolor');
     	
     	//get the size from the GtkFontButton
