@@ -73,9 +73,32 @@
 						</object>
 					</child>
 				  
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Presets</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkComboBoxText" id="presets">
+									<items>
+										<item translatable="yes" id="0">(none)</item>
+										<item translatable="yes" id="1">Leaves</item>
+										<item translatable="yes" id="2">Matrix</item>
+									</items>
+								</object>
+							</child>
+						</object>
+					</child>
 				<child>
 				<object class="GtkVBox">
-					<property name="spacing">6</property>
+					<property name="spacing">12</property>
+					<property name="margin-left">12</property>
 					<child>
 						<object class="GtkLabel">
 							<property name="label" translatable="yes">Text to Display (separate items with commas)</property>
@@ -125,6 +148,43 @@
 							</child>
 						</object>
 					</child>
+				<child>
+					<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Show Matrix© Trails</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSwitch" id="matrix_switch">
+									<property name="active">true</property>
+								</object>
+							</child>
+					</object>
+				</child>
+				
+				<child>
+					<object class="GtkBox">
+							<property name="margin-left">12</property>
+							<property name="spacing">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Firework explosion endings</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+							<child>
+								<object class="GtkSwitch" id="firework_switch">
+									<property name="active">true</property>
+								</object>
+							</child>
+					</object>
+				</child>
 
 				</object>
 			</child>
@@ -212,7 +272,7 @@
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property name="label" translatable="yes">Maximum number of elements</property>
+									<property name="label" translatable="yes">Maximum number of items</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>

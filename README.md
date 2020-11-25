@@ -1,7 +1,7 @@
 # DownFall
 DownFall is a GNOME Shell extension that moves text of your choice across the screen  
 
-!["Gif"](./media/DownFall.gif)
+!["Picture"](./media/DownFall.png)
 
 Text items can fall in eight directions on either the primary or current monitor:  
 * Down (↓)
