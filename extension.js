@@ -20,6 +20,7 @@
 
 const St = imports.gi.St;
 const GObject = imports.gi.GObject;
+const Gdk = imports.gi.Gdk;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
 
@@ -34,6 +35,8 @@ let COLOR;
 let FONT;
 let SIZE;
 let FI_STYLE;
+let MATRIXTRAILS;
+let FIREWORKS;
 let MONITORS;
 let DIRECTION;
 let MAX_ITEMS;
@@ -74,6 +77,15 @@ var FallItem = GObject.registerClass({
       let endX = startEndpoints[2];
       let endY = startEndpoints[3];
       
+      if (FIREWORKS) {
+      	//end in the middle
+      	endX = Math.floor(1/3*startX + 2/3*endX);
+      	endY = Math.floor(1/3*startY + 2/3*endY);
+      	
+      	this.X = endX;
+      	this.Y = endY;
+      }
+      
       let time = (AVG_TIME + (2*Math.random()-1) * TIME_MDIFF) * 1000;
       let rotation = Math.floor( (2*Math.random()-1) * AVG_ROT);
       
@@ -88,6 +100,10 @@ var FallItem = GObject.registerClass({
       this.set_position(endX, endY);
       this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
       this.restore_easing_state();
+      
+      if (MATRIXTRAILS) {
+      	Utils.MatrixTrails(this);
+      }
       
       this.connect('transitions-completed', this.fim.checkFall.bind(this.fim));
     }
@@ -136,6 +152,8 @@ var FIM = GObject.registerClass({
     		
     		//text-shadow: 1px 1px rgba(0, 0, 0, 0.4); opacity: 255
     	
+    	MATRIXTRAILS = settings.get_boolean('matrixtrails');
+    	FIREWORKS = settings.get_boolean('fireworks');
     	MONITORS = settings.get_int('fallmon');
     	DIRECTION = settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
     	MAX_ITEMS = settings.get_int('maxchars');
@@ -152,6 +170,36 @@ var FIM = GObject.registerClass({
 	    //destroy the FallItem when it finishes falling
 	    fi.destroy();
 	} else {
+	
+	    if (FIREWORKS) {
+	      //explode
+	      for (var n=0; n<6; n++) {
+	      	//Utils.Fireworks(n, fi.X, fi.Y);
+	      	let flare = new St.Label();
+    		let red = Math.floor(Math.random() * 256);
+    		let green = Math.floor(Math.random() * 256);
+    		let blue = Math.floor(Math.random() * 256);
+    		
+    		Main.uiGroup.add_actor(flare);
+    		flare.set_position(fi.X, fi.Y);
+    		flare.set_text(".");
+    		flare.set_style(`font-size: "40px";
+    		    color: rgb(${red},${green},${blue})`);
+    		flare.save_easing_state();
+    		flare.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
+    		flare.set_easing_duration(2000);
+    		
+    		//make a hexagon (1/2)^0, (1/2)^1, -(1/2)^1, -(1/2)^0, -(1/2)^1, (1/2)^1
+    		// 0, r3/2, r3/2, 0, -r3/2, -r3/2
+    		let Xf = fi.X + Math.floor( (-1)**( (n%5) > 1)*(1/2)**( (n%3) > 0) * 200 );
+    		let Yf = fi.Y + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
+    		
+    		flare.set_position(Xf, Yf);
+    		flare.restore_easing_state();
+    		flare.connect('transitions-completed', () => {Main.uiGroup.remove_actor(flare); flare.destroy(); return 0;} );
+	      }
+	    }
+	    
 	    //reset the FallItem
 	    fi.fall();
 	  }
