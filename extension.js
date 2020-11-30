@@ -79,8 +79,9 @@ var FallItem = GObject.registerClass({
       
       if (FIREWORKS) {
       	//end in the middle
-      	endX = Math.floor(1/3*startX + 2/3*endX);
-      	endY = Math.floor(1/3*startY + 2/3*endY);
+      	let alpha = Math.random();
+      	endX = Math.floor(alpha*startX + (1-alpha)*endX);
+      	endY = Math.floor(alpha*startY + (1-alpha)*endY);
       	
       	this.X = endX;
       	this.Y = endY;
@@ -174,23 +175,22 @@ var FIM = GObject.registerClass({
 	    if (FIREWORKS) {
 	      //explode
 	      for (var n=0; n<6; n++) {
-	      	//Utils.Fireworks(n, fi.X, fi.Y);
 	      	let flare = new St.Label();
-    		let red = Math.floor(Math.random() * 256);
-    		let green = Math.floor(Math.random() * 256);
-    		let blue = Math.floor(Math.random() * 256);
+    		let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
     		
     		Main.uiGroup.add_actor(flare);
     		flare.set_position(fi.X, fi.Y);
     		flare.set_text(".");
-    		flare.set_style(`font-size: "40px";
-    		    color: rgb(${red},${green},${blue})`);
+    		flare.set_style(`font-size: ${SIZE + "px"};
+    		color: ${flcolor};`);
     		flare.save_easing_state();
     		flare.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
     		flare.set_easing_duration(2000);
     		
-    		//make a hexagon (1/2)^0, (1/2)^1, -(1/2)^1, -(1/2)^0, -(1/2)^1, (1/2)^1
-    		// 0, r3/2, r3/2, 0, -r3/2, -r3/2
+    		//get hexagonal coordinates relative to the endX, endY
+    		//     i=2  i=1					(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
+    		// i=3		i=0	goes with	(-s,0)						(+s,0)
+    		//     i=4  i=5					(-s/2,-s*sqrt(3)/2) (+s/2, -s*sqrt(3)/2)
     		let Xf = fi.X + Math.floor( (-1)**( (n%5) > 1)*(1/2)**( (n%3) > 0) * 200 );
     		let Yf = fi.Y + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
     		
