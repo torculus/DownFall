@@ -18,9 +18,11 @@ Text items can fall in eight directions on either the primary or current monitor
 Additional configuration options include color, font, size, fall speed/time, rotation, and drift
 
 DownFall can be used to render multiple effects such as:  
-* Snow (❄, ❅, ❆, *, .)
-* Leaves (🍁️, 🍂️) falling or breezing across the screen
-* Japanese cherry blossoms (🌸️)
+* Snow (Down-left ❄, ❅, ❆, *, .)
+* Falling leaves (Down, Down-left, Left 🍁️, 🍂️)
+* Rain (Down, .,💧️)
+* Meteorites / shooting stars (Down-right *, .)
+* Japanese cherry blossoms (Down 🌸️)
 * The opening crawls from Star Wars®
-* Fireworks
+* Fireworks (Up, Up-right, Up-left ., *, |)
 * Digital rain from The Matrix® series (forthcoming)

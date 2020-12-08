@@ -20,6 +20,7 @@
 
 const St = imports.gi.St;
 const GObject = imports.gi.GObject;
+const GLib = imports.gi.GLib;
 const Gdk = imports.gi.Gdk;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
@@ -96,17 +97,43 @@ var FallItem = GObject.registerClass({
       this.set_style(FI_STYLE);
       
       this.save_easing_state();
-      this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
+      
+      if (MATRIXTRAILS) {
+      	this.set_easing_mode(Clutter.AnimationMode.LINEAR);
+      	let n = Math.ceil( Math.max( (endX-startX)/this.width, (endY-startY)/this.height ) );
+      	
+      	let stepX = Math.ceil( (endX-startX)/n );
+      	let stepY = Math.ceil( (endY-startY)/n );
+      	
+      	//move towards (endX, endY)
+      	for (var i=0; i < n; i++) {
+      	    //pick out random item
+      	    let matritem = new St.Label();
+      	    Main.uiGroup.add_actor(matritem);
+      	    matritem.set_position(startX + i*stepX, startY + i*stepY);
+      	    matritem.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
+      	    matritem.set_style(`font-size: ${SIZE + "px"};
+    		color: ${COLOR};`);
+      	    
+      	    //remove the item after time/n milliseconds
+      	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time,
+      	    	() => {Main.uiGroup.remove_actor(matritem); matritem.destroy();
+      	    		return GLib.SOURCE_REMOVE;});
+      	}
+      	
+      } else {
+      	this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
+      }
+      
       this.set_easing_duration(time);
       this.set_position(endX, endY);
       this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
       this.restore_easing_state();
-      
-      if (MATRIXTRAILS) {
-      	Utils.MatrixTrails(this);
-      }
-      
-      this.connect('transitions-completed', this.fim.checkFall.bind(this.fim));
+      this.connect('transitions-completed', this.fim.checkFall.bind(this.fim));     
+    }
+    
+    sleep() {
+      //pass;
     }
   });
 
@@ -201,6 +228,7 @@ var FIM = GObject.registerClass({
 	    }
 	    
 	    //reset the FallItem
+	    //fi.sleep(2000);
 	    fi.fall();
 	  }
     }
