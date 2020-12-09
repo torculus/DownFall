@@ -174,7 +174,28 @@ var FIM = GObject.registerClass({
     	    FONT = settings.get_string('textfont').slice(0,-2).trim();
     	}
     	
-    	FI_STYLE = `font-family: ${FONT};
+    	var font_fam;
+    	var font_weight = "normal";
+    	var font_style = "normal";
+    	
+    	//most fonts are Regular, Bold, Italic, Bold Italic, or Oblique
+    	if (FONT.includes("Regular")) {
+    	    font_fam = FONT.slice( 0, FONT.indexOf("Regular") ).trim();
+    	} else if (FONT.search("Bold Italic|Bold Oblique") > 0) {
+    	    font_fam = FONT.slice( 0, FONT.search("Bold") ).trim();
+    	    font_weight = "bold";
+    	    font_style = "italic";
+    	} else if (FONT.includes("Bold")) {
+    	    font_fam = FONT.slice( 0, FONT.indexOf("Bold") ).trim();
+    	    font_weight = "bold";
+    	} else if (FONT.search("Italic|Oblique") > 0) {
+    	    font_fam = FONT.slice( 0, FONT.search("Italic|Oblique") ).trim();
+    	    font_style = "italic";
+    	}
+    	
+    	FI_STYLE = `font-family: ${font_fam};
+    		font-weight: ${font_weight};
+    		font-style: ${font_style};
     		font-size: ${SIZE + "px"};
     		color: ${COLOR}`;
     		

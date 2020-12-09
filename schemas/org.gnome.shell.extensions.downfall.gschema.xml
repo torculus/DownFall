@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.downfall" path="/org/gnome/shell/extensions/downfall/">
-	<key type="i" name="presets">
-  		<default>0</default>
-  		<summary>Preset settings</summary>
-  		<description>Preset settings</description>
-  	</key>
-  	
+ 	
   	<key type="as" name="falltext">
   		<default>["ABC"]</default>
   		<summary>Text to display</summary>

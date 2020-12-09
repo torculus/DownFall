@@ -73,28 +73,6 @@
 						</object>
 					</child>
 				  
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Presets</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkComboBoxText" id="presets">
-									<items>
-										<item translatable="yes" id="0">(none)</item>
-										<item translatable="yes" id="1">Leaves</item>
-										<item translatable="yes" id="2">Matrix</item>
-									</items>
-								</object>
-							</child>
-						</object>
-					</child>
 				<child>
 				<object class="GtkVBox">
 					<property name="spacing">12</property>
@@ -154,7 +132,7 @@
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property translatable="yes" name="label">Show Matrix© Trails</property>
+									<property translatable="yes" name="label">Show Matrix© Trails (EXPERIMENTAL)</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>
@@ -358,7 +336,7 @@
 			<property name="orientation">vertical</property>
 					<child>
 						<object class="GtkLabel">
-							<property name="label" translatable="yes">Website</property>
+							<property name="label" translatable="yes">DownFall</property>
 							<property name="hexpand">true</property>
 							<property name="halign">1</property>
 							<attributes>
@@ -373,7 +351,62 @@
 							<property name="margin-left">12</property>
 							<child>
 								<object class="GtkLabel">
+									<property translatable="yes" name="label">Version 2.0</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+						</object>
+					</child>
+					
+					<child>
+						<object class="GtkLabel">
+							<property name="label" translatable="yes">Website</property>
+							<property name="hexpand">true</property>
+							<property name="halign">1</property>
+							<attributes>
+								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
+							</attributes>
+						</object>
+					</child>
+					
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLinkButton">
 									<property translatable="yes" name="label">https://github.com/torculus/DownFall</property>
+									<property name="visible">True</property>
+									<property name="can_focus">True</property>
+									<property name="receives_default">True</property>
+									<property name="events" />
+									<property name="uri">https://github.com/torculus/DownFall</property>
+									<property name="hexpand">true</property>
+									<property name="halign">1</property>
+								</object>
+							</child>
+						</object>
+					</child>
+					
+					<child>
+						<object class="GtkLabel">
+							<property name="label" translatable="yes">Credits</property>
+							<property name="hexpand">true</property>
+							<property name="halign">1</property>
+							<attributes>
+								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
+							</attributes>
+						</object>
+					</child>
+					
+					<child>
+						<object class="GtkBox">
+							<property name="spacing">12</property>
+							<property name="margin-left">12</property>
+							<child>
+								<object class="GtkLabel">
+									<property translatable="yes" name="label">Developer: Ben Osenbach</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>
