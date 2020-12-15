@@ -138,11 +138,3 @@ function startEndPoints(direction, monitor, drift, fallItem) {
     
     return [startX, startY, endX, endY];
 }
-
-function MatrixTrails(direction, fallItem) {
-    if (direction == 0) { //Down
-    	a;
-    } else {
-    	//pass
-    }
-}

@@ -1,12 +1,18 @@
 # Change Log
 
+## 2.1
+
+* Bugfix release
+* Implemented gjs delays to reduce CPU load
+* Improved Matrix© trails
+
 ## 2.0
 
 * Multi-item support
 * Renamed 'chars' to 'items'
 * Better handling of font properties (bold, italic, etc.)
 * Implemented firework explosions
-* First implementation of Matrix trails
+* First implementation of Matrix© trails
 * Improved 'About' tab
 
 ## 1.1

@@ -100,10 +100,17 @@ var FallItem = GObject.registerClass({
       
       if (MATRIXTRAILS) {
       	this.set_easing_mode(Clutter.AnimationMode.LINEAR);
+      	this.set_style(FI_STYLE + `color: #ffffff`);
+      	
       	let n = Math.ceil( Math.max( (endX-startX)/this.width, (endY-startY)/this.height ) );
       	
       	let stepX = Math.ceil( (endX-startX)/n );
       	let stepY = Math.ceil( (endY-startY)/n );
+      	
+      	//rapidly change the FallItem
+      	GLib.timeout_add(GLib.PRIORITY_LOW, 500, () => {
+      			this.set_text(FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))]);
+      			return GLib.SOURCE_CONTINUE;});
       	
       	//move towards (endX, endY)
       	for (var i=0; i < n; i++) {
@@ -112,10 +119,16 @@ var FallItem = GObject.registerClass({
       	    Main.uiGroup.add_actor(matritem);
       	    matritem.set_position(startX + i*stepX, startY + i*stepY);
       	    matritem.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
-      	    matritem.set_style(`font-size: ${SIZE + "px"};
-    		color: ${COLOR};`);
+      	    matritem.set_style(`font-size: ${SIZE + "px"}; color: ${COLOR};`);
       	    
-      	    //remove the item after time/n milliseconds
+      	    matritem.hide();
+      	    
+      	    //show the item after a delay
+      	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time*i/n,
+      	    	() => {	matritem.show();
+      	    		return GLib.SOURCE_REMOVE;});
+      	    
+      	    //remove the item after time milliseconds
       	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time,
       	    	() => {Main.uiGroup.remove_actor(matritem); matritem.destroy();
       	    		return GLib.SOURCE_REMOVE;});
@@ -132,9 +145,21 @@ var FallItem = GObject.registerClass({
       this.connect('transitions-completed', this.fim.checkFall.bind(this.fim));     
     }
     
-    sleep() {
-      //pass;
+    delay() {
+      return new Promise( () => {GLib.idle_add(GLib.PRIORITY_LOW,
+      				() => {resolve(); return GLib.SOURCE_REMOVE})} );
     }
+    
+    sleep(ms) {
+      return new Promise( () => {GLib.timeout_add(GLib.PRIORITY_LOW, ms,
+      				() => {resolve(); return GLib.SOURCE_REMOVE})} );
+    }
+    
+    waitasec(secs) {
+      return new Promise( () => {GLib.timeout_add_seconds(GLib.PRIORITY_LOW, secs,
+      				() => {resolve(); return GLib.SOURCE_REMOVE})} );
+    }
+    
   });
 
 var FIM = GObject.registerClass({
@@ -248,9 +273,9 @@ var FIM = GObject.registerClass({
 	      }
 	    }
 	    
-	    //reset the FallItem
-	    //fi.sleep(2000);
-	    fi.fall();
+	    //reset the FallItem after a delay (reduces CPU load)
+	    fi.waitasec(1)
+	    	.then( fi.fall() );
 	  }
     }
 	  

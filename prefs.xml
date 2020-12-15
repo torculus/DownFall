@@ -132,7 +132,7 @@
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property translatable="yes" name="label">Show Matrix© Trails (EXPERIMENTAL)</property>
+									<property translatable="yes" name="label">Show Matrix© trails</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>
@@ -351,7 +351,7 @@
 							<property name="margin-left">12</property>
 							<child>
 								<object class="GtkLabel">
-									<property translatable="yes" name="label">Version 2.0</property>
+									<property translatable="yes" name="label">Version 2.1</property>
 									<property name="hexpand">true</property>
 									<property name="halign">1</property>
 								</object>
