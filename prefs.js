@@ -31,7 +31,7 @@ function buildPrefsWidget() {
   
   let buildable = new Gtk.Builder();
   
-  if ( Config.PACKAGE_VERSION.startsWith("40") ) { //running GNOME 40
+  if ( Config.PACKAGE_VERSION.startsWith("4") ) { //running GNOME 40 or higher
     buildable.add_from_file(Me.dir.get_path() + '/prefs40.xml');
   } else {
     buildable.add_from_file(Me.dir.get_path() + '/prefs.xml');

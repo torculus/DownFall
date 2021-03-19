@@ -1,427 +1,450 @@
-<?xml version="1.0"?>
-<!-- DownFall – Gnome Shell Extension
- * Copyright (C) 2020 Benjamin S Osenbach
- *
- * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+<?xml version="1.0" encoding="UTF-8"?>
 <interface domain="DownFall">
-
-<object class="GtkAdjustment" id="max_adjust">
-	<property name="lower">1</property>
-	<property name="upper">100</property>
-	<property name="step_increment">1</property>
-</object>
-
-<object class="GtkAdjustment" id="time_adjust">
-	<property name="lower">2</property>
-	<property name="upper">10</property>
-	<property name="step_increment">1</property>
-</object>
-
-<object class="GtkAdjustment" id="rot_adjust">
-	<property name="lower">0</property>
-	<property name="upper">360</property>
-	<property name="step_increment">1</property>
-</object>
-
-<object class="GtkAdjustment" id="drift_adjust">
-	<property name="lower">0</property>
-	<property name="upper">100</property>
-	<property name="step_increment">1</property>
-</object>
-
-<object class="GtkNotebook" id="prefs_widget">
-	<property name="hexpand">true</property>
-
-	<child>
-		<object class="GtkGrid">
-			<property name="margin">18</property>
-			<property name="row-spacing">18</property>
-			<property name="row-homogeneous">false</property>
-			<property name="orientation">vertical</property>
-
-			<child>
-				<object class="GtkVBox">
-				<property name="spacing">6</property>
-
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Text Appearance</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-									<attributes>
-										<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-									</attributes>
-								</object>
-							</child>
-						</object>
-					</child>
-				  
-				<child>
-				<object class="GtkVBox">
-					<property name="spacing">12</property>
-					<property name="margin-start">12</property>
-					<child>
-						<object class="GtkLabel">
-							<property name="label" translatable="yes">Text to Display (separate items with commas)</property>
-							<property name="hexpand">true</property>
-							<property name="halign">1</property>
-						</object>
-					</child>
-					<child>
-						<object class="GtkEntry" id="display_field">"A,B,C"
-						</object>
-					</child>
-				</object>
-				</child>
-				  
-				  <child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Text Color</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkColorButton" id="text_color">
-								</object>
-							</child>
-						</object>
-					</child>
-				  
-				  <child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Text Font</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkFontButton" id="text_font">
-								</object>
-							</child>
-						</object>
-					</child>
-				<child>
-					<object class="GtkBox">
-							<property name="margin-start">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Show Matrix© trails</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSwitch" id="matrix_switch">
-									<property name="active">true</property>
-								</object>
-							</child>
-					</object>
-				</child>
-				
-				<child>
-					<object class="GtkBox">
-							<property name="margin-start">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Firework explosion endings</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSwitch" id="firework_switch">
-									<property name="active">true</property>
-								</object>
-							</child>
-					</object>
-				</child>
-
-				</object>
-			</child>
-
-		</object>
-	</child>
-
-	<child type="tab">
-		<object class="GtkLabel">
-			<property name="label" translatable="yes">Appearance</property>
-		</object>
-	</child>
-
-	<child>
-		<object class="GtkGrid">
-			<property name="margin">18</property>
-			<property name="row-spacing">18</property>
-			<property name="row-homogeneous">false</property>
-			<property name="orientation">vertical</property>
-
-					<child>
-						<object class="GtkLabel">
-							<property name="label" translatable="yes">Falling Behavior</property>
-							<property name="hexpand">true</property>
-							<property name="halign">1</property>
-							<attributes>
-								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-							</attributes>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Fall on</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkComboBoxText" id="fall_monitor">
-									<items>
-										<item translatable="yes" id="0">Current monitor</item>
-										<item translatable="yes" id="1">Primary monitor</item>
-									</items>
-								</object>
-							</child>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Fall Direction</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkComboBoxText" id="fall_direc">
-									<items>
-										<item translatable="yes" id="0">Down (↓)</item>
-										<item translatable="yes" id="1">Up (↑)</item>
-										<item translatable="yes" id="2">Right (→)</item>
-										<item translatable="yes" id="3">Left (←)</item>
-										<item translatable="yes" id="4">Up-right (↗)</item>
-										<item translatable="yes" id="5">Up-left (↖)</item>
-										<item translatable="yes" id="6">Down-right (↘)</item>
-										<item translatable="yes" id="7">Down-left (↙)</item>
-									</items>
-								</object>
-							</child>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="margin-start">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Maximum number of items</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSpinButton" id="max_chars">
-									<property name="adjustment">max_adjust</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		  
-					<child>
-						<object class="GtkBox">
-							<property name="margin-start">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Average Fall Time (seconds)</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSpinButton" id="fall_time">
-									<property name="adjustment">time_adjust</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		  
-					<child>
-						<object class="GtkBox">
-							<property name="margin-start">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Average Fall Rotation (degrees)</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSpinButton" id="fall_rot">
-									<property name="adjustment">rot_adjust</property>
-								</object>
-							</child>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="margin-start">12</property>
-							<property name="spacing">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property name="label" translatable="yes">Average Fall Drift (percentage)</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-							<child>
-								<object class="GtkSpinButton" id="fall_drift">
-									<property name="adjustment">drift_adjust</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		</object>
-	</child>
-
-	<child type="tab">
-		<object class="GtkLabel">
-			<property name="label" translatable="yes">Behavior</property>
-		</object>
-	</child>
-	
-	<child>
-		<object class="GtkGrid">
-			<property name="margin">18</property>
-			<property name="row-spacing">18</property>
-			<property name="row-homogeneous">false</property>
-			<property name="orientation">vertical</property>
-					<child>
-						<object class="GtkLabel">
-							<property name="label" translatable="yes">DownFall</property>
-							<property name="hexpand">true</property>
-							<property name="halign">1</property>
-							<attributes>
-								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-							</attributes>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Version 2.2</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkLabel">
-							<property name="label" translatable="yes">Website</property>
-							<property name="hexpand">true</property>
-							<property name="halign">1</property>
-							<attributes>
-								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-							</attributes>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLinkButton">
-									<property translatable="yes" name="label">https://github.com/torculus/DownFall</property>
-									<property name="visible">True</property>
-									<property name="can-focus">True</property>
-									<property name="receives_default">True</property>
-									<property name="events" />
-									<property name="uri">https://github.com/torculus/DownFall</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkLabel">
-							<property name="label" translatable="yes">Credits</property>
-							<property name="hexpand">true</property>
-							<property name="halign">1</property>
-							<attributes>
-								<attribute name="weight" value="PANGO_WEIGHT_BOLD"/>
-							</attributes>
-						</object>
-					</child>
-					
-					<child>
-						<object class="GtkBox">
-							<property name="spacing">12</property>
-							<property name="margin-start">12</property>
-							<child>
-								<object class="GtkLabel">
-									<property translatable="yes" name="label">Developer: Ben Osenbach</property>
-									<property name="hexpand">true</property>
-									<property name="halign">1</property>
-								</object>
-							</child>
-						</object>
-					</child>
-		</object>
-	</child>
-	
-	<child type="tab">
-		<object class="GtkLabel">
-			<property name="label" translatable="yes">About</property>
-		</object>
-	</child>
-
-</object>
-
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkAdjustment" id="max_adjust">
+    <property name="lower">1</property>
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="time_adjust">
+    <property name="lower">2</property>
+    <property name="upper">10</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="rot_adjust">
+    <property name="upper">360</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="drift_adjust">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkNotebook" id="prefs_widget">
+    <property name="visible">0</property>
+    <property name="hexpand">1</property>
+    <property name="vexpand">1</property>
+    <child>
+      <object class="GtkNotebookPage">
+        <property name="child">
+          <object class="GtkGrid">
+            <property name="visible">0</property>
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="row-spacing">18</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">0</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">0</property>
+                        <property name="label" translatable="yes">Text Appearance</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">1</property>
+                        <attributes>
+                          <attribute name="weight" value="PANGO_WEIGHT_BOLD"></attribute>
+                        </attributes>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">0</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-start">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">0</property>
+                        <property name="label" translatable="yes">Text to Display (separate items with commas)</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="display_field">
+                        <property name="visible">0</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">0</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-start">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">0</property>
+                        <property name="label" translatable="yes">Text Color</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="text_color">
+                        <property name="visible">0</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">0</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-start">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">0</property>
+                        <property name="label" translatable="yes">Text Font</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFontButton" id="text_font">
+                        <property name="visible">0</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">0</property>
+                    <property name="margin-start">12</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">0</property>
+                        <property translatable="yes" name="label">Show Matrix© trails</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSwitch" id="matrix_switch">
+                        <property name="visible">0</property>
+                        <property name="active">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">0</property>
+                    <property name="margin-start">12</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">0</property>
+                        <property translatable="yes" name="label">Firework explosion endings</property>
+                        <property name="hexpand">1</property>
+                        <property name="halign">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSwitch" id="firework_switch">
+                        <property name="visible">0</property>
+                        <property name="active">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+        <property name="tab">
+          <object class="GtkLabel">
+            <property name="visible">0</property>
+            <property name="label" translatable="yes">Appearance</property>
+          </object>
+        </property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkNotebookPage">
+        <property name="child">
+          <object class="GtkGrid">
+            <property name="visible">0</property>
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="row-spacing">18</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">0</property>
+                <property name="label" translatable="yes">Falling Behavior</property>
+                <property name="hexpand">1</property>
+                <property name="halign">1</property>
+                <attributes>
+                  <attribute name="weight" value="PANGO_WEIGHT_BOLD"></attribute>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="spacing">12</property>
+                <property name="margin-start">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property translatable="yes" name="label">Fall on</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="fall_monitor">
+                    <property name="visible">0</property>
+                    <items>
+                      <item translatable="yes" id="0">Current monitor</item>
+                      <item translatable="yes" id="1">Primary monitor</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="spacing">12</property>
+                <property name="margin-start">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property translatable="yes" name="label">Fall Direction</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="fall_direc">
+                    <property name="visible">0</property>
+                    <items>
+                      <item translatable="yes" id="0">Down (↓)</item>
+                      <item translatable="yes" id="1">Up (↑)</item>
+                      <item translatable="yes" id="2">Right (→)</item>
+                      <item translatable="yes" id="3">Left (←)</item>
+                      <item translatable="yes" id="4">Up-right (↗)</item>
+                      <item translatable="yes" id="5">Up-left (↖)</item>
+                      <item translatable="yes" id="6">Down-right (↘)</item>
+                      <item translatable="yes" id="7">Down-left (↙)</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property name="label" translatable="yes">Maximum number of items</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="max_chars">
+                    <property name="visible">0</property>
+                    <property name="adjustment">max_adjust</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property name="label" translatable="yes">Average Fall Time (seconds)</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fall_time">
+                    <property name="visible">0</property>
+                    <property name="adjustment">time_adjust</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property name="label" translatable="yes">Average Fall Rotation (degrees)</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fall_rot">
+                    <property name="visible">0</property>
+                    <property name="adjustment">rot_adjust</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property name="label" translatable="yes">Average Fall Drift (percentage)</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fall_drift">
+                    <property name="visible">0</property>
+                    <property name="adjustment">drift_adjust</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+        <property name="tab">
+          <object class="GtkLabel">
+            <property name="visible">0</property>
+            <property name="label" translatable="yes">Behavior</property>
+          </object>
+        </property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkNotebookPage">
+        <property name="child">
+          <object class="GtkGrid">
+            <property name="visible">0</property>
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="row-spacing">18</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">0</property>
+                <property name="label" translatable="yes">DownFall</property>
+                <property name="hexpand">1</property>
+                <property name="halign">1</property>
+                <attributes>
+                  <attribute name="weight" value="PANGO_WEIGHT_BOLD"></attribute>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="spacing">12</property>
+                <property name="margin-start">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property translatable="yes" name="label">Version 2.2</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">0</property>
+                <property name="label" translatable="yes">Website</property>
+                <property name="hexpand">1</property>
+                <property name="halign">1</property>
+                <attributes>
+                  <attribute name="weight" value="PANGO_WEIGHT_BOLD"></attribute>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="spacing">12</property>
+                <property name="margin-start">12</property>
+                <child>
+                  <object class="GtkLinkButton">
+                    <property name="visible">0</property>
+                    <property translatable="yes" name="label">https://github.com/torculus/DownFall</property>
+                    <property name="receives_default">1</property>
+                    <property name="uri">https://github.com/torculus/DownFall</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">0</property>
+                <property name="label" translatable="yes">Credits</property>
+                <property name="hexpand">1</property>
+                <property name="halign">1</property>
+                <attributes>
+                  <attribute name="weight" value="PANGO_WEIGHT_BOLD"></attribute>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">0</property>
+                <property name="spacing">12</property>
+                <property name="margin-start">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">0</property>
+                    <property translatable="yes" name="label">Developer: Ben Osenbach</property>
+                    <property name="hexpand">1</property>
+                    <property name="halign">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+        <property name="tab">
+          <object class="GtkLabel">
+            <property name="visible">0</property>
+            <property name="label" translatable="yes">About</property>
+          </object>
+        </property>
+      </object>
+    </child>
+  </object>
 </interface>
