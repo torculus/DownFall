@@ -23,6 +23,7 @@ const Gio = imports.gi.Gio;
 const Gdk = imports.gi.Gdk;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
+const Config = imports.misc.config;
 
 function buildPrefsWidget() {
   
@@ -30,7 +31,11 @@ function buildPrefsWidget() {
   
   let buildable = new Gtk.Builder();
   
-  buildable.add_from_file(Me.dir.get_path() + '/prefs.xml');
+  if ( Config.PACKAGE_VERSION.startsWith("40") ) { //running GNOME 40
+    buildable.add_from_file(Me.dir.get_path() + '/prefs40.xml');
+  } else {
+    buildable.add_from_file(Me.dir.get_path() + '/prefs.xml');
+  }
   
   let prefsWidget = buildable.get_object('prefs_widget');
   

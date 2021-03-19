@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.2
+
+* Initial gtk4 support for GNOME 40
+
 ## 2.1
 
 * Bugfix release

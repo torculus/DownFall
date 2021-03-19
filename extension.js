@@ -108,9 +108,9 @@ var FallItem = GObject.registerClass({
       	let stepY = Math.ceil( (endY-startY)/n );
       	
       	//rapidly change the FallItem
-      	GLib.timeout_add(GLib.PRIORITY_LOW, 500, () => {
-      			this.set_text(FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))]);
-      			return GLib.SOURCE_CONTINUE;});
+      	//GLib.timeout_add(GLib.PRIORITY_LOW, 500, () => {
+      	//		this.set_text(FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))]);
+      	//		return GLib.SOURCE_CONTINUE;});
       	
       	//move towards (endX, endY)
       	for (var i=0; i < n; i++) {

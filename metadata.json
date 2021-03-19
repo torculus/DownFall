@@ -4,7 +4,8 @@
   "name": "DownFall",
   "shell-version": [
     "3.36",
-    "3.38"
+    "3.38",
+    "40.0"
   ],
   "url": "https://github.com/torculus/DownFall",
   "uuid": "downfall@torculus.github.com",

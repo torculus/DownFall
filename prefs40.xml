@@ -44,7 +44,7 @@
 </object>
 
 <object class="GtkNotebook" id="prefs_widget">
-	<property name="expand">true</property>
+	<property name="hexpand">true</property>
 
 	<child>
 		<object class="GtkGrid">
@@ -76,7 +76,7 @@
 				<child>
 				<object class="GtkVBox">
 					<property name="spacing">12</property>
-					<property name="margin-left">12</property>
+					<property name="margin-start">12</property>
 					<child>
 						<object class="GtkLabel">
 							<property name="label" translatable="yes">Text to Display (separate items with commas)</property>
@@ -94,7 +94,7 @@
 				  <child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLabel">
 									<property name="label" translatable="yes">Text Color</property>
@@ -112,7 +112,7 @@
 				  <child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLabel">
 									<property name="label" translatable="yes">Text Font</property>
@@ -128,7 +128,7 @@
 					</child>
 				<child>
 					<object class="GtkBox">
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
@@ -147,7 +147,7 @@
 				
 				<child>
 					<object class="GtkBox">
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
@@ -197,7 +197,7 @@
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLabel">
 									<property translatable="yes" name="label">Fall on</property>
@@ -219,7 +219,7 @@
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLabel">
 									<property translatable="yes" name="label">Fall Direction</property>
@@ -246,7 +246,7 @@
 					
 					<child>
 						<object class="GtkBox">
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
@@ -265,7 +265,7 @@
 		  
 					<child>
 						<object class="GtkBox">
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
@@ -284,7 +284,7 @@
 		  
 					<child>
 						<object class="GtkBox">
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
@@ -303,7 +303,7 @@
 					
 					<child>
 						<object class="GtkBox">
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<property name="spacing">12</property>
 							<child>
 								<object class="GtkLabel">
@@ -348,7 +348,7 @@
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLabel">
 									<property translatable="yes" name="label">Version 2.2</property>
@@ -373,12 +373,12 @@
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLinkButton">
 									<property translatable="yes" name="label">https://github.com/torculus/DownFall</property>
 									<property name="visible">True</property>
-									<property name="can_focus">True</property>
+									<property name="can-focus">True</property>
 									<property name="receives_default">True</property>
 									<property name="events" />
 									<property name="uri">https://github.com/torculus/DownFall</property>
@@ -403,7 +403,7 @@
 					<child>
 						<object class="GtkBox">
 							<property name="spacing">12</property>
-							<property name="margin-left">12</property>
+							<property name="margin-start">12</property>
 							<child>
 								<object class="GtkLabel">
 									<property translatable="yes" name="label">Developer: Ben Osenbach</property>
