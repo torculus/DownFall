@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2020 Benjamin S Osenbach
+ * Copyright (C) 2021 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -74,8 +74,9 @@ function buildPrefsWidget() {
             settings.set_string('textcolor', hexString);
         });
   
-  
-  prefsWidget.show_all();
+  if ( Config.PACKAGE_VERSION.startsWith("3.38") ) { //running GNOME 3.38
+    prefsWidget.show_all();
+  }
   return prefsWidget;
 }
 

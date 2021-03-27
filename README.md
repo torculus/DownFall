@@ -25,4 +25,4 @@ DownFall can be used to render multiple effects such as:
 * Japanese cherry blossoms (Down 🌸️)
 * The opening crawls from Star Wars®
 * Fireworks (Up, Up-right, Up-left ., *, |)
-* Digital rain from The Matrix® series (forthcoming)
+* Digital rain from The Matrix® series (ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ)
