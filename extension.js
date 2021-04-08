@@ -102,8 +102,8 @@ var FallItem = GObject.registerClass({
       	this.set_easing_mode(Clutter.AnimationMode.LINEAR);
       	this.set_style(FI_STYLE + `color: #ffffff`);
       	
+      	//get number of steps between (startX,startY) and (endX,endY)
       	let n = Math.ceil( Math.max( (endX-startX)/this.width, (endY-startY)/this.height ) );
-      	
       	let stepX = Math.ceil( (endX-startX)/n );
       	let stepY = Math.ceil( (endY-startY)/n );
       	
