@@ -38,12 +38,10 @@
     <property name="step-increment">1</property>
   </object>
   <object class="GtkNotebook" id="prefs_widget">
-    <property name="can-focus">0</property>
     <child>
       <object class="GtkNotebookPage">
         <property name="child">
           <object class="GtkGrid">
-            <property name="can-focus">0</property>
             <property name="margin-start">18</property>
             <property name="margin-end">18</property>
             <property name="margin-top">18</property>
@@ -52,14 +50,12 @@
             <property name="row-spacing">18</property>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="vexpand">1</property>
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Text to Display (separate items with commas)</property>
@@ -77,12 +73,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Text Color</property>
@@ -100,12 +94,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Text Font</property>
@@ -124,12 +116,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Show Matrix© trails</property>
@@ -148,12 +138,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Firework explosion endings</property>
@@ -172,7 +160,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">0</property>
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <property name="label" translatable="yes">Text Appearance</property>
@@ -189,7 +176,6 @@
         </property>
         <property name="tab">
           <object class="GtkLabel">
-            <property name="can-focus">0</property>
             <property name="label" translatable="yes">Appearance</property>
           </object>
         </property>
@@ -199,7 +185,6 @@
       <object class="GtkNotebookPage">
         <property name="child">
           <object class="GtkGrid">
-            <property name="can-focus">0</property>
             <property name="margin-start">18</property>
             <property name="margin-end">18</property>
             <property name="margin-top">18</property>
@@ -208,7 +193,6 @@
             <property name="row-spacing">18</property>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">0</property>
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <property name="label" translatable="yes">Falling Behavior</property>
@@ -223,12 +207,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Fall on</property>
@@ -236,7 +218,6 @@
                 </child>
                 <child>
                   <object class="GtkComboBoxText" id="fall_monitor">
-                    <property name="can-focus">0</property>
                     <items>
                       <item id="0" translatable="yes">Current monitor</item>
                       <item id="1" translatable="yes">Primary monitor</item>
@@ -251,12 +232,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Fall Direction</property>
@@ -264,7 +243,6 @@
                 </child>
                 <child>
                   <object class="GtkComboBoxText" id="fall_direc">
-                    <property name="can-focus">0</property>
                     <items>
                       <item id="0" translatable="yes">Down (↓)</item>
                       <item id="1" translatable="yes">Up (↑)</item>
@@ -285,12 +263,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Maximum number of items (dangerous above 20)</property>
@@ -298,7 +274,6 @@
                 </child>
                 <child>
                   <object class="GtkSpinButton" id="max_chars">
-                    <property name="can-focus">0</property>
                     <property name="adjustment">max_adjust</property>
                   </object>
                 </child>
@@ -310,12 +285,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Average Fall Time (seconds)</property>
@@ -323,7 +296,6 @@
                 </child>
                 <child>
                   <object class="GtkSpinButton" id="fall_time">
-                    <property name="can-focus">0</property>
                     <property name="adjustment">time_adjust</property>
                   </object>
                 </child>
@@ -335,12 +307,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Average Fall Rotation (degrees)</property>
@@ -348,7 +318,6 @@
                 </child>
                 <child>
                   <object class="GtkSpinButton" id="fall_rot">
-                    <property name="can-focus">0</property>
                     <property name="adjustment">rot_adjust</property>
                   </object>
                 </child>
@@ -360,12 +329,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Average Fall Drift (percentage)</property>
@@ -373,7 +340,6 @@
                 </child>
                 <child>
                   <object class="GtkSpinButton" id="fall_drift">
-                    <property name="can-focus">0</property>
                     <property name="adjustment">drift_adjust</property>
                   </object>
                 </child>
@@ -387,7 +353,6 @@
         </property>
         <property name="tab">
           <object class="GtkLabel">
-            <property name="can-focus">0</property>
             <property name="label" translatable="yes">Behavior</property>
           </object>
         </property>
@@ -397,7 +362,6 @@
       <object class="GtkNotebookPage">
         <property name="child">
           <object class="GtkGrid">
-            <property name="can-focus">0</property>
             <property name="margin-start">18</property>
             <property name="margin-end">18</property>
             <property name="margin-top">18</property>
@@ -406,7 +370,6 @@
             <property name="row-spacing">18</property>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">0</property>
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <property name="label" translatable="yes">DownFall</property>
@@ -421,12 +384,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Version 2.2</property>
@@ -440,7 +401,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">0</property>
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <property name="label" translatable="yes">Website</property>
@@ -455,7 +415,6 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
@@ -475,7 +434,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">0</property>
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <property name="label" translatable="yes">Credits</property>
@@ -490,12 +448,10 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="can-focus">0</property>
                 <property name="margin-start">12</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="can-focus">0</property>
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <property name="label" translatable="yes">Developer: Ben Osenbach</property>
@@ -511,7 +467,6 @@
         </property>
         <property name="tab">
           <object class="GtkLabel">
-            <property name="can-focus">0</property>
             <property name="label" translatable="yes">About</property>
           </object>
         </property>
