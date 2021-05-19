@@ -29,6 +29,9 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
+// REMOVE THIS PART AFTER DONE TESTING
+const Performance = Me.imports.performance;
+
 let settings = Utils.getSettings();
 
 let FALLITEMS;
@@ -69,8 +72,6 @@ var FallItem = GObject.registerClass({
         monitor = Main.layoutManager.primaryMonitor;
       }
       
-      Main.uiGroup.add_actor(this);
-      
       //get coordinates for the start and end points
       let startEndpoints = Utils.startEndPoints(DIRECTION, monitor, AVG_DRIFT, this);
       let startX = startEndpoints[0];
@@ -95,6 +96,8 @@ var FallItem = GObject.registerClass({
       
       this.set_text(this.whichItem);
       this.set_style(FI_STYLE);
+      
+      this.show();
       
       this.save_easing_state();
       
@@ -146,18 +149,8 @@ var FallItem = GObject.registerClass({
     }
     
     delay() {
-      return new Promise( () => {GLib.idle_add(GLib.PRIORITY_LOW,
-      				() => {resolve(); return GLib.SOURCE_REMOVE})} );
-    }
-    
-    sleep(ms) {
-      return new Promise( () => {GLib.timeout_add(GLib.PRIORITY_LOW, ms,
-      				() => {resolve(); return GLib.SOURCE_REMOVE})} );
-    }
-    
-    waitasec(secs) {
-      return new Promise( () => {GLib.timeout_add_seconds(GLib.PRIORITY_LOW, secs,
-      				() => {resolve(); return GLib.SOURCE_REMOVE})} );
+      return new Promise( resolve => GLib.idle_add(GLib.PRIORITY_LOW,
+      				() => {resolve(0); return GLib.SOURCE_REMOVE}) );
     }
     
   });
@@ -180,6 +173,7 @@ var FIM = GObject.registerClass({
       while (countItems < MAX_ITEMS) {
       	let whichItem = FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))];
       	let newFi = new FallItem(whichItem, this);
+      	Main.uiGroup.add_actor(newFi);
       	newFi.fall();
       	countItems++;
       }
@@ -237,8 +231,8 @@ var FIM = GObject.registerClass({
     	}
 	  
     checkFall(fi) {
-	//remove the FallItem from the screen
-	Main.uiGroup.remove_actor(fi);
+	//hide the FallItem before next fall
+	fi.hide();
 	
 	if (disable == 1) {
 	    //destroy the FallItem when it finishes falling
@@ -274,8 +268,12 @@ var FIM = GObject.registerClass({
 	    }
 	    
 	    //reset the FallItem after a delay (reduces CPU load)
-	    fi.waitasec(1)
+	    /////////////////////////////////////////////////////////////////////////////////////////
+	    Performance.start("Test1");
+	    fi.delay()
 	    	.then( fi.fall() );
+	    Performance.end();
+	    /////////////////////////////////////////////////////////////////////////////////////////
 	  }
     }
 	  
@@ -299,6 +297,7 @@ var Extension = GObject.registerClass({
 
     disable() {
       disable = 1;
+      //fim.destroy_all_children();
     }
   });
 
