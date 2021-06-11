@@ -49,8 +49,6 @@ let AVG_ROT;
 let AVG_DRIFT;
 let TIME_MDIFF = 2;
 
-let disable;
-
 var FallItem = GObject.registerClass({
   GTypeName: 'FallItem',
   Properties: {},
@@ -84,9 +82,7 @@ var FallItem = GObject.registerClass({
       	let alpha = Math.random();
       	endX = Math.floor(alpha*startX + (1-alpha)*endX);
       	endY = Math.floor(alpha*startY + (1-alpha)*endY);
-      	
-      	this.X = endX;
-      	this.Y = endY;
+      	this.endX = endX; this.endY = endY;
       }
       
       let time = (AVG_TIME + (2*Math.random()-1) * TIME_MDIFF) * 1000;
@@ -133,7 +129,7 @@ var FallItem = GObject.registerClass({
       	    
       	    //remove the item after time milliseconds
       	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time,
-      	    	() => {Main.uiGroup.remove_actor(matritem); matritem.destroy();
+      	    	() => {matritem.destroy(); //Main.uiGroup.remove_actor(matritem);
       	    		return GLib.SOURCE_REMOVE;});
       	}
       	
@@ -145,10 +141,50 @@ var FallItem = GObject.registerClass({
       this.set_position(endX, endY);
       this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
       this.restore_easing_state();
-      this.connect('transitions-completed', this.fim.checkFall.bind(this.fim));     
+      this.connect('transitions-completed', this.finish.bind(this) );     
     }
     
-    delay() {
+    finish() {
+      this.hide();
+      
+      if (FIREWORKS) {
+      	//explode
+      	for (var n=0; n<6; n++) {
+      	  let flare = new St.Label();
+    	  let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
+    	  
+    	  Main.uiGroup.add_actor(flare);
+    	  flare.set_position(this.endX, this.endY);
+    	  flare.set_text(".");
+    	  flare.set_style(`font-size: ${SIZE + "px"};
+    	  		   color: ${flcolor};`);
+    	  flare.save_easing_state();
+    	  flare.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
+    	  flare.set_easing_duration(2000);
+    	  
+    	  //get hexagonal coordinates relative to the endX, endY
+    	  //     i=2  i=1					(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
+    	  // i=3		i=0	goes with	(-s,0)						(+s,0)
+    	  //     i=4  i=5					(-s/2,-s*sqrt(3)/2) (+s/2, -s*sqrt(3)/2)
+    	  let Xflr = this.endX + Math.floor( (-1)**( (n%5) > 1)*(1/2)**( (n%3) > 0) * 200 );
+    	  let Yflr = this.endY + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
+    	  
+    	  flare.set_position(Xflr, Yflr);
+    	  flare.restore_easing_state();
+    	  flare.connect('transitions-completed', () => {flare.destroy(); return 0;} ); //Main.uiGroup.remove_actor(flare);
+    	}
+      }
+      
+      //reset the FallItem after a delay (reduces CPU load)
+      /////////////////////////////////////////////////////////////////////////////////////////
+      Performance.start("Test1");
+      this.idle()
+      	.then( result => {this.fall()} );
+      Performance.end();
+      /////////////////////////////////////////////////////////////////////////////////////////
+    }
+    
+    idle() {
       return new Promise( resolve => GLib.idle_add(GLib.PRIORITY_LOW,
       				() => {resolve(0); return GLib.SOURCE_REMOVE}) );
     }
@@ -160,8 +196,11 @@ var FIM = GObject.registerClass({
   Properties: {},
   Signals: {},
   },
-  class FIM extends GObject.Object {
+  class FIM extends St.Widget { //see https://gjs-docs.gnome.org/clutter5~5_api/clutter.actor#method-destroy_all_children
     _init() {
+    	let ca = new Clutter.Actor();
+    	this.ca = ca;
+    	
     	settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
     }
@@ -173,6 +212,12 @@ var FIM = GObject.registerClass({
       while (countItems < MAX_ITEMS) {
       	let whichItem = FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))];
       	let newFi = new FallItem(whichItem, this);
+      	
+      	// THIS CODE IS CAUSING ISSUES
+      	this.ca.add_child( newFi.get_clutter_text() );
+      	
+      	//newFi is an St.Label, which can't be added to ClutterActor. How about `this.add_child( newFi.get_clutter_text() )`
+      	
       	Main.uiGroup.add_actor(newFi);
       	newFi.fall();
       	countItems++;
@@ -229,54 +274,7 @@ var FIM = GObject.registerClass({
     	AVG_ROT = settings.get_int('fallrot');
     	AVG_DRIFT = settings.get_int('falldrift');
     	}
-	  
-    checkFall(fi) {
-	//hide the FallItem before next fall
-	fi.hide();
-	
-	if (disable == 1) {
-	    //destroy the FallItem when it finishes falling
-	    fi.destroy();
-	} else {
-	
-	    if (FIREWORKS) {
-	      //explode
-	      for (var n=0; n<6; n++) {
-	      	let flare = new St.Label();
-    		let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
-    		
-    		Main.uiGroup.add_actor(flare);
-    		flare.set_position(fi.X, fi.Y);
-    		flare.set_text(".");
-    		flare.set_style(`font-size: ${SIZE + "px"};
-    		color: ${flcolor};`);
-    		flare.save_easing_state();
-    		flare.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
-    		flare.set_easing_duration(2000);
-    		
-    		//get hexagonal coordinates relative to the endX, endY
-    		//     i=2  i=1					(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
-    		// i=3		i=0	goes with	(-s,0)						(+s,0)
-    		//     i=4  i=5					(-s/2,-s*sqrt(3)/2) (+s/2, -s*sqrt(3)/2)
-    		let Xf = fi.X + Math.floor( (-1)**( (n%5) > 1)*(1/2)**( (n%3) > 0) * 200 );
-    		let Yf = fi.Y + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
-    		
-    		flare.set_position(Xf, Yf);
-    		flare.restore_easing_state();
-    		flare.connect('transitions-completed', () => {Main.uiGroup.remove_actor(flare); flare.destroy(); return 0;} );
-	      }
-	    }
-	    
-	    //reset the FallItem after a delay (reduces CPU load)
-	    /////////////////////////////////////////////////////////////////////////////////////////
-	    Performance.start("Test1");
-	    fi.delay()
-	    	.then( fi.fall() );
-	    Performance.end();
-	    /////////////////////////////////////////////////////////////////////////////////////////
-	  }
-    }
-	  
+    	 
   });
 
 var Extension = GObject.registerClass({
@@ -291,13 +289,12 @@ var Extension = GObject.registerClass({
     }
 
     enable() {
-      disable = 0;
       this.fim.dropItems();
     }
 
     disable() {
-      disable = 1;
-      //fim.destroy_all_children();
+      // SO IS THIS CODE
+      this.fim.ca.destroy_all_children();
     }
   });
 
