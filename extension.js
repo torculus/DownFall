@@ -29,9 +29,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
-// REMOVE THIS PART AFTER DONE TESTING
-const Performance = Me.imports.performance;
-
 let settings = Utils.getSettings();
 
 let FALLITEMS;
@@ -112,7 +109,7 @@ var FallItem = GObject.registerClass({
       	//		return GLib.SOURCE_CONTINUE;});
       	
       	//move towards (endX, endY)
-      	for (var i=0; i < n; i++) {
+      	for (let i=0; i < n; i++) {
       	    //pick out random item
       	    let matritem = new St.Label();
       	    Main.uiGroup.add_actor(matritem);
@@ -129,7 +126,7 @@ var FallItem = GObject.registerClass({
       	    
       	    //remove the item after time milliseconds
       	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time,
-      	    	() => {matritem.destroy(); //Main.uiGroup.remove_actor(matritem);
+      	    	() => {matritem.destroy();
       	    		return GLib.SOURCE_REMOVE;});
       	}
       	
@@ -149,7 +146,7 @@ var FallItem = GObject.registerClass({
       
       if (FIREWORKS) {
       	//explode
-      	for (var n=0; n<6; n++) {
+      	for (let n=0; n<6; n++) {
       	  let flare = new St.Label();
     	  let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
     	  
@@ -171,21 +168,17 @@ var FallItem = GObject.registerClass({
     	  
     	  flare.set_position(Xflr, Yflr);
     	  flare.restore_easing_state();
-    	  flare.connect('transitions-completed', () => {flare.destroy(); return 0;} ); //Main.uiGroup.remove_actor(flare);
+    	  flare.connect('transitions-completed', () => {flare.destroy();} );
     	}
       }
       
       //reset the FallItem after a delay (reduces CPU load)
-      /////////////////////////////////////////////////////////////////////////////////////////
-      Performance.start("Test1");
       this.idle()
       	.then( result => {this.fall()} );
-      Performance.end();
-      /////////////////////////////////////////////////////////////////////////////////////////
     }
     
     idle() {
-      return new Promise( resolve => GLib.idle_add(GLib.PRIORITY_LOW,
+      return new Promise( resolve => GLib.idle_add(999, //GLib.PRIORITY_LOW
       				() => {resolve(0); return GLib.SOURCE_REMOVE}) );
     }
     
@@ -196,33 +189,26 @@ var FIM = GObject.registerClass({
   Properties: {},
   Signals: {},
   },
-  class FIM extends St.Widget { //see https://gjs-docs.gnome.org/clutter5~5_api/clutter.actor#method-destroy_all_children
+  class FIM extends GObject.Object {
     _init() {
-    	let ca = new Clutter.Actor();
-    	this.ca = ca;
+    	let itemContainer = new Clutter.Actor(); //a place to store our items
+    	this.ic = itemContainer;
     	
     	settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
     }
     
     dropItems() {
-      let countItems = 0;
-      
       //only create MAX_ITEMS number of FallItems
-      while (countItems < MAX_ITEMS) {
+      for (let i=0; i < MAX_ITEMS; i++) {
       	let whichItem = FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))];
       	let newFi = new FallItem(whichItem, this);
-      	
-      	// THIS CODE IS CAUSING ISSUES
-      	this.ca.add_child( newFi.get_clutter_text() );
-      	
-      	//newFi is an St.Label, which can't be added to ClutterActor. How about `this.add_child( newFi.get_clutter_text() )`
-      	
-      	Main.uiGroup.add_actor(newFi);
-      	newFi.fall();
-      	countItems++;
+      	this.ic.add_child(newFi);
       }
       
+      Main.uiGroup.add_actor(this.ic);
+      
+      this.ic.get_children().forEach( (fi) => {fi.fall();} );
     }
     
     settingsChanged() {
@@ -238,9 +224,9 @@ var FIM = GObject.registerClass({
     	    FONT = settings.get_string('textfont').slice(0,-2).trim();
     	}
     	
-    	var font_fam;
-    	var font_weight = "normal";
-    	var font_style = "normal";
+    	let font_fam;
+    	let font_weight = "normal";
+    	let font_style = "normal";
     	
     	//most fonts are Regular, Bold, Italic, Bold Italic, or Oblique
     	if (FONT.includes("Regular")) {
@@ -262,7 +248,6 @@ var FIM = GObject.registerClass({
     		font-style: ${font_style};
     		font-size: ${SIZE + "px"};
     		color: ${COLOR}`;
-    		
     		//text-shadow: 1px 1px rgba(0, 0, 0, 0.4); opacity: 255
     	
     	MATRIXTRAILS = settings.get_boolean('matrixtrails');
@@ -284,7 +269,7 @@ var Extension = GObject.registerClass({
   },
   class Extension extends GObject.Object {
     _init() {
-      var fim = new FIM();
+      let fim = new FIM();
       this.fim = fim;
     }
 
@@ -293,8 +278,7 @@ var Extension = GObject.registerClass({
     }
 
     disable() {
-      // SO IS THIS CODE
-      this.fim.ca.destroy_all_children();
+      this.fim.ic.destroy_all_children();
     }
   });
 
