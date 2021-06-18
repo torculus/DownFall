@@ -173,12 +173,15 @@ var FallItem = GObject.registerClass({
       }
       
       //reset the FallItem after a delay (reduces CPU load)
-      this.idle()
-      	.then( result => {this.fall()} );
+      //this.idle()
+      //	.then( result => {this.fall()} );
+      
+      this.idleID = GLib.idle_add(GLib.PRIORITY_LOW,
+      			() => {this.fall(); return GLib.SOURCE_REMOVE});
     }
     
     idle() {
-      return new Promise( resolve => GLib.idle_add(999, //GLib.PRIORITY_LOW
+      return new Promise( resolve => GLib.idle_add(GLib.PRIORITY_LOW,
       				() => {resolve(0); return GLib.SOURCE_REMOVE}) );
     }
     
@@ -191,8 +194,9 @@ var FIM = GObject.registerClass({
   },
   class FIM extends GObject.Object {
     _init() {
-    	let itemContainer = new Clutter.Actor(); //a place to store our items
+    	let itemContainer = new Clutter.Actor(); //a place to store our FallItems
     	this.ic = itemContainer;
+    	Main.uiGroup.add_actor(this.ic);
     	
     	settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
@@ -206,8 +210,7 @@ var FIM = GObject.registerClass({
       	this.ic.add_child(newFi);
       }
       
-      Main.uiGroup.add_actor(this.ic);
-      
+      //make it rain
       this.ic.get_children().forEach( (fi) => {fi.fall();} );
     }
     
@@ -215,7 +218,7 @@ var FIM = GObject.registerClass({
     	FALLITEMS = settings.get_strv("falltext");
     	COLOR = settings.get_string('textcolor');
     	
-    	//get the size as an integer from the GtkFontButton
+    	//get the size as an integer from the GtkFontButton string
     	SIZE = settings.get_string('textfont').slice(-2).trim();
     	
     	if (SIZE.length == 1) {
@@ -278,7 +281,9 @@ var Extension = GObject.registerClass({
     }
 
     disable() {
+      //remove all of the FallItems
       this.fim.ic.destroy_all_children();
+      this.fim.ic.destroy();
     }
   });
 

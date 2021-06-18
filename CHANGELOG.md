@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.3.0
+
+* Switch to [Semantic Versioning](https://semver.org/)
+* Complete re-write of the structure
+* Replaced `destroy()` with `hide()` on each fall
+* Made FallItems children of FIM for quick removal
+* Replaced es6 Promises with `GLib.idle_add()`
+
+TODOS:  
+* Re-work Matrix© trails as children of FallItems
+
 ## 2.2
 
 * Initial gtk4 support for GNOME 40
