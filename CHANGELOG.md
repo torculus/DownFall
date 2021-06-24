@@ -1,15 +1,13 @@
 # Change Log
 
-## 2.3.0
+## 2.9.9 (will be 3.0.0 on release)
 
 * Switch to [Semantic Versioning](https://semver.org/)
 * Complete re-write of the structure
 * Replaced `destroy()` with `hide()` on each fall
 * Made FallItems children of FIM for quick removal
 * Replaced es6 Promises with `GLib.idle_add()`
-
-TODOS:  
-* Re-work Matrix© trails as children of FallItems
+* Re-worked Matrix© trails
 
 ## 2.2
 

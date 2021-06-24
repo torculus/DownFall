@@ -390,7 +390,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
-                    <property name="label" translatable="yes">Version 2.2</property>
+                    <property name="label" translatable="yes">Version 2.9.9</property>
                   </object>
                 </child>
                 <layout>

@@ -21,7 +21,6 @@
 const St = imports.gi.St;
 const GObject = imports.gi.GObject;
 const GLib = imports.gi.GLib;
-const Gdk = imports.gi.Gdk;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
 
@@ -56,6 +55,11 @@ var FallItem = GObject.registerClass({
       super._init();
       this.whichItem = whichItem;
       this.fim = fim; //reference back to the FallItemsManager (FIM)
+      
+      //stop matrix trails on 'destroy' signal
+      this.connect('destroy', () => {
+      		if (MATRIXTRAILS) {GLib.source_remove(this.matID);}
+      		});
     }
     
     fall() {
@@ -100,36 +104,29 @@ var FallItem = GObject.registerClass({
       	
       	//get number of steps between (startX,startY) and (endX,endY)
       	let n = Math.ceil( Math.max( (endX-startX)/this.width, (endY-startY)/this.height ) );
-      	let stepX = Math.ceil( (endX-startX)/n );
-      	let stepY = Math.ceil( (endY-startY)/n );
       	
-      	//rapidly change the FallItem
-      	//GLib.timeout_add(GLib.PRIORITY_LOW, 500, () => {
-      	//		this.set_text(FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))]);
-      	//		return GLib.SOURCE_CONTINUE;});
-      	
-      	//move towards (endX, endY)
-      	for (let i=0; i < n; i++) {
-      	    //pick out random item
-      	    let matritem = new St.Label();
-      	    Main.uiGroup.add_actor(matritem);
-      	    matritem.set_position(startX + i*stepX, startY + i*stepY);
-      	    matritem.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
-      	    matritem.set_style(`font-size: ${SIZE + "px"}; color: ${COLOR};`);
-      	    
-      	    matritem.hide();
-      	    
-      	    //show the item after a delay
-      	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time*i/n,
-      	    	() => {	matritem.show();
-      	    		return GLib.SOURCE_REMOVE;});
-      	    
-      	    //remove the item after time milliseconds
-      	    GLib.timeout_add(GLib.PRIORITY_DEFAULT, time,
-      	    	() => {matritem.destroy();
-      	    		return GLib.SOURCE_REMOVE;});
-      	}
-      	
+      	//add a new Matrix trail character every `time/n` milliseconds
+      	this.matID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
+      		() => {
+      		    let matritem = new St.Label();
+      		    this.fim.mc.add_child(matritem);
+      		    let pos = this.get_position();
+      		    //set the matritem at the current FallItem position
+      		    matritem.set_position(pos[0], pos[1]);
+      	    	    matritem.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
+      	    	    matritem.set_style(FI_STYLE);
+      	    	    matritem.show();
+      	    	    
+      	    	    //change the FallItem text
+      	    	    this.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
+      	    	    
+      	    	    //destroy the matritem after `time` milliseconds
+      	    	    GLib.timeout_add(GLib.PRIORITY_LOW, time,
+      	    	    	() => {matritem.destroy(); return GLib.SOURCE_REMOVE});
+      	    	    
+      	    	    return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
+      		});
+      
       } else {
       	this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
       }
@@ -172,17 +169,9 @@ var FallItem = GObject.registerClass({
     	}
       }
       
-      //reset the FallItem after a delay (reduces CPU load)
-      //this.idle()
-      //	.then( result => {this.fall()} );
-      
+      //reset the FallItem after a delay (reduces CPU load)    
       this.idleID = GLib.idle_add(GLib.PRIORITY_LOW,
       			() => {this.fall(); return GLib.SOURCE_REMOVE});
-    }
-    
-    idle() {
-      return new Promise( resolve => GLib.idle_add(GLib.PRIORITY_LOW,
-      				() => {resolve(0); return GLib.SOURCE_REMOVE}) );
     }
     
   });
@@ -197,6 +186,10 @@ var FIM = GObject.registerClass({
     	let itemContainer = new Clutter.Actor(); //a place to store our FallItems
     	this.ic = itemContainer;
     	Main.uiGroup.add_actor(this.ic);
+    	
+    	let matContainer = new Clutter.Actor(); //a place to store our matritems
+    	this.mc = matContainer;
+    	Main.uiGroup.add_actor(this.mc);
     	
     	settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
@@ -283,7 +276,9 @@ var Extension = GObject.registerClass({
     disable() {
       //remove all of the FallItems
       this.fim.ic.destroy_all_children();
-      this.fim.ic.destroy();
+      
+      //remove any matritems
+      this.fim.mc.destroy_all_children();
     }
   });
 
