@@ -264,21 +264,24 @@ var Extension = GObject.registerClass({
   Signals: {},
   },
   class Extension extends GObject.Object {
-    _init() {
-      let fim = new FIM();
-      this.fim = fim;
-    }
+    constructor() {}
 
     enable() {
+      let fim = new FIM();
+      this.fim = fim;
       this.fim.dropItems();
     }
 
     disable() {
       //remove all of the FallItems
       this.fim.ic.destroy_all_children();
+      this.fim.ic.destroy();
       
       //remove any matritems
       this.fim.mc.destroy_all_children();
+      this.fim.mc.destroy();
+      
+      this.fim = null;
     }
   });
 
