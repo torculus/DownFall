@@ -32,9 +32,9 @@ function buildPrefsWidget() {
   let buildable = new Gtk.Builder();
   
   if ( Config.PACKAGE_VERSION.startsWith("4") ) { //running GNOME 40 or higher
-    buildable.add_from_file(Me.dir.get_path() + '/prefs40.xml');
-  } else {
     buildable.add_from_file(Me.dir.get_path() + '/prefs.xml');
+  } else {
+    buildable.add_from_file(Me.dir.get_path() + '/prefs_legacy.xml');
   }
   
   let prefsWidget = buildable.get_object('prefs_widget');
@@ -74,7 +74,7 @@ function buildPrefsWidget() {
             settings.set_string('textcolor', hexString);
         });
   
-  if ( Config.PACKAGE_VERSION.startsWith("3.38") ) { //running GNOME 3.38
+  if ( Config.PACKAGE_VERSION.startsWith("3.") ) { //running GNOME 3.36/3.38
     prefsWidget.show_all();
   }
   return prefsWidget;

@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <interface domain="DownFall">
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="drift_adjust">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -37,626 +38,439 @@
     <property name="step-increment">1</property>
   </object>
   <object class="GtkNotebook" id="prefs_widget">
-    <property name="can-focus">False</property>
     <child>
-      <!-- n-columns=1 n-rows=6 -->
-      <object class="GtkGrid">
-        <property name="can-focus">False</property>
-        <property name="margin-left">18</property>
-        <property name="margin-right">18</property>
-        <property name="margin-top">18</property>
-        <property name="margin-bottom">18</property>
-        <property name="orientation">vertical</property>
-        <property name="row-spacing">18</property>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
+      <object class="GtkNotebookPage">
+        <property name="child">
+          <object class="GtkGrid">
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">12</property>
+            <property name="row-spacing">18</property>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="vexpand">1</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Text to Display (separate items with commas)</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="display_field">
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Text Color</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkColorButton" id="text_color">
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Text Font</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFontButton" id="text_font">
+                    <property name="font">Sans 12</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Show Matrix© trails</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="matrix_switch">
+                    <property name="active">1</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Firework explosion endings</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="firework_switch">
+                    <property name="active">1</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">False</property>
                 <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Text to Display (separate items with commas)</property>
+                <property name="hexpand">1</property>
+                <property name="label" translatable="yes">Text Appearance</property>
+                <attributes>
+                  <attribute name="weight" value="bold"></attribute>
+                </attributes>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="display_field">
-                <property name="can-focus">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Text Color</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkColorButton" id="text_color">
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Text Font</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkFontButton" id="text_font">
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="font">Sans 12</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Show Matrix© trails</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="matrix_switch">
-                <property name="can-focus">True</property>
-                <property name="active">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Firework explosion endings</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSwitch" id="firework_switch">
-                <property name="can-focus">True</property>
-                <property name="active">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">5</property>
-          </packing>
-        </child>
-        <child>
+        </property>
+        <property name="tab">
           <object class="GtkLabel">
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Text Appearance</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <property name="label" translatable="yes">Appearance</property>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
+        </property>
       </object>
-    </child>
-    <child type="tab">
-      <object class="GtkLabel">
-        <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Appearance</property>
-      </object>
-      <packing>
-        <property name="tab-fill">False</property>
-      </packing>
     </child>
     <child>
-      <!-- n-columns=1 n-rows=7 -->
-      <object class="GtkGrid">
-        <property name="can-focus">False</property>
-        <property name="margin-left">18</property>
-        <property name="margin-right">18</property>
-        <property name="margin-top">18</property>
-        <property name="margin-bottom">18</property>
-        <property name="orientation">vertical</property>
-        <property name="row-spacing">18</property>
-        <child>
+      <object class="GtkNotebookPage">
+        <property name="child">
+          <object class="GtkGrid">
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="orientation">vertical</property>
+            <property name="row-spacing">18</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="halign">start</property>
+                <property name="hexpand">1</property>
+                <property name="label" translatable="yes">Falling Behavior</property>
+                <attributes>
+                  <attribute name="weight" value="bold"></attribute>
+                </attributes>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Fall on</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="fall_monitor">
+                    <items>
+                      <item id="0" translatable="yes">Current monitor</item>
+                      <item id="1" translatable="yes">Primary monitor</item>
+                    </items>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Fall Direction</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="fall_direc">
+                    <items>
+                      <item id="0" translatable="yes">Down (↓)</item>
+                      <item id="1" translatable="yes">Up (↑)</item>
+                      <item id="2" translatable="yes">Right (→)</item>
+                      <item id="3" translatable="yes">Left (←)</item>
+                      <item id="4" translatable="yes">Up-right (↗)</item>
+                      <item id="5" translatable="yes">Up-left (↖)</item>
+                      <item id="6" translatable="yes">Down-right (↘)</item>
+                      <item id="7" translatable="yes">Down-left (↙)</item>
+                    </items>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Maximum number of items (dangerous above 20)</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="max_chars">
+                    <property name="adjustment">max_adjust</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Average Fall Time (seconds)</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fall_time">
+                    <property name="adjustment">time_adjust</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Average Fall Rotation (degrees)</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fall_rot">
+                    <property name="adjustment">rot_adjust</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Average Fall Drift (percentage)</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="fall_drift">
+                    <property name="adjustment">drift_adjust</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">6</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </property>
+        <property name="tab">
           <object class="GtkLabel">
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Falling Behavior</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <property name="label" translatable="yes">Behavior</property>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Fall on</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="fall_monitor">
-                <property name="can-focus">False</property>
-                <items>
-                  <item id="0" translatable="yes">Current monitor</item>
-                  <item id="1" translatable="yes">Primary monitor</item>
-                </items>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Fall Direction</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="fall_direc">
-                <property name="can-focus">False</property>
-                <items>
-                  <item id="0" translatable="yes">Down (↓)</item>
-                  <item id="1" translatable="yes">Up (↑)</item>
-                  <item id="2" translatable="yes">Right (→)</item>
-                  <item id="3" translatable="yes">Left (←)</item>
-                  <item id="4" translatable="yes">Up-right (↗)</item>
-                  <item id="5" translatable="yes">Up-left (↖)</item>
-                  <item id="6" translatable="yes">Down-right (↘)</item>
-                  <item id="7" translatable="yes">Down-left (↙)</item>
-                </items>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Maximum number of items (dangerous above 20)</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="max_chars">
-                <property name="can-focus">False</property>
-                <property name="adjustment">max_adjust</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Average Fall Time (seconds)</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="fall_time">
-                <property name="can-focus">False</property>
-                <property name="adjustment">time_adjust</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Average Fall Rotation (degrees)</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="fall_rot">
-                <property name="can-focus">False</property>
-                <property name="adjustment">rot_adjust</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">5</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Average Fall Drift (percentage)</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="fall_drift">
-                <property name="can-focus">False</property>
-                <property name="adjustment">drift_adjust</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">6</property>
-          </packing>
-        </child>
+        </property>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
-    </child>
-    <child type="tab">
-      <object class="GtkLabel">
-        <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Behavior</property>
-      </object>
-      <packing>
-        <property name="position">1</property>
-        <property name="tab-fill">False</property>
-      </packing>
     </child>
     <child>
-      <!-- n-columns=1 n-rows=6 -->
-      <object class="GtkGrid">
-        <property name="can-focus">False</property>
-        <property name="margin-left">18</property>
-        <property name="margin-right">18</property>
-        <property name="margin-top">18</property>
-        <property name="margin-bottom">18</property>
-        <property name="orientation">vertical</property>
-        <property name="row-spacing">18</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="hexpand">True</property>
-            <property name="label" translatable="yes">DownFall</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
+      <object class="GtkNotebookPage">
+        <property name="child">
+          <object class="GtkGrid">
+            <property name="margin-start">18</property>
+            <property name="margin-end">18</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="orientation">vertical</property>
+            <property name="row-spacing">18</property>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">False</property>
                 <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Version 2.9.9</property>
+                <property name="hexpand">1</property>
+                <property name="label" translatable="yes">DownFall</property>
+                <attributes>
+                  <attribute name="weight" value="bold"></attribute>
+                </attributes>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Website</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
             <child>
-              <object class="GtkLinkButton">
-                <property name="label" translatable="yes">https://github.com/torculus/DownFall</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="events"/>
-                <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="uri">https://github.com/torculus/DownFall</property>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Version 2.9.9</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="hexpand">True</property>
-            <property name="label" translatable="yes">Credits</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="can-focus">False</property>
-            <property name="margin-left">12</property>
-            <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
-                <property name="can-focus">False</property>
                 <property name="halign">start</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Developer: Ben Osenbach</property>
+                <property name="hexpand">1</property>
+                <property name="label" translatable="yes">Website</property>
+                <attributes>
+                  <attribute name="weight" value="bold"></attribute>
+                </attributes>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLinkButton">
+                    <property name="label" translatable="yes">https://github.com/torculus/DownFall</property>
+                    <property name="receives-default">1</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="uri">https://github.com/torculus/DownFall</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="halign">start</property>
+                <property name="hexpand">1</property>
+                <property name="label" translatable="yes">Credits</property>
+                <attributes>
+                  <attribute name="weight" value="bold"></attribute>
+                </attributes>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="margin-start">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <property name="label" translatable="yes">Developer: Ben Osenbach</property>
+                  </object>
+                </child>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">5</property>
-          </packing>
-        </child>
+        </property>
+        <property name="tab">
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">About</property>
+          </object>
+        </property>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
-    </child>
-    <child type="tab">
-      <object class="GtkLabel">
-        <property name="can-focus">False</property>
-        <property name="label" translatable="yes">About</property>
-      </object>
-      <packing>
-        <property name="position">2</property>
-        <property name="tab-fill">False</property>
-      </packing>
     </child>
   </object>
 </interface>
