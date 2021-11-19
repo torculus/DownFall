@@ -269,7 +269,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
-                    <property name="label" translatable="yes">Maximum number of items (dangerous above 20)</property>
+                    <property name="label" translatable="yes">Maximum number of items (high values risk freezing)</property>
                   </object>
                 </child>
                 <child>

@@ -249,7 +249,7 @@ var FIM = GObject.registerClass({
     	MAX_ITEMS = settings.get_int('maxchars');
     	AVG_TIME = settings.get_int('falltime');
     	AVG_ROT = settings.get_int('fallrot');
-    	AVG_DRIFT = settings.get_int('falldrift');
+    	AVG_DRIFT = settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
     	}
     	 
   });
