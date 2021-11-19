@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- DownFall – Gnome Shell Extension
- * Copyright (C) 2021 Benjamin S Osenbach
+ * Copyright (C) 2019-2021 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -269,7 +269,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
-                    <property name="label" translatable="yes">Maximum number of items (dangerous above 20)</property>
+                    <property name="label" translatable="yes">Maximum number of items (high values risk freezing)</property>
                   </object>
                 </child>
                 <child>
@@ -390,7 +390,7 @@
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
-                    <property name="label" translatable="yes">Version 2.9.9</property>
+                    <property name="label" translatable="yes">Version 3.0.0</property>
                   </object>
                 </child>
                 <layout>

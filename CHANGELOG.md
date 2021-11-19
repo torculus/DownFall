@@ -1,6 +1,6 @@
 # Change Log
 
-## 2.9.9 (will be 3.0.0 on release)
+## 3.0.0
 
 * Switch to [Semantic Versioning](https://semver.org/)
 * Complete re-write of the structure
@@ -8,6 +8,7 @@
 * Made FallItems children of FIM for quick removal
 * Replaced es6 Promises with `GLib.idle_add()`
 * Re-worked Matrix© trails
+* Addressed issue where GNOME shell froze
 
 ## 2.2
 
