@@ -1,7 +1,7 @@
 # DownFall
 DownFall is a GNOME Shell extension that moves text items of your choice across the screen  
 
-!["Picture"](./media/DownFall.gif)
+!["DownFall video"](./media/DownFall.mov)
 
 DownFall is inspired by projects like [Xsnow](https://janswaal.home.xs4all.nl/Xsnow/), [gsnow](https://extensions.gnome.org/extension/1156/gsnow/), and [Let it snow](https://bitbucket.org/matban/let-it-snow), but with support for arbitrary text or Unicode emojis
 
@@ -24,6 +24,7 @@ DownFall can be used to render multiple effects such as:
 * Meteorites / shooting stars (Down-right *, .)
 * Japanese cherry blossoms (Down 🌸️)
 * The opening crawls from Star Wars®
-* Fish, raining money
+* Raining money (💰️,💵️,🪙️)
 * Fireworks (Up, Up-right, Up-left ., *, |)
 * Digital rain from The Matrix® series (ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ)
+* And much more!
