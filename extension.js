@@ -63,13 +63,8 @@ var FallItem = GObject.registerClass({
     }
     
     fall() {
-      let monitor;
-      
-      if (MONITORS == 0) {
-        monitor = Main.layoutManager.currentMonitor;
-      } else {
-        monitor = Main.layoutManager.primaryMonitor;
-      }
+      let monitor = (MONITORS == 0) ? Main.layoutManager.currentMonitor
+      				    : Main.layoutManager.primaryMonitor;
       
       //get coordinates for the start and end points
       let startEndpoints = Utils.startEndPoints(DIRECTION, monitor, AVG_DRIFT, this);
@@ -89,6 +84,9 @@ var FallItem = GObject.registerClass({
       let time = (AVG_TIME + (2*Math.random()-1) * TIME_MDIFF) * 1000;
       let rotation = Math.floor( (2*Math.random()-1) * AVG_ROT);
       
+      let cluttermode = MATRIXTRAILS ? Clutter.AnimationMode.LINEAR
+      				     : Clutter.AnimationMode.EASE_OUT_QUAD;
+      
       this.set_position(startX, startY);
       
       this.set_text(this.whichItem);
@@ -96,10 +94,7 @@ var FallItem = GObject.registerClass({
       
       this.show();
       
-      this.save_easing_state();
-      
       if (MATRIXTRAILS) {
-      	this.set_easing_mode(Clutter.AnimationMode.LINEAR);
       	this.set_style(FI_STYLE + `color: #ffffff`);
       	
       	//get number of steps between (startX,startY) and (endX,endY)
@@ -126,16 +121,17 @@ var FallItem = GObject.registerClass({
       	    	    
       	    	    return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
       		});
-      
-      } else {
-      	this.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
       }
       
-      this.set_easing_duration(time);
-      this.set_position(endX, endY);
-      this.set_rotation_angle(Clutter.RotateAxis.Z_AXIS, rotation);
-      this.restore_easing_state();
-      this.connect('transitions-completed', this.finish.bind(this) );     
+      this.ease({
+      	x : endX,
+      	y : endY,
+      	duration : time,
+      	mode : cluttermode,
+      	rotation_angle_z : rotation,
+      	onComplete : () => {this.finish()}
+      });
+      
     }
     
     finish() {
@@ -147,7 +143,7 @@ var FallItem = GObject.registerClass({
       	  let flare = new St.Label();
     	  let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
     	  
-    	  Main.uiGroup.add_actor(flare);
+    	  Main.uiGroup.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
     	  flare.set_text(".");
     	  flare.set_style(`font-size: ${SIZE + "px"};
@@ -185,11 +181,11 @@ var FIM = GObject.registerClass({
     _init() {
     	let itemContainer = new Clutter.Actor(); //a place to store our FallItems
     	this.ic = itemContainer;
-    	Main.uiGroup.add_actor(this.ic);
+    	Main.uiGroup.add_child(this.ic);
     	
     	let matContainer = new Clutter.Actor(); //a place to store our matritems
     	this.mc = matContainer;
-    	Main.uiGroup.add_actor(this.mc);
+    	Main.uiGroup.add_child(this.mc);
     	
     	settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
@@ -274,10 +270,12 @@ var Extension = GObject.registerClass({
 
     disable() {
       //remove all of the FallItems
+      Main.uiGroup.remove_child(this.fim.ic);
       this.fim.ic.destroy_all_children();
       this.fim.ic.destroy();
       
       //remove any matritems
+      Main.uiGroup.remove_child(this.fim.mc);
       this.fim.mc.destroy_all_children();
       this.fim.mc.destroy();
       
