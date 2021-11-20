@@ -18,37 +18,7 @@
  *
  */
 
-const Gio = imports.gi.Gio;
-const GioSSS = Gio.SettingsSchemaSource;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
 const GLib = imports.gi.GLib;
- 
- function getSettings() {
-	let schema = 'org.gnome.shell.extensions.downfall';
-
-	// check if this extension was built with "make zip-file", and thus
-	// has the schema files in a subfolder
-	// otherwise assume that extension has been installed in the
-	// same prefix as gnome-shell (and therefore schemas are available
-	// in the standard folders)
-	let schemaDir = Me.dir.get_child('schemas');
-	let schemaSource;
-	if (schemaDir.query_exists(null)) {
-		schemaSource = GioSSS.new_from_directory(schemaDir.get_path(),
-				GioSSS.get_default(),
-				false);
-	} else {
-		schemaSource = GioSSS.get_default();
-	}
-
-	let schemaObj = schemaSource.lookup(schema, true);
-	if (!schemaObj) {
-		throw new Error('Schema ' + schema + ' could not be found for extension ' +
-				Me.metadata.uuid + '. Please check your installation.');
-	}
-
-	return new Gio.Settings({settings_schema: schemaObj});
-}
 
 /**
  * This function was copied from the activities-config extension

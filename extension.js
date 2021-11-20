@@ -28,8 +28,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
-let settings = Utils.getSettings();
-
 let FALLITEMS;
 let COLOR;
 let FONT;
@@ -178,7 +176,9 @@ var FIM = GObject.registerClass({
   Signals: {},
   },
   class FIM extends GObject.Object {
-    _init() {
+    _init(settings) {
+    	this.settings = settings;
+    	
     	let itemContainer = new Clutter.Actor(); //a place to store our FallItems
     	this.ic = itemContainer;
     	Main.uiGroup.add_child(this.ic);
@@ -187,7 +187,7 @@ var FIM = GObject.registerClass({
     	this.mc = matContainer;
     	Main.uiGroup.add_child(this.mc);
     	
-    	settings.connect('changed', this.settingsChanged.bind(this));
+    	this.settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
     }
     
@@ -204,16 +204,16 @@ var FIM = GObject.registerClass({
     }
     
     settingsChanged() {
-    	FALLITEMS = settings.get_strv("falltext");
-    	COLOR = settings.get_string('textcolor');
+    	FALLITEMS = this.settings.get_strv("falltext");
+    	COLOR = this.settings.get_string('textcolor');
     	
     	//get the size as an integer from the GtkFontButton string
-    	SIZE = settings.get_string('textfont').slice(-2).trim();
+    	SIZE = this.settings.get_string('textfont').slice(-2).trim();
     	
     	if (SIZE.length == 1) {
-    	    FONT = settings.get_string('textfont').slice(0,-1).trim();
+    	    FONT = this.settings.get_string('textfont').slice(0,-1).trim();
     	} else {
-    	    FONT = settings.get_string('textfont').slice(0,-2).trim();
+    	    FONT = this.settings.get_string('textfont').slice(0,-2).trim();
     	}
     	
     	let font_fam;
@@ -242,14 +242,14 @@ var FIM = GObject.registerClass({
     		color: ${COLOR}`;
     		//text-shadow: 1px 1px rgba(0, 0, 0, 0.4); opacity: 255
     	
-    	MATRIXTRAILS = settings.get_boolean('matrixtrails');
-    	FIREWORKS = settings.get_boolean('fireworks');
-    	MONITORS = settings.get_int('fallmon');
-    	DIRECTION = settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
-    	MAX_ITEMS = settings.get_int('maxchars');
-    	AVG_TIME = settings.get_int('falltime');
-    	AVG_ROT = settings.get_int('fallrot');
-    	AVG_DRIFT = settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
+    	MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
+    	FIREWORKS = this.settings.get_boolean('fireworks');
+    	MONITORS = this.settings.get_int('fallmon');
+    	DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
+    	MAX_ITEMS = this.settings.get_int('maxchars');
+    	AVG_TIME = this.settings.get_int('falltime');
+    	AVG_ROT = this.settings.get_int('fallrot');
+    	AVG_DRIFT = this.settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
     	}
     	 
   });
@@ -263,12 +263,15 @@ var Extension = GObject.registerClass({
     constructor() {}
 
     enable() {
-      let fim = new FIM();
+      let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
+      let fim = new FIM(settings);
       this.fim = fim;
       this.fim.dropItems();
     }
 
     disable() {
+      let settings = null;
+      
       //remove all of the FallItems
       Main.uiGroup.remove_child(this.fim.ic);
       this.fim.ic.destroy_all_children();

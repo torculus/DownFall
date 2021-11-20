@@ -24,10 +24,11 @@ const Gdk = imports.gi.Gdk;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 const Config = imports.misc.config;
+const ExtensionUtils = imports.misc.extensionUtils;
 
 function buildPrefsWidget() {
   
-  let settings = Utils.getSettings();
+  let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
   
   let buildable = new Gtk.Builder();
   
