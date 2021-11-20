@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.1 (bugfixes)
+
+* Moved a global scope variable to `enable()`
+* Migrated `Utils.getSettings()` to standard `ExtensionUtils.getSettings()`
+* FallItem timeout sources are now removed in `disable()`
+
 ## 3.0.0
 
 * Switch to [Semantic Versioning](https://semver.org/)
