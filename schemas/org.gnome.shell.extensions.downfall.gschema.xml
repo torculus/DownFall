@@ -73,7 +73,7 @@
   		<default>5</default>
   		<summary>Average fall time in seconds</summary>
   		<description>Average fall time in seconds</description>
-  		<range min="2" max="6"/>
+  		<range min="2" max="10"/>
   	</key>
   	
   	<key type="i" name="fallrot">

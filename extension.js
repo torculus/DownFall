@@ -53,11 +53,6 @@ var FallItem = GObject.registerClass({
       super._init();
       this.whichItem = whichItem;
       this.fim = fim; //reference back to the FallItemsManager (FIM)
-      
-      //stop matrix trails on 'destroy' signal
-      this.connect('destroy', () => {
-      		if (MATRIXTRAILS) {GLib.source_remove(this.matID);}
-      		});
     }
     
     fall() {
@@ -99,7 +94,7 @@ var FallItem = GObject.registerClass({
       	let n = Math.ceil( Math.max( (endX-startX)/this.width, (endY-startY)/this.height ) );
       	
       	//add a new Matrix trail character every `time/n` milliseconds
-      	this.matID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
+      	this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
       		() => {
       		    let matritem = new St.Label();
       		    this.fim.mc.add_child(matritem);
@@ -114,8 +109,10 @@ var FallItem = GObject.registerClass({
       	    	    this.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
       	    	    
       	    	    //destroy the matritem after `time` milliseconds
-      	    	    GLib.timeout_add(GLib.PRIORITY_LOW, time,
-      	    	    	() => {matritem.destroy(); return GLib.SOURCE_REMOVE});
+      	    	    matritem.matRemID = GLib.timeout_add( GLib.PRIORITY_LOW, time,
+      	    	    	() => {this.fim.mc.remove_child(matritem);
+      	    	    	       matritem.destroy();
+      	    	    	       return GLib.SOURCE_REMOVE} );
       	    	    
       	    	    return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
       		});
@@ -272,16 +269,27 @@ var Extension = GObject.registerClass({
     disable() {
       let settings = null;
       
-      //remove all of the FallItems
+      //stop all of the timers
+      this.fim.ic.get_children()
+      	.forEach( (fi) => { GLib.source_remove(fi.idleID);
+      			    fi.IdleID = null;
+      			    if (fi.matAddID) {
+      				GLib.source_remove(fi.matAddID);
+      				fi.matAddID = null;
+      			    }
+      			    //remove all of the FallItems
+      			    fi.destroy() } );
+      this.fim.mc.get_children()
+      	.forEach( (mi) => { GLib.source_remove(mi.matRemID);
+      			    mi.matRemID = null;
+      			    //remove any matritems
+      			    mi.destroy() } );
+      
+      //remove everything else
       Main.uiGroup.remove_child(this.fim.ic);
-      this.fim.ic.destroy_all_children();
       this.fim.ic.destroy();
-      
-      //remove any matritems
       Main.uiGroup.remove_child(this.fim.mc);
-      this.fim.mc.destroy_all_children();
       this.fim.mc.destroy();
-      
       this.fim = null;
     }
   });
