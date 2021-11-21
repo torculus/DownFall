@@ -68,14 +68,14 @@ var FallItem = GObject.registerClass({
       
       if (FIREWORKS) {
       	//end in the middle
-      	let alpha = Math.random();
+      	let alpha = GLib.random_int_range(33,50)/100;
       	endX = Math.floor(alpha*startX + (1-alpha)*endX);
       	endY = Math.floor(alpha*startY + (1-alpha)*endY);
       	this.endX = endX; this.endY = endY;
       }
       
-      let time = (AVG_TIME + (2*Math.random()-1) * TIME_MDIFF) * 1000;
-      let rotation = Math.floor( (2*Math.random()-1) * AVG_ROT);
+      let time = (AVG_TIME + GLib.random_int_range(-50,50)/100 * TIME_MDIFF) * 1000;
+      let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * AVG_ROT);
       
       let cluttermode = MATRIXTRAILS ? Clutter.AnimationMode.LINEAR
       				     : Clutter.AnimationMode.EASE_OUT_QUAD;
@@ -101,12 +101,12 @@ var FallItem = GObject.registerClass({
       		    let pos = this.get_position();
       		    //set the matritem at the current FallItem position
       		    matritem.set_position(pos[0], pos[1]);
-      	    	    matritem.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
+      	    	    matritem.set_text( FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ] );
       	    	    matritem.set_style(FI_STYLE);
       	    	    matritem.show();
       	    	    
       	    	    //change the FallItem text
-      	    	    this.set_text( FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))] );
+      	    	    this.set_text( FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ] );
       	    	    
       	    	    //destroy the matritem after `time` milliseconds
       	    	    matritem.matRemID = GLib.timeout_add( GLib.PRIORITY_LOW, time,
@@ -143,20 +143,23 @@ var FallItem = GObject.registerClass({
     	  flare.set_text(".");
     	  flare.set_style(`font-size: ${SIZE + "px"};
     	  		   color: ${flcolor};`);
-    	  flare.save_easing_state();
-    	  flare.set_easing_mode(Clutter.AnimationMode.EASE_OUT_QUAD);
-    	  flare.set_easing_duration(2000);
     	  
-    	  //get hexagonal coordinates relative to the endX, endY
-    	  //     i=2  i=1					(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
-    	  // i=3		i=0	goes with	(-s,0)						(+s,0)
-    	  //     i=4  i=5					(-s/2,-s*sqrt(3)/2) (+s/2, -s*sqrt(3)/2)
+    	  /*get hexagonal coordinates relative to the endX, endY
+    	  	i=2  i=1			(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
+    	  i=3		i=0	goes with  (-s,0)				      (+s,0)
+    	  	i=4  i=5			(-s/2,-s*sqrt(3)/2) (+s/2, -s*sqrt(3)/2)
+    	  */
     	  let Xflr = this.endX + Math.floor( (-1)**( (n%5) > 1)*(1/2)**( (n%3) > 0) * 200 );
     	  let Yflr = this.endY + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
+    	      	  
+    	  flare.ease({
+    	    x : Xflr,
+    	    y : Yflr,
+    	    duration : 2000,
+    	    mode : Clutter.AnimationMode.EASE_OUT_QUAD,
+    	    onComplete : () => {flare.destroy()}
+    	  });
     	  
-    	  flare.set_position(Xflr, Yflr);
-    	  flare.restore_easing_state();
-    	  flare.connect('transitions-completed', () => {flare.destroy();} );
     	}
       }
       
@@ -191,7 +194,7 @@ var FIM = GObject.registerClass({
     dropItems() {
       //only create MAX_ITEMS number of FallItems
       for (let i=0; i < MAX_ITEMS; i++) {
-      	let whichItem = FALLITEMS[Math.floor((Math.random() * FALLITEMS.length))];
+      	let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
       	let newFi = new FallItem(whichItem, this);
       	this.ic.add_child(newFi);
       }
