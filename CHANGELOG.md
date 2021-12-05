@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.0.2
+
+* Fixed division by 0 in Matrix© trails on 'Up' or 'Left'
+
 ## 3.0.1 (bugfixes)
 
 * Moved a global scope variable to `enable()`
