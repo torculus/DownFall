@@ -91,7 +91,7 @@ var FallItem = GObject.registerClass({
       	this.set_style(FI_STYLE + `color: #ffffff`);
       	
       	//get number of steps between (startX,startY) and (endX,endY)
-      	let n = Math.ceil( Math.max( (endX-startX)/this.width, (endY-startY)/this.height ) );
+      	let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       	
       	//add a new Matrix trail character every `time/n` milliseconds
       	this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
