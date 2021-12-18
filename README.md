@@ -1,7 +1,7 @@
 # DownFall
 DownFall is a GNOME Shell extension that moves text items of your choice across the screen  
 
-!["DownFall video"](https://raw.githubusercontent.com/torculus/DownFall/master/media/DownFall.mp4)
+https://raw.githubusercontent.com/torculus/DownFall/master/media/DownFall.mp4
 
 DownFall is inspired by projects like [Xsnow](https://sourceforge.net/projects/xsnow/), [gsnow](https://extensions.gnome.org/extension/1156/gsnow/), and [Let it snow](https://bitbucket.org/matban/let-it-snow/src/master/), but with support for arbitrary text or Unicode emojis
 
