@@ -56,6 +56,7 @@ var FallItem = GObject.registerClass({
     }
     
     fall() {
+      this.idleID = null;
       let monitor = (MONITORS == 0) ? Main.layoutManager.currentMonitor
       				    : Main.layoutManager.primaryMonitor;
       
@@ -94,7 +95,8 @@ var FallItem = GObject.registerClass({
       	let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       	
       	//add a new Matrix trail character every `time/n` milliseconds
-      	this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
+      	if (!this.matAddID) { //only on first fall
+      	  this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
       		() => {
       		    let matritem = new St.Label();
       		    this.fim.mc.add_child(matritem);
@@ -116,6 +118,7 @@ var FallItem = GObject.registerClass({
       	    	    
       	    	    return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
       		});
+      	}
       }
       
       this.ease({
@@ -274,18 +277,22 @@ var Extension = GObject.registerClass({
       
       //stop all of the timers
       this.fim.ic.get_children()
-      	.forEach( (fi) => { GLib.source_remove(fi.idleID);
-      			    fi.IdleID = null;
+      	.forEach( (fi) => { if (fi.idleID) {
+      				GLib.source_remove(fi.idleID);
+      			    	fi.IdleID = null;
+      			    }
       			    if (fi.matAddID) {
       				GLib.source_remove(fi.matAddID);
       				fi.matAddID = null;
       			    }
       			    //remove all of the FallItems
+      			    this.fim.ic.remove_child(fi);
       			    fi.destroy() } );
       this.fim.mc.get_children()
       	.forEach( (mi) => { GLib.source_remove(mi.matRemID);
       			    mi.matRemID = null;
       			    //remove any matritems
+      			    this.fim.mc.remove_child(mi);
       			    mi.destroy() } );
       
       //remove everything else
