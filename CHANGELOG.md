@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.0.3
+
+* Fixed adding a new `GLib.timeout_add()` on each call of `fallitem.fall()`
+
 ## 3.0.2
 
 * Fixed division by 0 in Matrix© trails on 'Up' or 'Left'
