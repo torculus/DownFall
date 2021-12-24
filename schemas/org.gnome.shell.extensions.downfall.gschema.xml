@@ -61,8 +61,14 @@
   		<summary>Fall direction</summary>
   		<description>Fall direction</description>
   	</key>
+  	
+  	<key type="i" name="fall3d">
+  		<default>0</default>
+  		<summary>Fall 3D</summary>
+  		<description>Fall behind or in front of windows</description>
+  	</key>
 
-  	<key type="i" name="maxchars">
+  	<key type="i" name="maxitems">
   		<default>40</default>
   		<summary>Maximum number of falling elements</summary>
   		<description>Maximum number of falling elements</description>
@@ -73,14 +79,14 @@
   		<default>5</default>
   		<summary>Average fall time in seconds</summary>
   		<description>Average fall time in seconds</description>
-  		<range min="2" max="10"/>
+  		<range min="2" max="20"/>
   	</key>
   	
   	<key type="i" name="fallrot">
   		<default>180</default>
   		<summary>Falling rotation in degrees</summary>
   		<description>Falling rotation in degrees</description>
-  		<range min="0" max="360"/>
+  		<range min="0" max="1800"/>
   	</key>
   	
   	<key type="i" name="falldrift">

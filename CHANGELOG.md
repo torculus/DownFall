@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.1.0
+
+* New setting: `fall_3d` for falling in front of or behind windows
+* Fix issue where DownFall prevents dragging windows left in GNOME overview
+
 ## 3.0.3
 
 * Fixed adding a new `GLib.timeout_add()` on each call of `fallitem.fall()`

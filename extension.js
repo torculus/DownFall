@@ -37,6 +37,7 @@ let MATRIXTRAILS;
 let FIREWORKS;
 let MONITORS;
 let DIRECTION;
+let FALL3D;
 let MAX_ITEMS;
 let AVG_TIME;
 let AVG_ROT;
@@ -141,7 +142,7 @@ var FallItem = GObject.registerClass({
       	  let flare = new St.Label();
     	  let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
     	  
-    	  Main.uiGroup.add_child(flare);
+    	  this.fim.pane3D.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
     	  flare.set_text(".");
     	  flare.set_style(`font-size: ${SIZE + "px"};
@@ -182,13 +183,19 @@ var FIM = GObject.registerClass({
     _init(settings) {
     	this.settings = settings;
     	
+    	if (FALL3D == 0) { //in front
+    	  this.pane3D = Main.uiGroup;
+    	} else {
+    	  this.pane3D = Main.layoutManager._backgroundGroup;
+    	}
+    	
     	let itemContainer = new Clutter.Actor(); //a place to store our FallItems
     	this.ic = itemContainer;
-    	Main.uiGroup.add_child(this.ic);
+    	this.pane3D.add_child(this.ic);
     	
     	let matContainer = new Clutter.Actor(); //a place to store our matritems
     	this.mc = matContainer;
-    	Main.uiGroup.add_child(this.mc);
+    	this.pane3D.add_child(this.mc);
     	
     	this.settings.connect('changed', this.settingsChanged.bind(this));
       	this.settingsChanged();
@@ -249,7 +256,8 @@ var FIM = GObject.registerClass({
     	FIREWORKS = this.settings.get_boolean('fireworks');
     	MONITORS = this.settings.get_int('fallmon');
     	DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
-    	MAX_ITEMS = this.settings.get_int('maxchars');
+    	FALL3D = this.settings.get_int('fall3d'); //0=in front, 1=behind
+    	MAX_ITEMS = this.settings.get_int('maxitems');
     	AVG_TIME = this.settings.get_int('falltime');
     	AVG_ROT = this.settings.get_int('fallrot');
     	AVG_DRIFT = this.settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
@@ -296,9 +304,9 @@ var Extension = GObject.registerClass({
       			    mi.destroy() } );
       
       //remove everything else
-      Main.uiGroup.remove_child(this.fim.ic);
+      this.fim.pane3D.remove_child(this.fim.ic);
       this.fim.ic.destroy();
-      Main.uiGroup.remove_child(this.fim.mc);
+      this.fim.pane3D.remove_child(this.fim.mc);
       this.fim.mc.destroy();
       this.fim = null;
     }
