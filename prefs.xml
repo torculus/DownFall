@@ -266,6 +266,7 @@
                       <item id="5" translatable="yes">Up-left (↖)</item>
                       <item id="6" translatable="yes">Down-right (↘)</item>
                       <item id="7" translatable="yes">Down-left (↙)</item>
+                      <item id="8" translatable="yes">Unpredictable (??)</item>
                     </items>
                   </object>
                 </child>

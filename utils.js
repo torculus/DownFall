@@ -110,11 +110,16 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
         endX = monitor.x + monitor.width - fallItem.width + Math.floor( rand3 * avgdrift * monitor.width);
         endY = monitor.y + monitor.height - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
         
-    } else { //Down-Left
+    } else if (direction == 7) { //Down-Left
         startX = monitor.x + monitor.width - fallItem.width + Math.floor( rand1 * avgdrift * monitor.width);
         startY = monitor.y - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
         endX = monitor.x + Math.floor( rand3 * avgdrift * monitor.width);
         endY = monitor.y + monitor.height - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
+    } else { //Unpredictable
+    	startX = monitor.width/2 + Math.floor(rand1 * (monitor.width - fallItem.width));
+    	startY = monitor.height/2 + Math.floor(rand2 * (monitor.height - fallItem.height));
+    	endX = monitor.x + Math.floor(rand3 * (monitor.width - fallItem.width));
+    	endY = monitor.y + Math.floor(rand4 * (monitor.height - fallItem.height));
     }
     
     return [startX, startY, endX, endY];

@@ -1,9 +1,15 @@
 # Change Log
 
+## 3.2.0
+
+* **New setting**: "Unpredictable (??)" fall direction
+* Introduce presets
+
 ## 3.1.0
 
-* New setting: `fall_3d` for falling in front of or behind windows
+* **New setting**: `fall_3d` for falling in front of or behind windows
 * Fix issue where DownFall prevents dragging windows left in GNOME overview
+* Increased limits on max FallItems, time, and rotation
 
 ## 3.0.3
 
