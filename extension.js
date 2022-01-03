@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2021 Benjamin S Osenbach
+ * Copyright (C) 2019-2022 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -184,7 +184,7 @@ var FIM = GObject.registerClass({
     	this.settings = settings;
     	
     	if (FALL3D == 0) { //in front
-    	  this.pane3D = Main.uiGroup;
+    	  this.pane3D = global.top_window_group; //Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group, 
     	} else {
     	  this.pane3D = Main.layoutManager._backgroundGroup;
     	}
