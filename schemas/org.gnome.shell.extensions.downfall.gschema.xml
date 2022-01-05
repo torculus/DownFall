@@ -20,6 +20,12 @@
 <schemalist>
   <schema id="org.gnome.shell.extensions.downfall" path="/org/gnome/shell/extensions/downfall/">
  	
+  	<key type="i" name="presets">
+  		<default>0</default>
+  		<summary>Presets</summary>
+  		<description>Predefined settings</description>
+  	</key>
+  	
   	<key type="as" name="falltext">
   		<default>["ABC"]</default>
   		<summary>Text to display</summary>

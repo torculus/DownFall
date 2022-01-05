@@ -41,6 +41,7 @@ function buildPrefsWidget() {
   let prefsWidget = buildable.get_object('prefs_widget');
   
   //bind settings from prefs.xml to schema keys
+  settings.bind('presets', buildable.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('matrixtrails', buildable.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fireworks', buildable.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -75,6 +76,22 @@ function buildPrefsWidget() {
             let hexString = Utils.cssHexString(rgba1.to_string());
             settings.set_string('textcolor', hexString);
         });
+  
+  //bind presets to specific values
+  buildable.get_object('presets').connect('changed', (presets) => {
+  	let preset = presets.get_active_text();
+  	
+  	if (preset == "Snow") {
+  	    buildable.get_object('display_field').set_text("*,.");
+  	    let rgba = new Gdk.RGBA("FFFFFF");
+  	    buildable.get_object('text_color').set_rgba(rgba);
+  	} else if (preset == "Matrix© rain") {
+  	    buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
+  	    let rgba = new Gdk.RGBA("00FF00");
+  	    buildable.get_object('text_color').set_rgba(rgba);
+  	    buildable.get_object('matrix_switch').set_active(true);
+  	}
+  });
   
   if ( Config.PACKAGE_VERSION.startsWith("3.") ) { //running GNOME 3.36/3.38
     prefsWidget.show_all();
