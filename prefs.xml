@@ -76,11 +76,17 @@
                 <child>
                   <object class="GtkComboBoxText" id="presets">
                     <items>
-                      <item id="0" translatable="yes">(none)</item>
+                      <item id="0" translatable="yes"> </item>
                       <item id="1" translatable="yes">Snow</item>
-                      <item id="2" translatable="yes">Matrix© rain</item>
-                      <item id="3" translatable="yes">(random)</item>
+                      <item id="2" translatable="yes">Leaves</item>
+                      <item id="3" translatable="yes">Matrix© rain</item>
+                      <item id="4" translatable="yes">Fireworks</item>
                     </items>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="random_button">
+                    <property name="label" translatable="yes">Random</property>
                   </object>
                 </child>
                 <layout>
