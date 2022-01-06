@@ -80,14 +80,16 @@ function buildPrefsWidget() {
   //bind presets to specific values
   buildable.get_object('presets').connect('changed', (presets) => {
   	let preset = presets.get_active_text();
+  	let rgba = new Gdk.RGBA();
   	
   	if (preset == "Snow") {
   	    buildable.get_object('display_field').set_text("*,.");
-  	    let rgba = new Gdk.RGBA("FFFFFF");
+  	    rgba.parse("\#ffffff");
   	    buildable.get_object('text_color').set_rgba(rgba);
+  	    buildable.get_object('matrix_switch').set_active(false);
   	} else if (preset == "Matrix© rain") {
   	    buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
-  	    let rgba = new Gdk.RGBA("00FF00");
+  	    rgba.parse("\#00ff00");
   	    buildable.get_object('text_color').set_rgba(rgba);
   	    buildable.get_object('matrix_switch').set_active(true);
   	}
