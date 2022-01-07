@@ -118,8 +118,8 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
     } else { //Unpredictable
     	startX = monitor.width/2 + Math.floor(rand1 * (monitor.width - fallItem.width));
     	startY = monitor.height/2 + Math.floor(rand2 * (monitor.height - fallItem.height));
-    	endX = monitor.x + Math.floor(rand3 * (monitor.width - fallItem.width));
-    	endY = monitor.y + Math.floor(rand4 * (monitor.height - fallItem.height));
+    	endX = startX + Math.floor( rand3 * avgdrift * monitor.width);
+    	endY = startY + Math.floor(rand4 * avgdrift * (monitor.height - fallItem.height));
     }
     
     return [startX, startY, endX, endY];

@@ -3,7 +3,7 @@
 ## 3.2.0
 
 * **New setting**: "Unpredictable (??)" fall direction
-* Introduce presets
+* **New setting**: Introduce presets (Snow, Leaves, Matrix© rain, Random)
 
 ## 3.1.0
 
