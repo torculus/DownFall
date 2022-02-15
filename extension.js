@@ -181,6 +181,7 @@ var FIM = GObject.registerClass({
   },
   class FIM extends GObject.Object {
     _init(settings) {
+        super._init();
     	this.settings = settings;
     	
     	if (FALL3D == 0) { //in front
@@ -271,7 +272,9 @@ var Extension = GObject.registerClass({
   Signals: {},
   },
   class Extension extends GObject.Object {
-    constructor() {}
+    _init() {
+      super._init();
+    }
 
     enable() {
       let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
