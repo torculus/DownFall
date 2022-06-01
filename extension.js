@@ -30,8 +30,6 @@ const Utils = Me.imports.utils;
 
 let FALLITEMS;
 let COLOR;
-let FONT;
-let SIZE;
 let FI_STYLE;
 let MONITORS;
 let DIRECTION;
@@ -45,15 +43,11 @@ let TIME_MDIFF = 2;
 let MATRIXTRAILS;
 let MATDISP;
 let MATCOLOR;
-let MATFONT;
-let MATSIZE;
 let MAT_STYLE;
 
 let FIREWORKS;
 let FLRDISP;
 let FLRCOLOR;
-let FLRFONT;
-let FLRSIZE;
 let FLR_STYLE;
 
 var FallItem = GObject.registerClass({
@@ -229,21 +223,13 @@ var FIM = GObject.registerClass({
     	FALLITEMS = this.settings.get_strv("falltext");
     	COLOR = this.settings.get_string('textcolor');
     	
-    	//get the size as an integer from the GtkFontButton string
-    	SIZE = this.settings.get_string('textfont').slice(-2).trim();
-    	
-    	if (SIZE.length == 1) {
-    	    FONT = this.settings.get_string('textfont').slice(0,-1).trim();
-    	} else {
-    	    FONT = this.settings.get_string('textfont').slice(0,-2).trim();
-    	}
-    	
-    	let [font_fam, font_weight, font_style] = Utils.get_font_props(FONT);
+    	let fi_fontstring = this.settings.get_string('textfont');
+    	let [font_fam, font_weight, font_style, font_size] = Utils.get_font_props(fi_fontstring);
     	    	
     	FI_STYLE = `font-family: ${font_fam};
     		font-weight: ${font_weight};
     		font-style: ${font_style};
-    		font-size: ${SIZE + "px"};
+    		font-size: ${font_size + "px"};
     		color: ${COLOR}`;
     		//text-shadow: 1px 1px rgba(0, 0, 0, 0.4); opacity: 255
     	
@@ -259,9 +245,12 @@ var FIM = GObject.registerClass({
     	if (MATRIXTRAILS) {
     	    MATDISP = this.settings.get_strv("matdisplay");
     	    MATCOLOR = this.settings.get_string('matcolor');
-    	    MATFONT;
-    	    MATSIZE;
-    	    MAT_STYLE = `font-size: ${SIZE + "px"};
+    	    let mat_fontstring = this.settings.get_string('matfont');
+    	    let [mat_fam, mat_weight, mat_style, mat_size] = Utils.get_font_props(mat_fontstring);
+    	    MAT_STYLE = `font-family: ${mat_fam};
+    	    		   font-weight: ${mat_weight};
+    	    		   font-style: ${mat_style};
+    	    		   font-size: ${mat_size + "px"};
     	    		   color: ${MATCOLOR}`;
     	}
     	
@@ -269,9 +258,12 @@ var FIM = GObject.registerClass({
     	if (FIREWORKS) {
     	    FLRDISP = this.settings.get_strv("flrdisplay");
     	    FLRCOLOR = this.settings.get_string('flrcolor');
-    	    FLRFONT;
-    	    FLRSIZE;
-    	    FLR_STYLE = `font-size: ${SIZE + "px"};
+    	    let flr_fontstring = this.settings.get_string('flrfont');
+    	    let [flr_fam, flr_weight, flr_style, flr_size] = Utils.get_font_props(flr_fontstring);
+    	    FLR_STYLE = `font-family: ${flr_fam};
+    	    		   font-weight: ${flr_weight};
+    	    		   font-style: ${flr_style};
+    	    		   font-size: ${flr_size + "px"};
     	  		   color: ${FLRCOLOR}`;
     	}
     	

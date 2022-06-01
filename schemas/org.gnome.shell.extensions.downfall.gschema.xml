@@ -97,7 +97,7 @@
   	</key>
   	
   	<key type="as" name="matdisplay">
-  		<default>["ABC"]</default>
+  		<default>["Z"]</default>
   		<summary>Text to display</summary>
   		<description>Text to display</description>
   	</key>
@@ -121,7 +121,7 @@
   	</key>
   	
   	<key type="as" name="flrdisplay">
-  		<default>["ABC"]</default>
+  		<default>["★"]</default>
   		<summary>Text to display</summary>
   		<description>Text to display</description>
   	</key>

@@ -71,53 +71,7 @@ function buildPrefsWidget() {
   //bind presets to specific values
   buildable.get_object('presets').connect('changed', (presets) => {
   	let preset = presets.get_active_text();
-  	let rgba = new Gdk.RGBA();
-  	
-  	if (preset == "Snow") {
-  	    buildable.get_object('display_field').set_text("*,.");
-  	    rgba.parse("\#ffffff");
-  	    buildable.get_object('text_color').set_rgba(rgba);
-  	    buildable.get_object('matrix_switch').set_active(false);
-  	    buildable.get_object('firework_switch').set_active(false);
-  	    buildable.get_object('fall_direc').set_active(7);
-  	    buildable.get_object('max_items').set_value(40);
-  	    buildable.get_object('fall_time').set_value(7);
-  	    buildable.get_object('fall_rot').set_value(45);
-  	    buildable.get_object('fall_drift').set_value(75);
-  	} else if (preset == "Leaves") {
-  	    buildable.get_object('display_field').set_text("🍁️,🍂️");
-  	    rgba.parse("\#ffffff");
-  	    buildable.get_object('text_color').set_rgba(rgba);
- 	    buildable.get_object('matrix_switch').set_active(false);
-  	    buildable.get_object('firework_switch').set_active(false);
-  	    buildable.get_object('fall_direc').set_active(6);
-  	    buildable.get_object('max_items').set_value(40);
-  	    buildable.get_object('fall_time').set_value(10);
-  	    buildable.get_object('fall_rot').set_value(60);
-  	    buildable.get_object('fall_drift').set_value(60);
-  	}else if (preset == "Matrix© rain") {
-  	    buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
-  	    rgba.parse("SpringGreen3");
-  	    buildable.get_object('text_color').set_rgba(rgba);
-  	    buildable.get_object('matrix_switch').set_active(true);
-  	    buildable.get_object('firework_switch').set_active(false);
-  	    buildable.get_object('fall_direc').set_active(0);
-  	    buildable.get_object('max_items').set_value(7);
-  	    buildable.get_object('fall_time').set_value(7);
-  	    buildable.get_object('fall_rot').set_value(0);
-  	    buildable.get_object('fall_drift').set_value(0);
-  	} else if (preset == "Fireworks") {
-  	    buildable.get_object('display_field').set_text("*");
-  	    rgba.parse("\#aaaaaa");
-  	    buildable.get_object('text_color').set_rgba(rgba);
-  	    buildable.get_object('matrix_switch').set_active(true);
-  	    buildable.get_object('firework_switch').set_active(true);
-  	    buildable.get_object('fall_direc').set_active(1);
-  	    buildable.get_object('max_items').set_value(7);
-  	    buildable.get_object('fall_time').set_value(5);
-  	    buildable.get_object('fall_rot').set_value(0);
-  	    buildable.get_object('fall_drift').set_value(30);
-  	}
+  	set_presets(preset, buildable);
   });
   
   //bind random button to random values
@@ -168,6 +122,67 @@ function widget_color(schemakey, widget, settings, buildable) {
             let hexString = Utils.cssHexString(rgba1.to_string());
             settings.set_string(schemakey, hexString);
         });
+}
+
+function set_presets(preset, buildable) {
+  if (preset == "Snow") {
+      let rgba = new Gdk.RGBA();
+      buildable.get_object('display_field').set_text("*,.");
+      rgba.parse("White");
+      buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('fall_direc').set_active(7);
+      buildable.get_object('max_items').set_value(40);
+      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('fall_rot').set_value(45);
+      buildable.get_object('fall_drift').set_value(75);
+      buildable.get_object('matrix_switch').set_active(false);
+      buildable.get_object('firework_switch').set_active(false);
+  } else if (preset == "Leaves") {
+      buildable.get_object('display_field').set_text("🍁️,🍂️");
+      buildable.get_object('fall_direc').set_active(6);
+      buildable.get_object('max_items').set_value(40);
+      buildable.get_object('fall_time').set_value(10);
+      buildable.get_object('fall_rot').set_value(60);
+      buildable.get_object('fall_drift').set_value(60);
+      buildable.get_object('matrix_switch').set_active(false);
+      buildable.get_object('firework_switch').set_active(false);
+  } else if (preset == "Matrix© rain") {
+      let rgba1 = new Gdk.RGBA();
+      let rgba2 = new Gdk.RGBA();
+      rgba1.parse("White");
+      rgba2.parse("SpringGreen3");
+      buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
+      buildable.get_object('text_color').set_rgba(rgba1);
+      buildable.get_object('fall_direc').set_active(0);
+      buildable.get_object('max_items').set_value(7);
+      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(0);
+      buildable.get_object('matrix_switch').set_active(true);
+      buildable.get_object('mat_display').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
+      buildable.get_object('mat_color').set_rgba(rgba2);
+      buildable.get_object('firework_switch').set_active(false);
+  } else if (preset == "Fireworks") {
+      let rgba1 = new Gdk.RGBA();
+      let rgba2 = new Gdk.RGBA();
+      let rgba3 = new Gdk.RGBA();
+      rgba1.parse("Orange");
+      rgba2.parse("Gray");
+      rgba3.parse("Yellow");
+      buildable.get_object('display_field').set_text("🔸️");
+      buildable.get_object('text_color').set_rgba(rgba1);
+      buildable.get_object('fall_direc').set_active(1);
+      buildable.get_object('max_items').set_value(7);
+      buildable.get_object('fall_time').set_value(5);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(30);
+      buildable.get_object('matrix_switch').set_active(true);
+      buildable.get_object('mat_display').set_text("*");
+      buildable.get_object('mat_color').set_rgba(rgba2);
+      buildable.get_object('firework_switch').set_active(true);
+      buildable.get_object('flr_display').set_text("★");
+      buildable.get_object('flr_color').set_rgba(rgba3);
+  }
 }
 
 function init() {

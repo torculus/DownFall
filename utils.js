@@ -125,7 +125,17 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
     return [startX, startY, endX, endY];
 }
 
-function get_font_props(FONT) {
+function get_font_props(fontstring) {
+    //get the size as an integer from the GtkFontButton string
+    let font_size = fontstring.slice(-2).trim();
+    let FONT;
+    
+    if (font_size.length == 1) {
+        FONT = fontstring.slice(0,-1).trim();
+    } else {
+        FONT = fontstring.slice(0,-2).trim();
+    }
+    
     let font_fam;
     let font_weight = "normal";
     let font_style = "normal";
@@ -145,5 +155,5 @@ function get_font_props(FONT) {
         font_style = "italic";
     }
     
-    return [font_fam, font_weight, font_style];
+    return [font_fam, font_weight, font_style, font_size];
 }
