@@ -44,8 +44,6 @@ function buildPrefsWidget() {
   //bind settings from prefs.xml to schema keys
   settings.bind('presets', buildable.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('matrixtrails', buildable.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fireworks', buildable.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fallmon', buildable.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fall3d', buildable.get_object('fall_3d'), 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -54,29 +52,21 @@ function buildPrefsWidget() {
   settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldrift', buildable.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
   
-  //set display_field from key
-  let dispfield = settings.get_strv('falltext');
-  let disptext = dispfield.toString();
-  buildable.get_object('display_field').set_text(disptext);
+  settings.bind('matrixtrails', buildable.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('matfont', buildable.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   
-  //bind display_field to key
-  buildable.get_object('display_field').connect('notify::text', (entry) => {
-  	let typed = entry.get_text();
-  	let falltext = typed.split(',');
-  	settings.set_strv('falltext', falltext);
-  });
+  settings.bind('fireworks', buildable.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('flrfont', buildable.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   
-  //set color button from settings
-  let rgba = new Gdk.RGBA();
-  rgba.parse(settings.get_string('textcolor'));
-  buildable.get_object('text_color').set_rgba(rgba);
+  //set up text entries
+  widget_schema('falltext', 'display_field', settings, buildable);
+  widget_schema('matdisplay', 'mat_display', settings, buildable);
+  widget_schema('flrdisplay', 'flr_display', settings, buildable);
   
-  //bind text color to key
-  buildable.get_object('text_color').connect('notify::rgba', (button) => {
-            let rgba1 = button.get_rgba();
-            let hexString = Utils.cssHexString(rgba1.to_string());
-            settings.set_string('textcolor', hexString);
-        });
+  //set up color entries
+  widget_color('textcolor', 'text_color', settings, buildable);
+  widget_color('matcolor', 'mat_color', settings, buildable);
+  widget_color('flrcolor', 'flr_color', settings, buildable);
   
   //bind presets to specific values
   buildable.get_object('presets').connect('changed', (presets) => {
@@ -152,6 +142,32 @@ function buildPrefsWidget() {
     prefsWidget.show_all();
   }
   return prefsWidget;
+}
+
+function widget_schema(schemakey, widget, settings, buildable) {
+  //set widget from schemakey
+  let disptext = settings.get_strv(schemakey).toString();
+  buildable.get_object(widget).set_text(disptext);
+  
+  //bind schemakey to widget changes
+  buildable.get_object(widget).connect('notify::text', (entry) => {
+  	let typed = entry.get_text().split(',');
+  	settings.set_strv(schemakey, typed);
+  });
+}
+
+function widget_color(schemakey, widget, settings, buildable) {
+  //set color button from settings
+  let rgba = new Gdk.RGBA();
+  rgba.parse(settings.get_string(schemakey));
+  buildable.get_object(widget).set_rgba(rgba);
+  
+  //bind text color to key
+  buildable.get_object(widget).connect('notify::rgba', (button) => {
+            let rgba1 = button.get_rgba();
+            let hexString = Utils.cssHexString(rgba1.to_string());
+            settings.set_string(schemakey, hexString);
+        });
 }
 
 function init() {

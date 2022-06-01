@@ -33,8 +33,6 @@ let COLOR;
 let FONT;
 let SIZE;
 let FI_STYLE;
-let MATRIXTRAILS;
-let FIREWORKS;
 let MONITORS;
 let DIRECTION;
 let FALL3D;
@@ -43,6 +41,20 @@ let AVG_TIME;
 let AVG_ROT;
 let AVG_DRIFT;
 let TIME_MDIFF = 2;
+
+let MATRIXTRAILS;
+let MATDISP;
+let MATCOLOR;
+let MATFONT;
+let MATSIZE;
+let MAT_STYLE;
+
+let FIREWORKS;
+let FLRDISP;
+let FLRCOLOR;
+let FLRFONT;
+let FLRSIZE;
+let FLR_STYLE;
 
 var FallItem = GObject.registerClass({
   GTypeName: 'FallItem',
@@ -104,8 +116,8 @@ var FallItem = GObject.registerClass({
       		    let pos = this.get_position();
       		    //set the matritem at the current FallItem position
       		    matritem.set_position(pos[0], pos[1]);
-      	    	    matritem.set_text( FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ] );
-      	    	    matritem.set_style(FI_STYLE);
+      	    	    matritem.set_text( MATDISP[ GLib.random_int_range(0, MATDISP.length) ] );
+      	    	    matritem.set_style(MAT_STYLE);
       	    	    matritem.show();
       	    	    
       	    	    //change the FallItem text
@@ -144,9 +156,8 @@ var FallItem = GObject.registerClass({
     	  
     	  this.fim.pane3D.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
-    	  flare.set_text(".");
-    	  flare.set_style(`font-size: ${SIZE + "px"};
-    	  		   color: ${flcolor};`);
+    	  flare.set_text( FLRDISP[ GLib.random_int_range(0, FLRDISP.length) ] );
+    	  flare.set_style(FLR_STYLE);
     	  
     	  /*get hexagonal coordinates relative to the endX, endY
     	  	i=2  i=1			(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
@@ -227,25 +238,8 @@ var FIM = GObject.registerClass({
     	    FONT = this.settings.get_string('textfont').slice(0,-2).trim();
     	}
     	
-    	let font_fam;
-    	let font_weight = "normal";
-    	let font_style = "normal";
-    	
-    	//most fonts are Regular, Bold, Italic, Bold Italic, or Oblique
-    	if (FONT.includes("Regular")) {
-    	    font_fam = FONT.slice( 0, FONT.indexOf("Regular") ).trim();
-    	} else if (FONT.search("Bold Italic|Bold Oblique") > 0) {
-    	    font_fam = FONT.slice( 0, FONT.search("Bold") ).trim();
-    	    font_weight = "bold";
-    	    font_style = "italic";
-    	} else if (FONT.includes("Bold")) {
-    	    font_fam = FONT.slice( 0, FONT.indexOf("Bold") ).trim();
-    	    font_weight = "bold";
-    	} else if (FONT.search("Italic|Oblique") > 0) {
-    	    font_fam = FONT.slice( 0, FONT.search("Italic|Oblique") ).trim();
-    	    font_style = "italic";
-    	}
-    	
+    	let [font_fam, font_weight, font_style] = Utils.get_font_props(FONT);
+    	    	
     	FI_STYLE = `font-family: ${font_fam};
     		font-weight: ${font_weight};
     		font-style: ${font_style};
@@ -253,8 +247,6 @@ var FIM = GObject.registerClass({
     		color: ${COLOR}`;
     		//text-shadow: 1px 1px rgba(0, 0, 0, 0.4); opacity: 255
     	
-    	MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
-    	FIREWORKS = this.settings.get_boolean('fireworks');
     	MONITORS = this.settings.get_int('fallmon');
     	DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
     	FALL3D = this.settings.get_int('fall3d'); //0=in front, 1=behind
@@ -262,6 +254,27 @@ var FIM = GObject.registerClass({
     	AVG_TIME = this.settings.get_int('falltime');
     	AVG_ROT = this.settings.get_int('fallrot');
     	AVG_DRIFT = this.settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
+    	
+    	MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
+    	if (MATRIXTRAILS) {
+    	    MATDISP = this.settings.get_strv("matdisplay");
+    	    MATCOLOR = this.settings.get_string('matcolor');
+    	    MATFONT;
+    	    MATSIZE;
+    	    MAT_STYLE = `font-size: ${SIZE + "px"};
+    	    		   color: ${MATCOLOR}`;
+    	}
+    	
+    	FIREWORKS = this.settings.get_boolean('fireworks');
+    	if (FIREWORKS) {
+    	    FLRDISP = this.settings.get_strv("flrdisplay");
+    	    FLRCOLOR = this.settings.get_string('flrcolor');
+    	    FLRFONT;
+    	    FLRSIZE;
+    	    FLR_STYLE = `font-size: ${SIZE + "px"};
+    	  		   color: ${FLRCOLOR}`;
+    	}
+    	
     	}
     	 
   });
