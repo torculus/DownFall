@@ -44,18 +44,6 @@
   		<description>Display text font</description>
   	</key>
   	
-  	<key type="b" name="matrixtrails">
-  		<default>false</default>
-  		<summary>Show Matrix© trails</summary>
-  		<description>Show Matrix© trails</description>
-  	</key>
-  	
-  	<key type="b" name="fireworks">
-  		<default>false</default>
-  		<summary>Show fireworks explosions</summary>
-  		<description>Show fireworks explosions</description>
-  	</key>
-  	
   	<key type="i" name="fallmon">
   		<default>0</default>
   		<summary>Which monitor(s) to fall on</summary>
@@ -100,6 +88,54 @@
   		<summary>Average Fall drift in percentage</summary>
   		<description>Average Fall drift in percentage</description>
   		<range min="0" max="100"/>
+  	</key>
+  	
+  	<key type="b" name="matrixtrails">
+  		<default>false</default>
+  		<summary>Show Matrix© trails</summary>
+  		<description>Show Matrix© trails</description>
+  	</key>
+  	
+  	<key type="as" name="matdisplay">
+  		<default>["Z"]</default>
+  		<summary>Text to display</summary>
+  		<description>Text to display</description>
+  	</key>
+  	
+  	<key type="s" name="matcolor">
+  		<default>"#5294e2"</default>
+  		<summary>Display text RGB color</summary>
+  		<description>Display text RGB color</description>
+  	</key>
+  	
+  	<key type="s" name="matfont">
+  		<default>"Arial 12"</default>
+  		<summary>Display text font</summary>
+  		<description>Display text font</description>
+  	</key>
+  	
+  	<key type="b" name="fireworks">
+  		<default>false</default>
+  		<summary>Show fireworks explosions</summary>
+  		<description>Show fireworks explosions</description>
+  	</key>
+  	
+  	<key type="as" name="flrdisplay">
+  		<default>["★"]</default>
+  		<summary>Text to display</summary>
+  		<description>Text to display</description>
+  	</key>
+  	
+  	<key type="s" name="flrcolor">
+  		<default>"#5294e2"</default>
+  		<summary>Display text RGB color</summary>
+  		<description>Display text RGB color</description>
+  	</key>
+  	
+  	<key type="s" name="flrfont">
+  		<default>"Arial 12"</default>
+  		<summary>Display text font</summary>
+  		<description>Display text font</description>
   	</key>
   	
   </schema>

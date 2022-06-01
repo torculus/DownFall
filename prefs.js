@@ -44,8 +44,6 @@ function buildPrefsWidget() {
   //bind settings from prefs.xml to schema keys
   settings.bind('presets', buildable.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('matrixtrails', buildable.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fireworks', buildable.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fallmon', buildable.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('fall3d', buildable.get_object('fall_3d'), 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -54,80 +52,26 @@ function buildPrefsWidget() {
   settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
   settings.bind('falldrift', buildable.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
   
-  //set display_field from key
-  let dispfield = settings.get_strv('falltext');
-  let disptext = dispfield.toString();
-  buildable.get_object('display_field').set_text(disptext);
+  settings.bind('matrixtrails', buildable.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('matfont', buildable.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   
-  //bind display_field to key
-  buildable.get_object('display_field').connect('notify::text', (entry) => {
-  	let typed = entry.get_text();
-  	let falltext = typed.split(',');
-  	settings.set_strv('falltext', falltext);
-  });
+  settings.bind('fireworks', buildable.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+  settings.bind('flrfont', buildable.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
   
-  //set color button from settings
-  let rgba = new Gdk.RGBA();
-  rgba.parse(settings.get_string('textcolor'));
-  buildable.get_object('text_color').set_rgba(rgba);
+  //set up text entries
+  widget_schema('falltext', 'display_field', settings, buildable);
+  widget_schema('matdisplay', 'mat_display', settings, buildable);
+  widget_schema('flrdisplay', 'flr_display', settings, buildable);
   
-  //bind text color to key
-  buildable.get_object('text_color').connect('notify::rgba', (button) => {
-            let rgba1 = button.get_rgba();
-            let hexString = Utils.cssHexString(rgba1.to_string());
-            settings.set_string('textcolor', hexString);
-        });
+  //set up color entries
+  widget_color('textcolor', 'text_color', settings, buildable);
+  widget_color('matcolor', 'mat_color', settings, buildable);
+  widget_color('flrcolor', 'flr_color', settings, buildable);
   
   //bind presets to specific values
   buildable.get_object('presets').connect('changed', (presets) => {
   	let preset = presets.get_active_text();
-  	let rgba = new Gdk.RGBA();
-  	
-  	if (preset == "Snow") {
-  	    buildable.get_object('display_field').set_text("*,.");
-  	    rgba.parse("\#ffffff");
-  	    buildable.get_object('text_color').set_rgba(rgba);
-  	    buildable.get_object('matrix_switch').set_active(false);
-  	    buildable.get_object('firework_switch').set_active(false);
-  	    buildable.get_object('fall_direc').set_active(7);
-  	    buildable.get_object('max_items').set_value(40);
-  	    buildable.get_object('fall_time').set_value(7);
-  	    buildable.get_object('fall_rot').set_value(45);
-  	    buildable.get_object('fall_drift').set_value(75);
-  	} else if (preset == "Leaves") {
-  	    buildable.get_object('display_field').set_text("🍁️,🍂️");
-  	    rgba.parse("\#ffffff");
-  	    buildable.get_object('text_color').set_rgba(rgba);
- 	    buildable.get_object('matrix_switch').set_active(false);
-  	    buildable.get_object('firework_switch').set_active(false);
-  	    buildable.get_object('fall_direc').set_active(6);
-  	    buildable.get_object('max_items').set_value(40);
-  	    buildable.get_object('fall_time').set_value(10);
-  	    buildable.get_object('fall_rot').set_value(60);
-  	    buildable.get_object('fall_drift').set_value(60);
-  	}else if (preset == "Matrix© rain") {
-  	    buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
-  	    rgba.parse("SpringGreen3");
-  	    buildable.get_object('text_color').set_rgba(rgba);
-  	    buildable.get_object('matrix_switch').set_active(true);
-  	    buildable.get_object('firework_switch').set_active(false);
-  	    buildable.get_object('fall_direc').set_active(0);
-  	    buildable.get_object('max_items').set_value(7);
-  	    buildable.get_object('fall_time').set_value(7);
-  	    buildable.get_object('fall_rot').set_value(0);
-  	    buildable.get_object('fall_drift').set_value(0);
-  	} else if (preset == "Fireworks") {
-  	    buildable.get_object('display_field').set_text("*");
-  	    rgba.parse("\#aaaaaa");
-  	    buildable.get_object('text_color').set_rgba(rgba);
-  	    buildable.get_object('matrix_switch').set_active(true);
-  	    buildable.get_object('firework_switch').set_active(true);
-  	    buildable.get_object('fall_direc').set_active(1);
-  	    buildable.get_object('max_items').set_value(7);
-  	    buildable.get_object('fall_time').set_value(5);
-  	    buildable.get_object('fall_rot').set_value(0);
-  	    buildable.get_object('fall_drift').set_value(30);
-  	}
+  	set_presets(preset, buildable);
   });
   
   //bind random button to random values
@@ -152,6 +96,93 @@ function buildPrefsWidget() {
     prefsWidget.show_all();
   }
   return prefsWidget;
+}
+
+function widget_schema(schemakey, widget, settings, buildable) {
+  //set widget from schemakey
+  let disptext = settings.get_strv(schemakey).toString();
+  buildable.get_object(widget).set_text(disptext);
+  
+  //bind schemakey to widget changes
+  buildable.get_object(widget).connect('notify::text', (entry) => {
+  	let typed = entry.get_text().split(',');
+  	settings.set_strv(schemakey, typed);
+  });
+}
+
+function widget_color(schemakey, widget, settings, buildable) {
+  //set color button from settings
+  let rgba = new Gdk.RGBA();
+  rgba.parse(settings.get_string(schemakey));
+  buildable.get_object(widget).set_rgba(rgba);
+  
+  //bind text color to key
+  buildable.get_object(widget).connect('notify::rgba', (button) => {
+            let rgba1 = button.get_rgba();
+            let hexString = Utils.cssHexString(rgba1.to_string());
+            settings.set_string(schemakey, hexString);
+        });
+}
+
+function set_presets(preset, buildable) {
+  if (preset == "Snow") {
+      let rgba = new Gdk.RGBA();
+      buildable.get_object('display_field').set_text("*,.");
+      rgba.parse("White");
+      buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('fall_direc').set_active(7);
+      buildable.get_object('max_items').set_value(40);
+      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('fall_rot').set_value(45);
+      buildable.get_object('fall_drift').set_value(75);
+      buildable.get_object('matrix_switch').set_active(false);
+      buildable.get_object('firework_switch').set_active(false);
+  } else if (preset == "Leaves") {
+      buildable.get_object('display_field').set_text("🍁️,🍂️");
+      buildable.get_object('fall_direc').set_active(6);
+      buildable.get_object('max_items').set_value(40);
+      buildable.get_object('fall_time').set_value(10);
+      buildable.get_object('fall_rot').set_value(60);
+      buildable.get_object('fall_drift').set_value(60);
+      buildable.get_object('matrix_switch').set_active(false);
+      buildable.get_object('firework_switch').set_active(false);
+  } else if (preset == "Matrix© rain") {
+      let rgba1 = new Gdk.RGBA();
+      let rgba2 = new Gdk.RGBA();
+      rgba1.parse("White");
+      rgba2.parse("SpringGreen3");
+      buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
+      buildable.get_object('text_color').set_rgba(rgba1);
+      buildable.get_object('fall_direc').set_active(0);
+      buildable.get_object('max_items').set_value(7);
+      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(0);
+      buildable.get_object('matrix_switch').set_active(true);
+      buildable.get_object('mat_display').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
+      buildable.get_object('mat_color').set_rgba(rgba2);
+      buildable.get_object('firework_switch').set_active(false);
+  } else if (preset == "Fireworks") {
+      let rgba1 = new Gdk.RGBA();
+      let rgba2 = new Gdk.RGBA();
+      let rgba3 = new Gdk.RGBA();
+      rgba1.parse("Orange");
+      rgba2.parse("Gray");
+      rgba3.parse("Yellow");
+      buildable.get_object('display_field').set_text("🔸️");
+      buildable.get_object('text_color').set_rgba(rgba1);
+      buildable.get_object('fall_direc').set_active(1);
+      buildable.get_object('max_items').set_value(7);
+      buildable.get_object('fall_time').set_value(5);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(30);
+      buildable.get_object('matrix_switch').set_active(true);
+      buildable.get_object('mat_display').set_text("*");
+      buildable.get_object('mat_color').set_rgba(rgba2);
+      buildable.get_object('firework_switch').set_active(true);
+      buildable.get_object('flr_display').set_text("★");
+      buildable.get_object('flr_color').set_rgba(rgba3);
+  }
 }
 
 function init() {
