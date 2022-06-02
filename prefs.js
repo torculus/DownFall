@@ -83,13 +83,13 @@ function buildPrefsWidget() {
   	let color = "\#" + Math.floor(Math.random()*16777215).toString(16);
   	rgba.parse( color );
   	buildable.get_object('text_color').set_rgba(rgba);
-  	buildable.get_object('matrix_switch').set_active( (Math.random() >= 0.5) );
-  	buildable.get_object('firework_switch').set_active( (Math.random() >= 0.5) );
   	buildable.get_object('fall_direc').set_active(GLib.random_int_range(0,8));
   	buildable.get_object('max_items').set_value(GLib.random_int_range(1,40));
   	buildable.get_object('fall_time').set_value(GLib.random_int_range(2,20));
   	buildable.get_object('fall_rot').set_value(GLib.random_int_range(0,360));
   	buildable.get_object('fall_drift').set_value(GLib.random_int_range(0,100));
+  	buildable.get_object('matrix_switch').set_active( (Math.random() >= 0.5) );
+  	buildable.get_object('firework_switch').set_active( (Math.random() >= 0.5) );
   });
   
   if ( Config.PACKAGE_VERSION.startsWith("3.") ) { //running GNOME 3.36/3.38

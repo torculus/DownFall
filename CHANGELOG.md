@@ -3,7 +3,7 @@
 ## 3.3.0
 * Moved Matrix© trails and Firework Explosion Endings to "Special Effects" tab
 * Renamed "Firework Explosion Endings" to "Firework Flares"
-* **New setting**: Added color and font styling options to Special Effects
+* **New setting**: Added text, color, and font styling options to Special Effects
 
 ## 3.2.0
 
