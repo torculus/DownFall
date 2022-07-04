@@ -172,12 +172,12 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text("🔸️");
       buildable.get_object('text_color').set_rgba(rgba1);
       buildable.get_object('fall_direc').set_active(1);
-      buildable.get_object('max_items').set_value(7);
-      buildable.get_object('fall_time').set_value(5);
+      buildable.get_object('max_items').set_value(5);
+      buildable.get_object('fall_time').set_value(2);
       buildable.get_object('fall_rot').set_value(0);
       buildable.get_object('fall_drift').set_value(30);
       buildable.get_object('matrix_switch').set_active(true);
-      buildable.get_object('mat_display').set_text("*");
+      buildable.get_object('mat_display').set_text(".");
       buildable.get_object('mat_color').set_rgba(rgba2);
       buildable.get_object('firework_switch').set_active(true);
       buildable.get_object('flr_display').set_text("★");

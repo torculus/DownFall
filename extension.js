@@ -165,7 +165,7 @@ var FallItem = GObject.registerClass({
     	    x : Xflr,
     	    y : Yflr,
     	    duration : 2000,
-    	    mode : Clutter.AnimationMode.EASE_OUT_QUAD,
+    	    mode : Clutter.AnimationMode.EASE_OUT_EXPO,
     	    onComplete : () => {flare.destroy()}
     	  });
     	  
@@ -321,5 +321,6 @@ var Extension = GObject.registerClass({
   });
 
 function init() {
+    ExtensionUtils.initTranslations(Me.metadata.uuid);
     return new Extension();
 }
