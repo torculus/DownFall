@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.3.1
+* Adjusted Firework preset and `Clutter.AnimationMode` to be more realistic
+
 ## 3.3.0
 * Moved Matrix© trails and Firework Explosion Endings to "Special Effects" tab
 * Renamed "Firework Explosion Endings" to "Firework Flares"
