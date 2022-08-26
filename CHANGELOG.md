@@ -1,5 +1,8 @@
 # Change Log
 
+## 3.3.2
+* Added GNOME 43 to metadata
+
 ## 3.3.1
 * Adjusted Firework preset and `Clutter.AnimationMode` to be more realistic
 
