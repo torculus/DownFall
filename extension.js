@@ -18,9 +18,7 @@
  *
  */
 
-const St = imports.gi.St;
-const GObject = imports.gi.GObject;
-const GLib = imports.gi.GLib;
+const {St, GObject, GLib} = imports.gi;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
 
@@ -61,6 +59,15 @@ var FallItem = GObject.registerClass({
       this.whichItem = whichItem;
       this.fim = fim; //reference back to the FallItemsManager (FIM)
     }
+
+	style(fistyle) {
+	  //don't style on each iteration of fall()
+      if (MATRIXTRAILS) {
+      	this.set_style(fistyle + `color: #ffffff`);
+	  } else {
+		this.set_style(fistyle);
+	  }
+	}
     
     fall() {
       this.idleID = null;
@@ -89,15 +96,11 @@ var FallItem = GObject.registerClass({
       				     : Clutter.AnimationMode.EASE_OUT_QUAD;
       
       this.set_position(startX, startY);
-      
       this.set_text(this.whichItem);
-      this.set_style(FI_STYLE);
       
       this.show();
       
       if (MATRIXTRAILS) {
-      	this.set_style(FI_STYLE + `color: #ffffff`);
-      	
       	//get number of steps between (startX,startY) and (endX,endY)
       	let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       	
@@ -216,7 +219,7 @@ var FIM = GObject.registerClass({
       }
       
       //make it rain
-      this.ic.get_children().forEach( (fi) => {fi.fall();} );
+      this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE); fi.fall();} );
     }
     
     settingsChanged() {
@@ -266,8 +269,10 @@ var FIM = GObject.registerClass({
     	    		   font-size: ${flr_size + "px"};
     	  		   color: ${FLRCOLOR}`;
     	}
+       
+		this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE); } );
     	
-    	}
+    }
     	 
   });
 
