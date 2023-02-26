@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.4.0
+* Separated `fi.style()` from `fi.fall()`
+* **New feature***: changing text and style dynamically ("on the fly")
+
 ## 3.3.2
 * Added GNOME 43 to metadata
 

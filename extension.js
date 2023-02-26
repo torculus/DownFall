@@ -54,14 +54,15 @@ var FallItem = GObject.registerClass({
   Signals: {},
   },
   class FallItem extends St.Label {
-    _init(whichItem, fim) {
+    _init(fim) {
       super._init();
-      this.whichItem = whichItem;
       this.fim = fim; //reference back to the FallItemsManager (FIM)
     }
 
-	style(fistyle) {
+	style(fistyle, text) {
 	  //don't style on each iteration of fall()
+	  this.set_text(text);
+
       if (MATRIXTRAILS) {
       	this.set_style(fistyle + `color: #ffffff`);
 	  } else {
@@ -96,7 +97,6 @@ var FallItem = GObject.registerClass({
       				     : Clutter.AnimationMode.EASE_OUT_QUAD;
       
       this.set_position(startX, startY);
-      this.set_text(this.whichItem);
       
       this.show();
       
@@ -213,13 +213,13 @@ var FIM = GObject.registerClass({
     dropItems() {
       //only create MAX_ITEMS number of FallItems
       for (let i=0; i < MAX_ITEMS; i++) {
-      	let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-      	let newFi = new FallItem(whichItem, this);
+      	let newFi = new FallItem(this);
       	this.ic.add_child(newFi);
       }
       
       //make it rain
-      this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE); fi.fall();} );
+	  let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
+      this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE, whichItem); fi.fall();} );
     }
     
     settingsChanged() {
@@ -270,7 +270,8 @@ var FIM = GObject.registerClass({
     	  		   color: ${FLRCOLOR}`;
     	}
        
-		this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE); } );
+		let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
+		this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE, whichItem); } );
     	
     }
     	 
