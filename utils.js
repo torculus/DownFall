@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2022 Benjamin S Osenbach
+ * Copyright (C) 2019-2023 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *

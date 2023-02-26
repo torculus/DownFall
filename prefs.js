@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2022 Benjamin S Osenbach
+ * Copyright (C) 2019-2023 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -18,10 +18,7 @@
  *
  */
 
-const Gtk = imports.gi.Gtk;
-const Gio = imports.gi.Gio;
-const Gdk = imports.gi.Gdk;
-const GLib = imports.gi.GLib;
+const {Gtk, Gio, Gdk, GLib} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 const Config = imports.misc.config;

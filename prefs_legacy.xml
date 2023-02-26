@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2022 Benjamin S Osenbach
+ * Copyright (C) 2019-2023 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -833,7 +833,7 @@
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Version 3.3.2</property>
+                <property name="label" translatable="yes">Version 3.4.0 (dev)</property>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2022 Benjamin S Osenbach
+ * Copyright (C) 2019-2023 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -218,8 +218,10 @@ var FIM = GObject.registerClass({
       }
       
       //make it rain
-	  let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-      this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE, whichItem); fi.fall();} );
+      this.ic.get_children().forEach( (fi) => {
+	    let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
+		fi.style(FI_STYLE, whichItem);
+		fi.fall();} );
     }
     
     settingsChanged() {
@@ -270,8 +272,9 @@ var FIM = GObject.registerClass({
     	  		   color: ${FLRCOLOR}`;
     	}
        
-		let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-		this.ic.get_children().forEach( (fi) => {fi.style(FI_STYLE, whichItem); } );
+		this.ic.get_children().forEach( (fi) => {
+			let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
+			fi.style(FI_STYLE, whichItem); } );
     	
     }
     	 
