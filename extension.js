@@ -59,7 +59,7 @@ var FallItem = GObject.registerClass({
       this.fim = fim; //reference back to the FallItemsManager (FIM)
     }
 
-	style(fistyle, text) {
+	change(fistyle, text, fontstring) {
 	  //don't style on each iteration of fall()
 	  this.set_text(text);
 
@@ -68,6 +68,8 @@ var FallItem = GObject.registerClass({
 	  } else {
 		this.set_style(fistyle);
 	  }
+
+	  this.get_clutter_text().set_font_name(fontstring);
 	}
     
     fall() {
@@ -220,7 +222,7 @@ var FIM = GObject.registerClass({
       //make it rain
       this.ic.get_children().forEach( (fi) => {
 	    let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-		fi.style(FI_STYLE, whichItem);
+		fi.change(FI_STYLE, whichItem, this.settings.get_string('textfont') );
 		fi.fall();} );
     }
     
@@ -274,7 +276,7 @@ var FIM = GObject.registerClass({
        
 		this.ic.get_children().forEach( (fi) => {
 			let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-			fi.style(FI_STYLE, whichItem); } );
+			fi.change(FI_STYLE, whichItem, fi_fontstring); } );
     	
     }
     	 
