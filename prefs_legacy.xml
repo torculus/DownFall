@@ -833,7 +833,7 @@
               <object class="GtkLabel">
                 <property name="halign">start</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Version 3.4.0 (dev)</property>
+                <property name="label" translatable="yes">Version 3.4.0</property>
               </object>
               <packing>
                 <property name="expand">False</property>
