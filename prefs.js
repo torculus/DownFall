@@ -116,8 +116,7 @@ function widget_color(schemakey, widget, settings, buildable) {
   //bind text color to key
   buildable.get_object(widget).connect('notify::rgba', (button) => {
             let rgba1 = button.get_rgba();
-            let hexString = Utils.cssHexString(rgba1.to_string());
-            settings.set_string(schemakey, hexString);
+            settings.set_string(schemakey, rgba1.to_string());
         });
 }
 

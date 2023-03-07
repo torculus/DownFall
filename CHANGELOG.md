@@ -3,8 +3,8 @@
 ## 3.4.0
 * Separated `fi.change()` from `fi.fall()` for performance
 * Use Pango styling instead of custom styling
+* Removed (almost) all global variables (code safety)
 * ***New feature***: changing text and style dynamically ("on the fly")
-- [  ] Move `Gdk.RGBA` to `Clutter.Color`
 
 ## 3.3.2
 * Added GNOME 43 to metadata

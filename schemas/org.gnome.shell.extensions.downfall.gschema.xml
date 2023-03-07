@@ -33,13 +33,13 @@
   	</key>
   	
   	<key type="s" name="textcolor">
-  		<default>"#5294e2"</default>
+  		<default>"rgb(0,0,0)"</default>
   		<summary>Display text RGB color</summary>
   		<description>Display text RGB color</description>
   	</key>
   	
   	<key type="s" name="textfont">
-  		<default>"Arial 12"</default>
+  		<default>"Sans 20"</default>
   		<summary>Display text font</summary>
   		<description>Display text font</description>
   	</key>
@@ -77,7 +77,7 @@
   	</key>
   	
   	<key type="i" name="fallrot">
-  		<default>180</default>
+  		<default>0</default>
   		<summary>Falling rotation in degrees</summary>
   		<description>Falling rotation in degrees</description>
   		<range min="0" max="1800"/>
@@ -98,18 +98,18 @@
   	
   	<key type="as" name="matdisplay">
   		<default>["Z"]</default>
-  		<summary>Text to display</summary>
-  		<description>Text to display</description>
+  		<summary>Matrix text to display</summary>
+  		<description>Matrix text to display</description>
   	</key>
   	
   	<key type="s" name="matcolor">
-  		<default>"#5294e2"</default>
-  		<summary>Display text RGB color</summary>
-  		<description>Display text RGB color</description>
+  		<default>"rgb(0,0,0)"</default>
+  		<summary>Matrix text RGB color</summary>
+  		<description>Matrix text RGB color</description>
   	</key>
   	
   	<key type="s" name="matfont">
-  		<default>"Arial 12"</default>
+  		<default>"Sans 20"</default>
   		<summary>Display text font</summary>
   		<description>Display text font</description>
   	</key>
@@ -122,20 +122,20 @@
   	
   	<key type="as" name="flrdisplay">
   		<default>["★"]</default>
-  		<summary>Text to display</summary>
-  		<description>Text to display</description>
+  		<summary>Flare text to display</summary>
+  		<description>Flare text to display</description>
   	</key>
   	
   	<key type="s" name="flrcolor">
-  		<default>"#5294e2"</default>
-  		<summary>Display text RGB color</summary>
-  		<description>Display text RGB color</description>
+  		<default>"rgb(0,0,0)"</default>
+  		<summary>Flare text RGB color</summary>
+  		<description>Flare text RGB color</description>
   	</key>
   	
   	<key type="s" name="flrfont">
-  		<default>"Arial 12"</default>
-  		<summary>Display text font</summary>
-  		<description>Display text font</description>
+  		<default>"Sans 20"</default>
+  		<summary>Flare text font</summary>
+  		<description>Flare text font</description>
   	</key>
   	
   </schema>

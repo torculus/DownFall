@@ -18,34 +18,14 @@
  *
  */
 
-const {St, GObject, GLib} = imports.gi;
+const {St, GObject, GLib, Clutter} = imports.gi;
 const Main = imports.ui.main;
-const Clutter = imports.gi.Clutter;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
-let FALLITEMS;
-let COLOR;
-let MONITORS;
-let DIRECTION;
-let FALL3D;
-let MAX_ITEMS;
-let AVG_TIME;
-let AVG_ROT;
-let AVG_DRIFT;
 let TIME_MDIFF = 2;
-
-let MATRIXTRAILS;
-let MATDISP;
-let MATFONT;
-let MATCOLOR;
-
-let FIREWORKS;
-let FLRDISP;
-let FLRFONT;
-let FLRCOLOR;
 
 var FallItem = GObject.registerClass({
   GTypeName: 'FallItem',
@@ -60,26 +40,26 @@ var FallItem = GObject.registerClass({
 
     change(text, fontstring, color) {
       //don't style on each iteration of fall()
-      this.set_text(text);
+      this.set_style(`color: ${color}`);
 
       this.get_clutter_text().set_font_name(fontstring);
-
-      this.set_style(`color: ${color}`);
+      
+      this.set_text(text);
     }
     
     fall() {
       this.idleID = null;
-      let monitor = (MONITORS == 0) ? Main.layoutManager.currentMonitor
+      let monitor = (this.fim.MONITORS == 0) ? Main.layoutManager.currentMonitor
       				    : Main.layoutManager.primaryMonitor;
       
       //get coordinates for the start and end points
-      let startEndpoints = Utils.startEndPoints(DIRECTION, monitor, AVG_DRIFT, this);
+      let startEndpoints = Utils.startEndPoints(this.fim.DIRECTION, monitor, this.fim.AVG_DRIFT, this);
       let startX = startEndpoints[0];
       let startY = startEndpoints[1];
       let endX = startEndpoints[2];
       let endY = startEndpoints[3];
       
-      if (FIREWORKS) {
+      if (this.fim.FIREWORKS) {
       	//end in the middle
       	let alpha = GLib.random_int_range(33,50)/100;
       	endX = Math.floor(alpha*startX + (1-alpha)*endX);
@@ -87,17 +67,17 @@ var FallItem = GObject.registerClass({
       	this.endX = endX; this.endY = endY;
       }
       
-      let time = (AVG_TIME + GLib.random_int_range(-50,50)/100 * TIME_MDIFF) * 1000;
-      let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * AVG_ROT);
+      let time = (this.fim.AVG_TIME + GLib.random_int_range(-50,50)/100 * TIME_MDIFF) * 1000;
+      let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * this.fim.AVG_ROT);
       
-      let cluttermode = MATRIXTRAILS ? Clutter.AnimationMode.LINEAR
+      let cluttermode = this.fim.MATRIXTRAILS ? Clutter.AnimationMode.LINEAR
       				     : Clutter.AnimationMode.EASE_OUT_QUAD;
       
       this.set_position(startX, startY);
       
       this.show();
       
-      if (MATRIXTRAILS) {
+      if (this.fim.MATRIXTRAILS) {
      	//get number of steps between (startX,startY) and (endX,endY)
       	let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       	
@@ -110,13 +90,13 @@ var FallItem = GObject.registerClass({
       		    let pos = this.get_position();
       		    //set the matritem at the current FallItem position
       		    matritem.set_position(pos[0], pos[1]);
-      	    	    matritem.set_text( MATDISP[ GLib.random_int_range(0, MATDISP.length) ] );
-      	    	    matritem.get_clutter_text().set_font_name(MATFONT);
-		    matritem.set_style(`color: ${MATCOLOR}`);
+		    matritem.set_style(`color: ${this.fim.MATCOLOR}`);
+      	    	    matritem.get_clutter_text().set_font_name(this.fim.MATFONT);
+      	    	    matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
       	    	    matritem.show();
       	    	    
       	    	    //change the FallItem text
-      	    	    this.set_text( FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ] );
+      	    	    this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
       	    	    
       	    	    //destroy the matritem after `time` milliseconds
       	    	    matritem.matRemID = GLib.timeout_add( GLib.PRIORITY_LOW, time,
@@ -143,7 +123,7 @@ var FallItem = GObject.registerClass({
     finish() {
       this.hide();
       
-      if (FIREWORKS) {
+      if (this.fim.FIREWORKS) {
       	//explode
       	for (let n=0; n<6; n++) {
       	  let flare = new St.Label();
@@ -151,9 +131,9 @@ var FallItem = GObject.registerClass({
     	  
     	  this.fim.pane3D.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
-    	  flare.set_text( FLRDISP[ GLib.random_int_range(0, FLRDISP.length) ] );
-      	  flare.get_clutter_text().set_font_name(FLRFONT);
-    	  flare.set_style(`color:${FLRCOLOR}`);
+    	  flare.set_style(`color:${this.fim.FLRCOLOR}`);
+      	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
+    	  flare.set_text( this.fim.FLRDISP[ GLib.random_int_range(0, this.fim.FLRDISP.length) ] );
     	  
     	  /*get hexagonal coordinates relative to the endX, endY
     	  	i=2  i=1			(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
@@ -190,8 +170,8 @@ var FIM = GObject.registerClass({
     _init(settings) {
         super._init();
     	this.settings = settings;
-    	
-    	if (FALL3D == 0) { //in front
+
+    	if (this.settings.get_int('fall3d') == 0) { //in front
     	  this.pane3D = global.top_window_group; //Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group, 
     	} else {
     	  this.pane3D = Main.layoutManager._backgroundGroup;
@@ -204,57 +184,58 @@ var FIM = GObject.registerClass({
     	let matContainer = new Clutter.Actor(); //a place to store our matritems
     	this.mc = matContainer;
     	this.pane3D.add_child(this.mc);
-    	
+
     	this.settings.connect('changed', this.settingsChanged.bind(this));
-      	this.settingsChanged();
+	this.loadSettings();
     }
     
     dropItems() {
       //only create MAX_ITEMS number of FallItems
-      for (let i=0; i < MAX_ITEMS; i++) {
+      for (let i=0; i < this.MAX_ITEMS; i++) {
       	let newFi = new FallItem(this);
       	this.ic.add_child(newFi);
       }
       
       //make it rain
       this.ic.get_children().forEach( (fi) => {
-	    let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-		fi.change(whichItem, this.settings.get_string('textfont'), COLOR);
+	    let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
+		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR);
 		fi.fall();} );
     }
     
-    settingsChanged() {
-    	FALLITEMS = this.settings.get_strv("falltext");
-    	COLOR = this.settings.get_string('textcolor');
+    loadSettings() {
+    	this.FALLITEMS = this.settings.get_strv("falltext");
+    	this.FALLCOLOR = this.settings.get_string('textcolor');
     	
-    	let fi_fontstring = this.settings.get_string('textfont');
+    	this.FALLFONT = this.settings.get_string('textfont');
     	
-    	MONITORS = this.settings.get_int('fallmon');
-    	DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
-    	FALL3D = this.settings.get_int('fall3d'); //0=in front, 1=behind
-    	MAX_ITEMS = this.settings.get_int('maxitems');
-    	AVG_TIME = this.settings.get_int('falltime');
-    	AVG_ROT = this.settings.get_int('fallrot');
-    	AVG_DRIFT = this.settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
+    	this.MONITORS = this.settings.get_int('fallmon');
+    	this.DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
+    	this.MAX_ITEMS = this.settings.get_int('maxitems');
+    	this.AVG_TIME = this.settings.get_int('falltime');
+    	this.AVG_ROT = this.settings.get_int('fallrot');
+    	this.AVG_DRIFT = this.settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
     	
-    	MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
-    	if (MATRIXTRAILS) {
-	  MATDISP = this.settings.get_strv("matdisplay");
-    	  MATCOLOR = this.settings.get_string('matcolor');
-	  MATFONT = this.settings.get_string('matfont');
-    	}
-    	
-    	FIREWORKS = this.settings.get_boolean('fireworks');
-    	if (FIREWORKS) {
-    	  FLRDISP = this.settings.get_strv("flrdisplay");
-    	  FLRCOLOR = this.settings.get_string('flrcolor');
-    	  FLRFONT = this.settings.get_string('flrfont');
-    	}
-       
-	this.ic.get_children().forEach( (fi) => {
-		let whichItem = FALLITEMS[ GLib.random_int_range(0, FALLITEMS.length) ];
-		fi.change(whichItem, fi_fontstring, COLOR); } );
+    	this.MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
+    	if (this.MATRIXTRAILS) {
+	  this.MATDISP = this.settings.get_strv("matdisplay");
+    	  this.MATCOLOR = this.settings.get_string('matcolor');
+	  this.MATFONT = this.settings.get_string('matfont');
+	}    	
 
+    	this.FIREWORKS = this.settings.get_boolean('fireworks');
+    	if (this.FIREWORKS) {
+    	  this.FLRDISP = this.settings.get_strv("flrdisplay");
+    	  this.FLRCOLOR = this.settings.get_string('flrcolor');
+    	  this.FLRFONT = this.settings.get_string('flrfont');
+    	}
+    }
+
+    settingsChanged() {
+    	this.loadSettings();
+	this.ic.get_children().forEach( (fi) => {
+		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
+		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR); } );
     }
 
   });
