@@ -1,9 +1,9 @@
 # Change Log
 
-## 3.4.0
-* Separated `fi.change()` from `fi.fall()` for performance
-* Use Pango styling instead of custom styling
-* Removed (almost) all global variables (code safety)
+## 4.0.0
+* Separated `fi.change()` and `fi.matrixtrail()` from `fi.fall()` for performance
+* Use Pango and GLib instead of custom functions
+* Removed all global variables (code safety)
 * ***New feature***: changing text and style dynamically ("on the fly")
 
 ## 3.3.2

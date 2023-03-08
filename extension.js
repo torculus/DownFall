@@ -25,8 +25,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
-let TIME_MDIFF = 2;
-
 var FallItem = GObject.registerClass({
   GTypeName: 'FallItem',
   Properties: {},
@@ -67,7 +65,7 @@ var FallItem = GObject.registerClass({
       	this.endX = endX; this.endY = endY;
       }
       
-      let time = (this.fim.AVG_TIME + GLib.random_int_range(-50,50)/100 * TIME_MDIFF) * 1000;
+      let time = (this.fim.AVG_TIME + GLib.random_int_range(-1,1)) * 1000;
       let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * this.fim.AVG_ROT);
       
       let cluttermode = this.fim.MATRIXTRAILS ? Clutter.AnimationMode.LINEAR
@@ -78,35 +76,12 @@ var FallItem = GObject.registerClass({
       this.show();
       
       if (this.fim.MATRIXTRAILS) {
-     	//get number of steps between (startX,startY) and (endX,endY)
-      	let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
-      	
-      	//add a new Matrix trail character every `time/n` milliseconds
-      	if (!this.matAddID) { //only on first fall
-      	  this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n,
-      		() => {
-      		    let matritem = new St.Label();
-      		    this.fim.mc.add_child(matritem);
-      		    let pos = this.get_position();
-      		    //set the matritem at the current FallItem position
-      		    matritem.set_position(pos[0], pos[1]);
-		    matritem.set_style(`color: ${this.fim.MATCOLOR}`);
-      	    	    matritem.get_clutter_text().set_font_name(this.fim.MATFONT);
-      	    	    matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
-      	    	    matritem.show();
-      	    	    
-      	    	    //change the FallItem text
-      	    	    this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
-      	    	    
-      	    	    //destroy the matritem after `time` milliseconds
-      	    	    matritem.matRemID = GLib.timeout_add( GLib.PRIORITY_LOW, time,
-      	    	    	() => {this.fim.mc.remove_child(matritem);
-      	    	    	       matritem.destroy();
-      	    	    	       return GLib.SOURCE_REMOVE} );
-      	    	    
-      	    	    return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
-      		});
-      	}
+	if (!this.matAddID) { //only add on first fall
+	  this.matrixtrail(startX, startY, endX, endY, time);
+	}
+      } else if (this.matAddID) { //dynamically stopping the matritems
+      	  GLib.source_remove(this.matAddID);
+	  this.matAddID = null;
       }
       
       this.ease({
@@ -118,6 +93,36 @@ var FallItem = GObject.registerClass({
       	onComplete : () => {this.finish()}
       });
       
+    }
+
+    matrixtrail(startX, startY, endX, endY, time) {
+      //get number of steps between (startX,startY) and (endX,endY)
+      let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
+      
+      //add a new Matrix trail character every `time/n` milliseconds
+      this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n, () => {
+      		let matritem = new St.Label();
+		this.fim.mc.add_child(matritem);
+      		let pos = this.get_position();
+
+		//set the matritem at the current FallItem position
+      		matritem.set_position(pos[0], pos[1]);
+		matritem.set_style(`color: ${this.fim.MATCOLOR}`);
+		matritem.get_clutter_text().set_font_name(this.fim.MATFONT);
+		matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
+		matritem.show();
+
+		//change the FallItem text
+		this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
+
+		//destroy the matritem after `time` milliseconds
+		matritem.matRemID = GLib.timeout_add( GLib.PRIORITY_LOW, time,
+			() => {this.fim.mc.remove_child(matritem);
+			matritem.destroy();
+			return GLib.SOURCE_REMOVE} );
+
+		return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
+      		});
     }
     
     finish() {
@@ -221,6 +226,13 @@ var FIM = GObject.registerClass({
 	  this.MATDISP = this.settings.get_strv("matdisplay");
     	  this.MATCOLOR = this.settings.get_string('matcolor');
 	  this.MATFONT = this.settings.get_string('matfont');
+	} else {
+	  //stop adding new matritems
+	  this.ic.get_children().forEach( (fi) => {GLib.source_remove(fi.matAddID);
+	  						fi.matAddID = null;} );
+
+	  //immediately destroy all remaining matritems
+	  this.mc.get_children().forEach( (mi) => {mi.destroy();} );
 	}    	
 
     	this.FIREWORKS = this.settings.get_boolean('fireworks');
