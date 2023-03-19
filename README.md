@@ -5,6 +5,8 @@ https://user-images.githubusercontent.com/20175597/147769699-c8331414-7f4e-499a-
 
 DownFall is inspired by projects like [Xsnow](https://sourceforge.net/projects/xsnow/), [gsnow](https://extensions.gnome.org/extension/1156/gsnow/), and [Let it snow](https://bitbucket.org/matban/let-it-snow/src/master/), but with support for arbitrary text or Unicode emojis
 
+NOTE: this is a legacy branch intended for GNOME shell versions less than 43
+
 Text items can fall in eight directions on either the primary or current monitor:  
 * Down (↓)
 * Up (↑)
