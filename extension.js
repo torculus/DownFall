@@ -79,9 +79,6 @@ var FallItem = GObject.registerClass({
 	if (!this.matAddID) { //only add on first fall
 	  this.matrixtrail(startX, startY, endX, endY, time);
 	}
-      } else if (this.matAddID) { //dynamically stopping the matritems
-      	  GLib.source_remove(this.matAddID);
-	  this.matAddID = null;
       }
       
       this.ease({
@@ -99,30 +96,43 @@ var FallItem = GObject.registerClass({
       //get number of steps between (startX,startY) and (endX,endY)
       let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       
-      //add a new Matrix trail character every `time/n` milliseconds
-      this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time/n, () => {
-      		let matritem = new St.Label();
-		this.fim.mc.add_child(matritem);
-      		let pos = this.get_position();
+      for(var i=0; i<n; i++) {
+      	let matritem = new St.Label();
+	this.fim.mc.add_child(matritem);
+	matritem.set_style(`color: ${this.fim.MATCOLOR}`);
+	matritem.get_clutter_text().set_font_name(this.fim.MATFONT);
+	matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
+	matritem.hide();
 
+	//show a new Matrix trail character every `time/n` milliseconds
+	this.matAddID = GLib.timeout_add(GLib.PRIORITY_LOW, time*(1+i)/n, () => {
 		//set the matritem at the current FallItem position
+		let pos = this.get_position();
       		matritem.set_position(pos[0], pos[1]);
-		matritem.set_style(`color: ${this.fim.MATCOLOR}`);
-		matritem.get_clutter_text().set_font_name(this.fim.MATFONT);
-		matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
 		matritem.show();
-
+		
 		//change the FallItem text
 		this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
 
-		//destroy the matritem after `time` milliseconds
-		matritem.matRemID = GLib.timeout_add( GLib.PRIORITY_LOW, time,
-			() => {this.fim.mc.remove_child(matritem);
-			matritem.destroy();
-			return GLib.SOURCE_REMOVE} );
+		matritem.matChangeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
+			//change the FallItem text
+			this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
 
-		return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
-      		});
+			matritem.hide();
+
+			//move and change the matritem after `time` milliseconds
+			let pos = this.get_position();
+			matritem.set_position(pos[0], pos[1]);
+			matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
+			matritem.show();
+			return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
+		});
+		
+		return GLib.SOURCE_REMOVE; //stop this after it's added 1st time
+	});
+
+      }
+
     }
     
     finish() {
@@ -203,7 +213,7 @@ var FIM = GObject.registerClass({
       
       //make it rain
       this.ic.get_children().forEach( (fi) => {
-	    let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
+		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
 		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR);
 		fi.fall();} );
     }
@@ -232,7 +242,10 @@ var FIM = GObject.registerClass({
 	  						fi.matAddID = null;} );
 
 	  //immediately destroy all remaining matritems
-	  this.mc.get_children().forEach( (mi) => {mi.destroy();} );
+	  this.mc.get_children().forEach( (mi) => {GLib.source_remove(mi.matChangeID);
+							mi.matChangeID = null;
+							this.mc.remove_child(mi);
+	  						mi.destroy();} );
 	}    	
 
     	this.FIREWORKS = this.settings.get_boolean('fireworks');
@@ -286,8 +299,8 @@ var Extension = GObject.registerClass({
       			    this.fim.ic.remove_child(fi);
       			    fi.destroy() } );
       this.fim.mc.get_children()
-      	.forEach( (mi) => { GLib.source_remove(mi.matRemID);
-      			    mi.matRemID = null;
+      	.forEach( (mi) => { GLib.source_remove(mi.matChangeID);
+      			    mi.matChangeID = null;
       			    //remove any matritems
       			    this.fim.mc.remove_child(mi);
       			    mi.destroy() } );
