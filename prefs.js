@@ -24,75 +24,72 @@ const Utils = Me.imports.utils;
 const Config = imports.misc.config;
 const ExtensionUtils = imports.misc.extensionUtils;
 
-function buildPrefsWidget() {
-  
-  let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
-  
-  let buildable = new Gtk.Builder();
-  
-  if ( Config.PACKAGE_VERSION.startsWith("4") ) { //running GNOME 40 or higher
-    buildable.add_from_file(Me.dir.get_path() + '/prefs.xml');
-  } else {
-    buildable.add_from_file(Me.dir.get_path() + '/prefs_legacy.xml');
-  }
-  
-  let prefsWidget = buildable.get_object('prefs_widget');
-  
-  //bind settings from prefs.xml to schema keys
-  settings.bind('presets', buildable.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('textfont', buildable.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fallmon', buildable.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('falldirec', buildable.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fall3d', buildable.get_object('fall_3d'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('maxitems', buildable.get_object('max_items'), 'value', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('falltime', buildable.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('fallrot', buildable.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('falldrift', buildable.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
-  
-  settings.bind('matrixtrails', buildable.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('matfont', buildable.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-  
-  settings.bind('fireworks', buildable.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
-  settings.bind('flrfont', buildable.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-  
-  //set up text entries
-  widget_schema('falltext', 'display_field', settings, buildable);
-  widget_schema('matdisplay', 'mat_display', settings, buildable);
-  widget_schema('flrdisplay', 'flr_display', settings, buildable);
-  
-  //set up color entries
-  widget_color('textcolor', 'text_color', settings, buildable);
-  widget_color('matcolor', 'mat_color', settings, buildable);
-  widget_color('flrcolor', 'flr_color', settings, buildable);
-  
-  //bind presets to specific values
-  buildable.get_object('presets').connect('changed', (presets) => {
-  	let preset = presets.get_active_text();
-  	set_presets(preset, buildable);
-  });
-  
-  //bind random button to random values
-  buildable.get_object('random_button').connect('clicked', () => {
-  	let rgba = new Gdk.RGBA();
+function fillPreferencesWindow(window) {
+    window.search_enabled = true;
+    let builder = Gtk.Builder.new();
+    builder.add_from_file(Me.dir.get_path() + '/prefs.ui');
+    let page1 = builder.get_object('appearance-page');
+    let page2 = builder.get_object('behavior-page');
+    let page3 = builder.get_object('sfx-page');
+    let page4 = builder.get_object('about-page');
+    window.add(page1);
+    window.add(page2);
+    window.add(page3);
+    window.add(page4);
+
+    let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
+
+    //bind settings from prefs.xml to schema keys
+    settings.bind('presets', builder.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('textfont', builder.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('fallmon', builder.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('falldirec', builder.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('fall3d', builder.get_object('fall_3d'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('maxitems', builder.get_object('max_items'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('falltime', builder.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('fallrot', builder.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('falldrift', builder.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
+
+    settings.bind('matrixtrails', builder.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matfont', builder.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+
+    settings.bind('fireworks', builder.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('flrfont', builder.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+
+    //set up text entries
+    widget_schema('falltext', 'display_field', settings, builder);
+    widget_schema('matdisplay', 'mat_display', settings, builder);
+    widget_schema('flrdisplay', 'flr_display', settings, builder);
+
+    //set up color entries
+    widget_color('textcolor', 'text_color', settings, builder);
+    widget_color('matcolor', 'mat_color', settings, builder);
+    widget_color('flrcolor', 'flr_color', settings, builder);
+
+    //bind presets to specific values
+    builder.get_object('presets').connect('changed', (presets) => {
+    	let preset = presets.get_active_text();
+  	set_presets(preset, builder);
+    });
+
+    //bind random button to random values
+    builder.get_object('random_button').connect('clicked', () => {
+    	let rgba = new Gdk.RGBA();
   	
-  	buildable.get_object('presets').set_active(0);
-  	buildable.get_object('display_field').set_text( String.fromCharCode(Math.floor(Math.random() * (65536))) );
+  	builder.get_object('presets').set_active(0);
+  	builder.get_object('display_field').set_text( String.fromCharCode(Math.floor(Math.random() * (65536))) );
   	let color = "\#" + Math.floor(Math.random()*16777215).toString(16);
   	rgba.parse( color );
-  	buildable.get_object('text_color').set_rgba(rgba);
-  	buildable.get_object('fall_direc').set_active(GLib.random_int_range(0,8));
-  	buildable.get_object('max_items').set_value(GLib.random_int_range(1,40));
-  	buildable.get_object('fall_time').set_value(GLib.random_int_range(2,20));
-  	buildable.get_object('fall_rot').set_value(GLib.random_int_range(0,360));
-  	buildable.get_object('fall_drift').set_value(GLib.random_int_range(0,100));
-  	buildable.get_object('matrix_switch').set_active( (Math.random() >= 0.5) );
-  	buildable.get_object('firework_switch').set_active( (Math.random() >= 0.5) );
-  });
-  
-  if ( Config.PACKAGE_VERSION.startsWith("3.") ) { //running GNOME 3.36/3.38
-    prefsWidget.show_all();
-  }
-  return prefsWidget;
+  	builder.get_object('text_color').set_rgba(rgba);
+  	builder.get_object('fall_direc').set_active(GLib.random_int_range(0,8));
+  	builder.get_object('max_items').set_value(GLib.random_int_range(1,40));
+  	builder.get_object('fall_time').set_value(GLib.random_int_range(2,20));
+  	builder.get_object('fall_rot').set_value(GLib.random_int_range(0,360));
+  	builder.get_object('fall_drift').set_value(GLib.random_int_range(0,100));
+  	builder.get_object('matrix_switch').set_active( (Math.random() >= 0.5) );
+  	builder.get_object('firework_switch').set_active( (Math.random() >= 0.5) );
+    });
+ 
 }
 
 function widget_schema(schemakey, widget, settings, buildable) {

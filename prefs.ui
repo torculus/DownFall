@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DownFall – Gnome Shell Extension
+ * Copyright (C) 2019-2022 Benjamin S Osenbach
+ *
+ * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<interface domain="DownFall">
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkAdjustment" id="drift_adjust">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="max_adjust">
+    <property name="lower">1</property>
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="rot_adjust">
+    <property name="upper">1800</property>
+    <property name="step-increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="time_adjust">
+    <property name="lower">2</property>
+    <property name="upper">20</property>
+    <property name="step-increment">1</property>
+  </object>
+  <object class="AdwPreferencesPage" id="appearance-page">
+    <property name="name">appearance</property>
+    <property name="title" translatable="yes">Appearance</property>
+    <property name="icon-name">folder-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup" id="g1">
+        <property name="title" translatable="yes">Falling Appearance</property>
+        <child>
+          <object class="AdwActionRow" id="r11">
+            <property name="title" translatable="yes">Presets</property>
+            <property name="activatable-widget">presets</property>
+            <child>
+              <object class="GtkComboBoxText" id="presets">
+                <property name="valign">center</property>
+                <items>
+                  <item id="0" translatable="yes"> </item>
+                  <item id="1" translatable="yes">Snow</item>
+                  <item id="2" translatable="yes">Leaves</item>
+                  <item id="3" translatable="yes">Matrix© rain</item>
+                  <item id="4" translatable="yes">Fireworks</item>
+                  </items>
+              </object>
+            </child>
+	    <child>
+	      <object class="GtkButton" id="random_button">
+	        <property name="label">Random</property>
+	      </object>
+	    </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwEntryRow" id="display_field">
+            <property name="title" translatable="yes">Text to Display (Accepts emojis, separate items with commas)</property>
+            <property name="enable_emoji_completion">1</property>
+            <property name="input_hints">1</property>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r13">
+            <property name="title" translatable="yes">Text Color</property>
+            <property name="activatable-widget">text_color</property>
+            <child>
+              <object class="GtkColorButton" id="text_color">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r14">
+            <property name="title" translatable="yes">Text Font</property>
+            <property name="activatable-widget">text_font</property>
+            <child>
+              <object class="GtkFontButton" id="text_font">
+                <property name="valign">center</property>
+                <property name="font">Sans 12</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+      </object>
+    </child>
+  </object>
+  
+  <object class="AdwPreferencesPage" id="behavior-page">
+    <property name="name">behavior</property>
+    <property name="title" translatable="yes">Behavior</property>
+    <property name="icon-name">folder-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup" id="g2">
+        <property name="title" translatable="yes">Falling Behavior</property>
+        <child>
+          <object class="AdwActionRow" id="r21">
+            <property name="title" translatable="yes">Fall on</property>
+            <property name="activatable-widget">fall_monitor</property>
+            <child>
+              <object class="GtkComboBoxText" id="fall_monitor">
+                <property name="valign">center</property>
+                <items>
+                  <item id="0" translatable="yes">Current monitor</item>
+                  <item id="1" translatable="yes">Primary monitor</item>
+                </items>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r22">
+            <property name="title" translatable="yes">Fall Direction</property>
+            <property name="activatable-widget">fall_monitor</property>
+            <child>
+              <object class="GtkComboBoxText" id="fall_direc">
+                <property name="valign">center</property>
+                <items>
+                  <item id="0" translatable="yes">Down (↓)</item>
+                  <item id="1" translatable="yes">Up (↑)</item>
+                  <item id="2" translatable="yes">Right (→)</item>
+                  <item id="3" translatable="yes">Left (←)</item>
+                  <item id="4" translatable="yes">Up-right (↗)</item>
+                  <item id="5" translatable="yes">Up-left (↖)</item>
+                  <item id="6" translatable="yes">Down-right (↘)</item>
+                  <item id="7" translatable="yes">Down-left (↙)</item>
+                  <item id="8" translatable="yes">Unpredictable (??)</item>
+                </items>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r23">
+            <property name="title" translatable="yes">Fall 3D depth</property>
+            <property name="activatable-widget">fall_3d</property>
+            <child>
+              <object class="GtkComboBoxText" id="fall_3d">
+                <property name="valign">center</property>
+                <items>
+                  <item id="0" translatable="yes">In front of windows</item>
+                  <item id="1" translatable="yes">Behind windows</item>
+                </items>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r24">
+            <property name="title" translatable="yes">Maximum number of items (high values risk freezing)</property>
+            <property name="activatable-widget">max_items</property>
+            <child>
+              <object class="GtkSpinButton" id="max_items">
+                <property name="valign">center</property>
+                <property name="adjustment">max_adjust</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r25">
+            <property name="title" translatable="yes">Average Fall Time (seconds)</property>
+            <property name="activatable-widget">fall_time</property>
+            <child>
+              <object class="GtkSpinButton" id="fall_time">
+                <property name="valign">center</property>
+                <property name="adjustment">time_adjust</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r26">
+            <property name="title" translatable="yes">Average Fall Rotation (degrees)</property>
+            <property name="activatable-widget">fall_rot</property>
+            <child>
+              <object class="GtkSpinButton" id="fall_rot">
+                <property name="valign">center</property>
+                <property name="adjustment">rot_adjust</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r27">
+            <property name="title" translatable="yes">Average Fall Drift (percentage)</property>
+            <property name="activatable-widget">fall_drift</property>
+            <child>
+              <object class="GtkSpinButton" id="fall_drift">
+                <property name="valign">center</property>
+                <property name="adjustment">drift_adjust</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+      </object>
+    </child>
+  </object>
+  
+  <object class="AdwPreferencesPage" id="sfx-page">
+    <property name="name">specialfx</property>
+    <property name="title" translatable="yes">Special Effects</property>
+    <property name="icon-name">folder-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup" id="matrixtrails">
+        <property name="title" translatable="yes">Matrix© trails</property>
+        <child>
+          <object class="AdwActionRow" id="r31">
+            <property name="title" translatable="yes">Show Matrix© trails</property>
+            <property name="activatable-widget">matrix_switch</property>
+            <child>
+              <object class="GtkSwitch" id="matrix_switch">
+                <property name="valign">center</property>
+                <property name="active">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r32">
+            <property name="title" translatable="yes">Matrix© trails text</property>
+            <property name="subtitle">Separate items with commas, ":" to search emojis</property>
+            <property name="activatable-widget">mat_display</property>
+            <child>
+              <object class="GtkEntry" id="mat_display">
+                <property name="valign">center</property>
+                <property name="enable_emoji_completion">1</property>
+                <property name="show_emoji_icon">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r33">
+            <property name="title" translatable="yes">Matrix© trails Color</property>
+            <property name="activatable-widget">mat_color</property>
+            <child>
+              <object class="GtkColorButton" id="mat_color">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r34">
+            <property name="title" translatable="yes">Matrix© trails Font</property>
+            <property name="activatable-widget">mat_font</property>
+            <child>
+              <object class="GtkFontButton" id="mat_font">
+                <property name="valign">center</property>
+                <property name="font">Sans 12</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    
+    <child>
+      <object class="AdwPreferencesGroup" id="fireworkflares">
+        <property name="title" translatable="yes">Firework Flares</property>
+        <child>
+          <object class="AdwActionRow" id="r35">
+            <property name="title" translatable="yes">Show Firework Flares</property>
+            <property name="activatable-widget">firework_switch</property>
+            <child>
+              <object class="GtkSwitch" id="firework_switch">
+                <property name="valign">center</property>
+                <property name="active">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r36">
+            <property name="title" translatable="yes">Firework Flares text</property>
+            <property name="subtitle">Separate items with commas, ":" to search emojis</property>
+            <property name="activatable-widget">flr_display</property>
+            <child>
+              <object class="GtkEntry" id="flr_display">
+                <property name="valign">center</property>
+                <property name="enable_emoji_completion">1</property>
+                <property name="show_emoji_icon">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r37">
+            <property name="title" translatable="yes">Firework Flares Color</property>
+            <property name="activatable-widget">flr_color</property>
+            <child>
+              <object class="GtkColorButton" id="flr_color">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        
+        <child>
+          <object class="AdwActionRow" id="r38">
+            <property name="title" translatable="yes"> Font</property>
+            <property name="activatable-widget">flr_font</property>
+            <child>
+              <object class="GtkFontButton" id="flr_font">
+                <property name="valign">center</property>
+                <property name="font">Sans 12</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    
+  </object>
+
+  <object class="AdwPreferencesPage" id="about-page">
+    <property name="name">about</property>
+    <property name="title" translatable="yes">About</property>
+    <property name="icon-name">folder-symbolic</property>
+    <child>
+      <object class="AdwPreferencesGroup" id="g4">
+        <property name="title" translatable="yes">About</property>
+        <child>
+          <object class="AdwActionRow" id="r4">
+            <property name="title" translatable="yes">My Switch</property>
+            <property name="activatable-widget">s4</property>
+            <child>
+              <object class="GtkSwitch" id="s4">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
