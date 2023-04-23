@@ -18,8 +18,10 @@
  *
  */
 
-const {St, GObject, GLib, Clutter} = imports.gi;
+const {St, Gio, GObject, GLib, Clutter} = imports.gi;
 const Main = imports.ui.main;
+const QuickSettings = imports.ui.quickSettings;
+const QuickSettingsMenu = Main.panel.statusArea.quickSettings;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -265,6 +267,68 @@ var FIM = GObject.registerClass({
 
   });
 
+const FeatureToggle = GObject.registerClass(
+class FeatureToggle extends QuickSettings.QuickToggle {
+    _init() {
+        super._init({
+            iconName: 'selection-mode-symbolic',
+            toggleMode: true,
+        });
+        
+        // NOTE: In GNOME 44, the `label` property must be set after
+        // construction. The newer `title` property can be set at construction.
+        this.label = 'DownFall';
+
+        // Binding the toggle to a GSettings key
+        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
+
+        this._settings.bind('feature-enabled',
+            this, 'checked',
+            Gio.SettingsBindFlags.DEFAULT);
+    }
+  });
+
+const FeatureIndicator = GObject.registerClass(
+class FeatureIndicator extends QuickSettings.SystemIndicator {
+    _init() {
+        super._init();
+
+        // Create the icon for the indicator
+        this._indicator = this._addIndicator();
+        this._indicator.icon_name = 'selection-mode-symbolic';
+
+        // Showing the indicator when the feature is enabled
+        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
+	
+        this._settings.bind('feature-enabled',
+            this._indicator, 'visible',
+            Gio.SettingsBindFlags.DEFAULT);
+        
+        // Create the toggle and associate it with the indicator, being sure to
+        // destroy it along with the indicator
+        this.quickSettingsItems.push(new FeatureToggle());
+        
+        this.connect('destroy', () => {
+            this.quickSettingsItems.forEach(item => item.destroy());
+        });
+        
+        // Add the indicator to the panel and the toggle to the menu
+        QuickSettingsMenu._indicators.add_child(this);
+        QuickSettingsMenu._addItems(this.quickSettingsItems);
+    }
+    
+    // To add your toggle above another item, such as Background Apps, add it
+    // using the built-in function, then move them afterwards.
+    _addItems(items) {
+        QuickSettingsMenu._addItems(items);
+
+        for (const item of items) {
+            QuickSettingsMenu.menu._grid.set_child_below_sibling(item,
+                QuickSettingsMenu._backgroundApps.quickSettingsItems[0]);
+        }
+    }
+  });
+
 var Extension = GObject.registerClass({
   GTypeName: 'Extension',
   Properties: {},
@@ -273,17 +337,22 @@ var Extension = GObject.registerClass({
   class Extension extends GObject.Object {
     _init() {
       super._init();
+      this._indicator = null;
     }
 
     enable() {
       let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
       let fim = new FIM(settings);
       this.fim = fim;
-      this.fim.dropItems();
+
+      this._indicator = new FeatureIndicator();
     }
 
     disable() {
       let settings = null;
+
+      this._indicator.destroy();
+      this._indicator = null;
       
       //stop all of the timers
       this.fim.ic.get_children()

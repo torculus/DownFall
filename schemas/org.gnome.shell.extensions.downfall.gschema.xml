@@ -137,6 +137,12 @@
   		<summary>Flare text font</summary>
   		<description>Flare text font</description>
   	</key>
+
+   	<key type="b" name="feature-enabled">
+  		<default>false</default>
+  		<summary>Quick Settings</summary>
+  		<description>Quick Settings toggle</description>
+  	</key>
   	
   </schema>
 </schemalist>
