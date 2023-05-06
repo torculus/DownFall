@@ -3,15 +3,11 @@
   "description": "Moves text of your choice across the screen. Can simulate leaves, snow, fireworks, ufos, and more!",
   "name": "DownFall",
   "shell-version": [
-    "3.36",
-    "3.38",
-    "40",
-    "41",
-    "42",
     "43",
     "44"
   ],
   "url": "https://github.com/torculus/DownFall",
   "uuid": "downfall@torculus.github.com",
+  "settings-schema": "org.gnome.shell.extensions.downfall",
   "version": 10000000
 }

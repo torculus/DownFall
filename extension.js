@@ -18,6 +18,8 @@
  *
  */
 
+'use strict';
+
 const {St, Gio, GObject, GLib, Clutter} = imports.gi;
 const Main = imports.ui.main;
 const QuickSettings = imports.ui.quickSettings;
@@ -178,7 +180,7 @@ var FallItem = GObject.registerClass({
     
   });
 
-var FIM = GObject.registerClass({
+const FIM = GObject.registerClass({
   GTypeName: 'FIM',
   Properties: {},
   Signals: {},
@@ -187,40 +189,27 @@ var FIM = GObject.registerClass({
     _init(settings) {
         super._init();
     	this.settings = settings;
-
+	
     	if (this.settings.get_int('fall3d') == 0) { //in front
     	  this.pane3D = global.top_window_group; //Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group, 
     	} else {
     	  this.pane3D = Main.layoutManager._backgroundGroup;
     	}
     	
-    	let itemContainer = new Clutter.Actor(); //a place to store our FallItems
-    	this.ic = itemContainer;
+    	this.ic = new Clutter.Actor(); //a place to store our FallItems
     	this.pane3D.add_child(this.ic);
     	
-    	let matContainer = new Clutter.Actor(); //a place to store our matritems
-    	this.mc = matContainer;
+    	this.mc = new Clutter.Actor(); //a place to store our matritems
     	this.pane3D.add_child(this.mc);
 
     	this.settings.connect('changed', this.settingsChanged.bind(this));
+
 	this.loadSettings();
     }
-    
-    dropItems() {
-      //only create MAX_ITEMS number of FallItems
-      for (let i=0; i < this.MAX_ITEMS; i++) {
-      	let newFi = new FallItem(this);
-      	this.ic.add_child(newFi);
-      }
-      
-      //make it rain
-      this.ic.get_children().forEach( (fi) => {
-		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
-		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR);
-		fi.fall();} );
-    }
-    
+
     loadSettings() {
+    	this.ENABLED = this.settings.get_boolean('feature-enabled');
+
     	this.FALLITEMS = this.settings.get_strv("falltext");
     	this.FALLCOLOR = this.settings.get_string('textcolor');
     	
@@ -240,8 +229,11 @@ var FIM = GObject.registerClass({
 	  this.MATFONT = this.settings.get_string('matfont');
 	} else {
 	  //stop adding new matritems
-	  this.ic.get_children().forEach( (fi) => {GLib.source_remove(fi.matAddID);
-	  						fi.matAddID = null;} );
+		this.ic.get_children().forEach( (fi) => {if (fi.matAddID) {
+								GLib.source_remove(fi.matAddID);
+								fi.matAddID = null;
+							}
+	  						} );
 
 	  //immediately destroy all remaining matritems
 	  this.mc.get_children().forEach( (mi) => {GLib.source_remove(mi.matChangeID);
@@ -260,53 +252,107 @@ var FIM = GObject.registerClass({
 
     settingsChanged() {
     	this.loadSettings();
+	//update the FallItems
 	this.ic.get_children().forEach( (fi) => {
 		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
 		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR); } );
+    }
+
+    dropItems() {
+      //only create MAX_ITEMS number of FallItems
+      for (let i=0; i < this.MAX_ITEMS; i++) {
+      	let newFi = new FallItem(this);
+      	this.ic.add_child(newFi);
+      }
+      
+      //make it rain
+      this.ic.get_children().forEach( (fi) => {
+		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
+		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR);
+		fi.fall();} );
+    }
+
+    stop() {
+      //stop all of the timers
+      this.ic.get_children()
+      	.forEach( (fi) => { if (fi.idleID) {
+      				GLib.source_remove(fi.idleID);
+      			    	fi.IdleID = null;
+      			    }
+      			    if (fi.matAddID) {
+      				GLib.source_remove(fi.matAddID);
+      				fi.matAddID = null;
+      			    }
+      			    //remove all of the FallItems
+      			    this.ic.remove_child(fi);
+      			    fi.destroy() } );
+      this.mc.get_children()
+      	.forEach( (mi) => { GLib.source_remove(mi.matChangeID);
+      			    mi.matChangeID = null;
+      			    //remove any matritems
+      			    this.mc.remove_child(mi);
+      			    mi.destroy() } );
+      
+    }
+
+    toggle() {
+      this.loadSettings();
+
+      if (this.ENABLED) {
+        this.dropItems();
+      } else {
+        this.stop();
+      }
     }
 
   });
 
 const FeatureToggle = GObject.registerClass(
 class FeatureToggle extends QuickSettings.QuickToggle {
-    _init() {
+    _init(fim) {
         super._init({
             iconName: 'selection-mode-symbolic',
             toggleMode: true,
         });
+
+        this.fim = fim;
         
         // NOTE: In GNOME 44, the `label` property must be set after
         // construction. The newer `title` property can be set at construction.
         this.label = 'DownFall';
 
         // Binding the toggle to a GSettings key
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
+	this._settings = ExtensionUtils.getSettings();
 
         this._settings.bind('feature-enabled',
             this, 'checked',
             Gio.SettingsBindFlags.DEFAULT);
+	
+	this.connect('clicked', this.fim.toggle.bind(this.fim));
     }
   });
 
 const FeatureIndicator = GObject.registerClass(
 class FeatureIndicator extends QuickSettings.SystemIndicator {
-    _init() {
+    _init(fim) {
         super._init();
+
+        this.fim = fim;
 
         // Create the icon for the indicator
         this._indicator = this._addIndicator();
         this._indicator.icon_name = 'selection-mode-symbolic';
 
         // Showing the indicator when the feature is enabled
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
-	
+	this._settings = ExtensionUtils.getSettings();
+
         this._settings.bind('feature-enabled',
             this._indicator, 'visible',
             Gio.SettingsBindFlags.DEFAULT);
         
         // Create the toggle and associate it with the indicator, being sure to
         // destroy it along with the indicator
-        this.quickSettingsItems.push(new FeatureToggle());
+        this.quickSettingsItems.push(new FeatureToggle(this.fim));
         
         this.connect('destroy', () => {
             this.quickSettingsItems.forEach(item => item.destroy());
@@ -329,7 +375,7 @@ class FeatureIndicator extends QuickSettings.SystemIndicator {
     }
   });
 
-var Extension = GObject.registerClass({
+const Extension = GObject.registerClass({
   GTypeName: 'Extension',
   Properties: {},
   Signals: {},
@@ -341,44 +387,31 @@ var Extension = GObject.registerClass({
     }
 
     enable() {
-      let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
-      let fim = new FIM(settings);
-      this.fim = fim;
+      this._settings = ExtensionUtils.getSettings();
+      this.fim = new FIM(this._settings);
 
-      this._indicator = new FeatureIndicator();
+      this._indicator = new FeatureIndicator(this.fim);
     }
 
     disable() {
-      let settings = null;
-
       this._indicator.destroy();
       this._indicator = null;
-      
-      //stop all of the timers
-      this.fim.ic.get_children()
-      	.forEach( (fi) => { if (fi.idleID) {
-      				GLib.source_remove(fi.idleID);
-      			    	fi.IdleID = null;
-      			    }
-      			    if (fi.matAddID) {
-      				GLib.source_remove(fi.matAddID);
-      				fi.matAddID = null;
-      			    }
-      			    //remove all of the FallItems
-      			    this.fim.ic.remove_child(fi);
-      			    fi.destroy() } );
-      this.fim.mc.get_children()
-      	.forEach( (mi) => { GLib.source_remove(mi.matChangeID);
-      			    mi.matChangeID = null;
-      			    //remove any matritems
-      			    this.fim.mc.remove_child(mi);
-      			    mi.destroy() } );
-      
+
+      this._settings.destroy();
+      this._settings = null;
+
+      if (this.fim.ENABLED) {
+        //stop stuff
+	this.fim.stop();
+      }
+
       //remove everything else
       this.fim.pane3D.remove_child(this.fim.ic);
       this.fim.ic.destroy();
       this.fim.pane3D.remove_child(this.fim.mc);
       this.fim.mc.destroy();
+      
+      this.fim.destroy();
       this.fim = null;
     }
   });
