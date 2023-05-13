@@ -189,18 +189,10 @@ const FIM = GObject.registerClass({
     _init(settings) {
         super._init();
     	this.settings = settings;
-	
-    	if (this.settings.get_int('fall3d') == 0) { //in front
-    	  this.pane3D = global.top_window_group; //Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group, 
-    	} else {
-    	  this.pane3D = Main.layoutManager._backgroundGroup;
-    	}
-    	
+	this.MATRIXTRAILSON = false;
+   	
     	this.ic = new Clutter.Actor(); //a place to store our FallItems
-    	this.pane3D.add_child(this.ic);
-    	
     	this.mc = new Clutter.Actor(); //a place to store our matritems
-    	this.pane3D.add_child(this.mc);
 
     	this.settings.connect('changed', this.settingsChanged.bind(this));
 
@@ -210,9 +202,11 @@ const FIM = GObject.registerClass({
     loadSettings() {
     	this.ENABLED = this.settings.get_boolean('feature-enabled');
 
+    	this.FALL3D = this.settings.get_int('fall3d');
+
     	this.FALLITEMS = this.settings.get_strv("falltext");
     	this.FALLCOLOR = this.settings.get_string('textcolor');
-    	
+
     	this.FALLFONT = this.settings.get_string('textfont');
     	
     	this.MONITORS = this.settings.get_int('fallmon');
@@ -227,20 +221,8 @@ const FIM = GObject.registerClass({
 	  this.MATDISP = this.settings.get_strv("matdisplay");
     	  this.MATCOLOR = this.settings.get_string('matcolor');
 	  this.MATFONT = this.settings.get_string('matfont');
-	} else {
-	  //stop adding new matritems
-		this.ic.get_children().forEach( (fi) => {if (fi.matAddID) {
-								GLib.source_remove(fi.matAddID);
-								fi.matAddID = null;
-							}
-	  						} );
-
-	  //immediately destroy all remaining matritems
-	  this.mc.get_children().forEach( (mi) => {GLib.source_remove(mi.matChangeID);
-							mi.matChangeID = null;
-							this.mc.remove_child(mi);
-	  						mi.destroy();} );
-	}    	
+	  this.MATRIXTRAILSON = true;
+	}
 
     	this.FIREWORKS = this.settings.get_boolean('fireworks');
     	if (this.FIREWORKS) {
@@ -252,6 +234,13 @@ const FIM = GObject.registerClass({
 
     settingsChanged() {
     	this.loadSettings();
+
+	//restart if matrixtrails are turned off while running
+	if (this.MATRIXTRAILSON && !this.MATRIXTRAILS) {
+	  this.MATRIXTRAILSON = false;
+	  this.reset().then( this.dropItems() );
+	}
+
 	//update the FallItems
 	this.ic.get_children().forEach( (fi) => {
 		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
@@ -259,6 +248,16 @@ const FIM = GObject.registerClass({
     }
 
     dropItems() {
+      if (this.FALL3D == 0) { //in front
+      	this.pane3D = global.top_window_group; 
+      } else {
+      	//Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group 
+	this.pane3D = Main.layoutManager._backgroundGroup;
+      }
+
+      this.pane3D.add_child(this.ic);
+      this.pane3D.add_child(this.mc);
+
       //only create MAX_ITEMS number of FallItems
       for (let i=0; i < this.MAX_ITEMS; i++) {
       	let newFi = new FallItem(this);
@@ -272,10 +271,11 @@ const FIM = GObject.registerClass({
 		fi.fall();} );
     }
 
-    stop() {
+    stopTimers() {
       //stop all of the timers
-      this.ic.get_children()
-      	.forEach( (fi) => { if (fi.idleID) {
+      return new Promise( resolve => {
+      	this.ic.get_children()
+      		.forEach( (fi) => { if (fi.idleID) {
       				GLib.source_remove(fi.idleID);
       			    	fi.IdleID = null;
       			    }
@@ -283,16 +283,27 @@ const FIM = GObject.registerClass({
       				GLib.source_remove(fi.matAddID);
       				fi.matAddID = null;
       			    }
-      			    //remove all of the FallItems
-      			    this.ic.remove_child(fi);
-      			    fi.destroy() } );
-      this.mc.get_children()
-      	.forEach( (mi) => { GLib.source_remove(mi.matChangeID);
+      			  } );
+	
+      	this.mc.get_children()
+      		.forEach( (mi) => { GLib.source_remove(mi.matChangeID);
       			    mi.matChangeID = null;
-      			    //remove any matritems
-      			    this.mc.remove_child(mi);
-      			    mi.destroy() } );
-      
+      			  } );
+	resolve('0');
+      } );
+    }
+
+    reset() {
+	//make sure the sources are removed before destroying anything
+    	this.stopTimers().then( () => {
+				//remove all of the FallItems
+				this.ic.destroy_all_children();
+				//remove any matritems
+      				this.mc.destroy_all_children() } )
+			.then( () => {
+				//remove containers from pane3D
+				this.pane3D.remove_child(this.ic);
+				this.pane3D.remove_child(this.mc) } );
     }
 
     toggle() {
@@ -301,7 +312,7 @@ const FIM = GObject.registerClass({
       if (this.ENABLED) {
         this.dropItems();
       } else {
-        this.stop();
+      	this.reset();
       }
     }
 
@@ -311,16 +322,13 @@ const FeatureToggle = GObject.registerClass(
 class FeatureToggle extends QuickSettings.QuickToggle {
     _init(fim) {
         super._init({
+	    title: 'DownFall',
             iconName: 'selection-mode-symbolic',
             toggleMode: true,
         });
 
         this.fim = fim;
         
-        // NOTE: In GNOME 44, the `label` property must be set after
-        // construction. The newer `title` property can be set at construction.
-        this.label = 'DownFall';
-
         // Binding the toggle to a GSettings key
 	this._settings = ExtensionUtils.getSettings();
 
@@ -397,21 +405,13 @@ const Extension = GObject.registerClass({
       this._indicator.destroy();
       this._indicator = null;
 
-      this._settings.destroy();
       this._settings = null;
 
-      if (this.fim.ENABLED) {
-        //stop stuff
-	this.fim.stop();
-      }
+      this.fim.reset();
 
       //remove everything else
-      this.fim.pane3D.remove_child(this.fim.ic);
       this.fim.ic.destroy();
-      this.fim.pane3D.remove_child(this.fim.mc);
       this.fim.mc.destroy();
-      
-      this.fim.destroy();
       this.fim = null;
     }
   });
