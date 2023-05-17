@@ -318,7 +318,7 @@
   <object class="AdwPreferencesPage" id="about-page">
     <property name="name">about</property>
     <property name="title" translatable="yes">About</property>
-    <property name="icon-name">about-symbolic</property>
+    <property name="icon-name">help-about-symbolic</property>
     <child>
       <object class="AdwPreferencesGroup" id="g4">
         <property name="title" translatable="yes">About</property>

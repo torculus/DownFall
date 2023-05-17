@@ -5,6 +5,8 @@
 * Use Pango and GLib instead of custom functions
 * Removed all global variables (code safety)
 * ***New feature***: changing text and style dynamically ("on the fly")
+* ***New feature***: Port settings dialog to `libadwaita`
+* ***New feature***: QuickSettings menu item (requires GNOME 44+)
 
 ## 3.3.2
 * Added GNOME 43 to metadata

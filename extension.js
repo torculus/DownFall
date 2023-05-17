@@ -38,6 +38,10 @@ var FallItem = GObject.registerClass({
     _init(fim) {
       super._init();
       this.fim = fim; //reference back to the FallItemsManager (FIM)
+
+      //matrixtrails stuff
+      this.trailson = false;
+      this.matAddID = null;
     }
 
     change(text, fontstring, color) {
@@ -80,8 +84,10 @@ var FallItem = GObject.registerClass({
       this.show();
       
       if (this.fim.MATRIXTRAILS) {
-	if (!this.matAddID) { //only add on first fall
+	if (!this.trailson) { //only add on first fall
 	  this.matrixtrail(startX, startY, endX, endY, time);
+	} else {
+	  this.matAddID = null;
 	}
       }
       
@@ -97,6 +103,8 @@ var FallItem = GObject.registerClass({
     }
 
     matrixtrail(startX, startY, endX, endY, time) {
+      this.trailson = true;
+
       //get number of steps between (startX,startY) and (endX,endY)
       let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       
