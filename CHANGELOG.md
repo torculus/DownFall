@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.2 (Roadmap)
+- [ ] Add `EaseOut` animationmode for more realistic fireworks
+- [ ] Add random colors for Firework flares
+
+## 4.0.1
+* Adjusted Firework preset and flare logic to be more realistic (fade out, random angles)
+
 ## 4.0.0
 * Separated `fi.change()` and `fi.matrixtrail()` from `fi.fall()` for performance
 * Use Pango and GLib instead of custom functions

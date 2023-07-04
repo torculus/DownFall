@@ -55,11 +55,11 @@ var FallItem = GObject.registerClass({
     
     fall() {
       this.idleID = null;
-      let monitor = (this.fim.MONITORS == 0) ? Main.layoutManager.currentMonitor
+      this.monitor = (this.fim.MONITORS == 0) ? Main.layoutManager.currentMonitor
       				    : Main.layoutManager.primaryMonitor;
       
       //get coordinates for the start and end points
-      let startEndpoints = Utils.startEndPoints(this.fim.DIRECTION, monitor, this.fim.AVG_DRIFT, this);
+      let startEndpoints = Utils.startEndPoints(this.fim.DIRECTION, this.monitor, this.fim.AVG_DRIFT, this);
       let startX = startEndpoints[0];
       let startY = startEndpoints[1];
       let endX = startEndpoints[2];
@@ -155,6 +155,9 @@ var FallItem = GObject.registerClass({
       	for (let n=0; n<6; n++) {
       	  let flare = new St.Label();
     	  let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
+
+	  let angle = GLib.random_double_range(0, 6.28);
+	  let speed = GLib.random_int_range(30, 70);
     	  
     	  this.fim.pane3D.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
@@ -171,9 +174,10 @@ var FallItem = GObject.registerClass({
     	  let Yflr = this.endY + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
     	      	  
     	  flare.ease({
-    	    x : Xflr,
-    	    y : Yflr,
+    	    x : this.endX + Math.cos(angle)*speed/100 * this.monitor.width,
+    	    y : this.endY + Math.sin(angle)*speed/100 * this.monitor.height + 1,
     	    duration : 2000,
+	    opacity: 0,
     	    mode : Clutter.AnimationMode.EASE_OUT_EXPO,
     	    onComplete : () => {flare.destroy()}
     	  });
