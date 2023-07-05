@@ -154,7 +154,7 @@ var FallItem = GObject.registerClass({
       	//explode
       	for (let n=0; n<6; n++) {
       	  let flare = new St.Label();
-    	  let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
+    	  //let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
 
 	  let angle = GLib.random_double_range(0, 6.28);
 	  let speed = GLib.random_int_range(30, 70);
@@ -165,14 +165,6 @@ var FallItem = GObject.registerClass({
       	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
     	  flare.set_text( this.fim.FLRDISP[ GLib.random_int_range(0, this.fim.FLRDISP.length) ] );
     	  
-    	  /*get hexagonal coordinates relative to the endX, endY
-    	  	i=2  i=1			(-s/2,s*sqrt(3)/2)  (+s/2, s*sqrt(3)/2)
-    	  i=3		i=0	goes with  (-s,0)				      (+s,0)
-    	  	i=4  i=5			(-s/2,-s*sqrt(3)/2) (+s/2, -s*sqrt(3)/2)
-    	  */
-    	  let Xflr = this.endX + Math.floor( (-1)**( (n%5) > 1)*(1/2)**( (n%3) > 0) * 200 );
-    	  let Yflr = this.endY + Math.floor( (-1)**(n>3)*( (n%3) > 0)*Math.sqrt(3)/2 * 200 );
-    	      	  
     	  flare.ease({
     	    x : this.endX + Math.cos(angle)*speed/100 * this.monitor.width,
     	    y : this.endY + Math.sin(angle)*speed/100 * this.monitor.height + 1,
