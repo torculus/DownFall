@@ -45,6 +45,7 @@ function fillPreferencesWindow(window) {
     settings.bind('fallmon', builder.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('falldirec', builder.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('fall3d', builder.get_object('fall_3d'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('clutteranimmode', builder.get_object('clutter_animmode'), 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('maxitems', builder.get_object('max_items'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('falltime', builder.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('fallrot', builder.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -147,6 +148,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
       buildable.get_object('text_color').set_rgba(rgba1);
       buildable.get_object('fall_direc').set_active(0);
+      buildable.get_object('clutter_animmode').set_active(0); //LINEAR
       buildable.get_object('max_items').set_value(7);
       buildable.get_object('fall_time').set_value(7);
       buildable.get_object('fall_rot').set_value(0);
@@ -165,6 +167,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text("🔸️");
       buildable.get_object('text_color').set_rgba(rgba1);
       buildable.get_object('fall_direc').set_active(1);
+      buildable.get_object('clutter_animmode').set_active(2); //EASE_OUT_QUAD
       buildable.get_object('max_items').set_value(2);
       buildable.get_object('fall_time').set_value(3);
       buildable.get_object('fall_rot').set_value(0);

@@ -162,9 +162,53 @@
             </child>
           </object>
         </child>
-        
-        <child>
+
+       <child>
           <object class="AdwActionRow" id="r24">
+            <property name="title" translatable="yes">Clutter AnimationMode</property>
+            <child>
+              <object class="GtkComboBoxText" id="clutter_animmode">
+                <property name="valign">center</property>
+                <items>
+                  <item id="1" translatable="yes">LINEAR</item>
+                  <item id="2" translatable="yes">EASE_IN_QUAD</item>
+                  <item id="3" translatable="yes">EASE_OUT_QUAD</item>
+                  <item id="4" translatable="yes">EASE_IN_OUT_QUAD</item>
+                  <item id="5" translatable="yes">EASE_IN_CUBIC</item>
+                  <item id="6" translatable="yes">EASE_OUT_CUBIC</item>
+                  <item id="7" translatable="yes">EASE_IN_OUT_CUBIC</item>
+                  <item id="8" translatable="yes">EASE_IN_QUART</item>
+                  <item id="9" translatable="yes">EASE_OUT_QUART</item>
+                  <item id="10" translatable="yes">EASE_IN_OUT_QUART</item>
+                  <item id="11" translatable="yes">EASE_IN_QUINT</item>
+                  <item id="12" translatable="yes">EASE_OUT_QUINT</item>
+                  <item id="13" translatable="yes">EASE_IN_OUT_QUINT</item>
+                  <item id="14" translatable="yes">EASE_IN_SINE</item>
+                  <item id="15" translatable="yes">EASE_OUT_SINE</item>
+                  <item id="16" translatable="yes">EASE_IN_OUT_SINE</item>
+                  <item id="17" translatable="yes">EASE_IN_EXPO</item>
+                  <item id="18" translatable="yes">EASE_OUT_EXPO</item>
+                  <item id="19" translatable="yes">EASE_IN_OUT_EXPO</item>
+                  <item id="20" translatable="yes">EASE_IN_CIRC</item>
+                  <item id="21" translatable="yes">EASE_OUT_CIRC</item>
+                  <item id="22" translatable="yes">EASE_IN_OUT_CIRC</item>
+                  <item id="23" translatable="yes">EASE_IN_ELASTIC</item>
+                  <item id="24" translatable="yes">EASE_OUT_ELASTIC</item>
+                  <item id="25" translatable="yes">EASE_IN_OUT_ELASTIC</item>
+                  <item id="26" translatable="yes">EASE_IN_BACK</item>
+                  <item id="27" translatable="yes">EASE_OUT_BACK</item>
+                  <item id="28" translatable="yes">EASE_IN_OUT_BACK</item>
+                  <item id="29" translatable="yes">EASE_IN_BOUNCE</item>
+                  <item id="30" translatable="yes">EASE_OUT_BOUNCE</item>
+                  <item id="31" translatable="yes">EASE_IN_OUT_BOUNCE</item>
+                </items>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwActionRow" id="r25">
             <property name="title" translatable="yes">Maximum number of items (high values risk freezing)</property>
             <child>
               <object class="GtkSpinButton" id="max_items">
@@ -174,9 +218,9 @@
             </child>
           </object>
         </child>
-        
+
         <child>
-          <object class="AdwActionRow" id="r25">
+          <object class="AdwActionRow" id="r26">
             <property name="title" translatable="yes">Average Fall Time (seconds)</property>
             <child>
               <object class="GtkSpinButton" id="fall_time">
@@ -188,7 +232,7 @@
         </child>
         
         <child>
-          <object class="AdwActionRow" id="r26">
+          <object class="AdwActionRow" id="r27">
             <property name="title" translatable="yes">Average Fall Rotation (degrees)</property>
             <child>
               <object class="GtkSpinButton" id="fall_rot">
@@ -200,7 +244,7 @@
         </child>
         
         <child>
-          <object class="AdwActionRow" id="r27">
+          <object class="AdwActionRow" id="r28">
             <property name="title" translatable="yes">Average Fall Drift (percentage)</property>
             <child>
               <object class="GtkSpinButton" id="fall_drift">
@@ -327,7 +371,7 @@
             <property name="title" translatable="yes">Version</property>
             <child>
               <object class="GtkLabel">
-		<property name="label">4.0.1</property>
+		<property name="label">4.0.2</property>
               </object>
             </child>
           </object>

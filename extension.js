@@ -76,9 +76,6 @@ var FallItem = GObject.registerClass({
       let time = (this.fim.AVG_TIME + GLib.random_int_range(-1,1)) * 1000;
       let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * this.fim.AVG_ROT);
       
-      let cluttermode = this.fim.MATRIXTRAILS ? Clutter.AnimationMode.LINEAR
-      				     : Clutter.AnimationMode.EASE_OUT_QUAD;
-      
       this.set_position(startX, startY);
       
       this.show();
@@ -95,7 +92,7 @@ var FallItem = GObject.registerClass({
       	x : endX,
       	y : endY,
       	duration : time,
-      	mode : cluttermode,
+      	mode : this.fim.ANIMATIONMODE,
       	rotation_angle_z : rotation,
       	onComplete : () => {this.finish()}
       });
@@ -207,6 +204,7 @@ const FIM = GObject.registerClass({
     	this.ENABLED = this.settings.get_boolean('feature-enabled');
 
     	this.FALL3D = this.settings.get_int('fall3d');
+	this.ANIMATIONMODE = this.settings.get_int('clutteranimmode')+1;
 
     	this.FALLITEMS = this.settings.get_strv("falltext");
     	this.FALLCOLOR = this.settings.get_string('textcolor');
