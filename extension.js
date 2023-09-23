@@ -106,11 +106,10 @@ var FallItem = GObject.registerClass({
       let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
       
       for(var i=0; i<n; i++) {
-      	let matritem = new St.Label();
+      	let matritem = new FallItem(this.fim);
 	this.fim.mc.add_child(matritem);
-	matritem.set_style(`color: ${this.fim.MATCOLOR}`);
-	matritem.get_clutter_text().set_font_name(this.fim.MATFONT);
-	matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
+	matritem.change(this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ], this.fim.MATFONT, this.fim.MATCOLOR);
+
 	matritem.hide();
 
 	//show a new Matrix trail character every `time/n` milliseconds
@@ -120,13 +119,7 @@ var FallItem = GObject.registerClass({
       		matritem.set_position(pos[0], pos[1]);
 		matritem.show();
 		
-		//change the FallItem text
-		this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
-
-		matritem.matChangeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
-			//change the FallItem text
-			this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
-
+		matritem.changeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
 			matritem.hide();
 
 			//move and change the matritem after `time` milliseconds
@@ -137,7 +130,13 @@ var FallItem = GObject.registerClass({
 			return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
 		});
 		
-		return GLib.SOURCE_REMOVE; //stop this after it's added 1st time
+		return GLib.SOURCE_REMOVE; //stop making new matritems after 1st fall
+	});
+
+	this.changeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
+		//change the FallItem text ONCE every "time" milliseconds
+		this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
+		return GLib.SOURCE_CONTINUE;
 	});
 
       }
@@ -156,7 +155,7 @@ var FallItem = GObject.registerClass({
 	  let angle = GLib.random_double_range(0, 6.28);
 	  let speed = GLib.random_int_range(30, 70);
     	  
-    	  this.fim.pane3D.add_child(flare);
+    	  this.fim.pane3d.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
     	  flare.set_style(`color:${this.fim.FLRCOLOR}`);
       	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
@@ -178,6 +177,23 @@ var FallItem = GObject.registerClass({
       this.idleID = GLib.idle_add(GLib.PRIORITY_LOW,
       			() => {this.fall(); return GLib.SOURCE_REMOVE});
     }
+
+    stopTimers() {
+	//stop and remove the timeouts
+	for(source in [this.idleID, this.matAddID, this.changeID]) {
+		if(source) {
+			GLib.source_remove(source);
+			source = null;
+		}
+	}
+    }
+
+    destroy() {
+	this.stopTimers();
+
+	//destroy the St.Label
+	super.destroy();
+    }
     
   });
 
@@ -194,6 +210,7 @@ const FIM = GObject.registerClass({
    	
     	this.ic = new Clutter.Actor(); //a place to store our FallItems
     	this.mc = new Clutter.Actor(); //a place to store our matritems
+	this.pane3d = null;
 
     	this.settings.connect('changed', this.settingsChanged.bind(this));
 
@@ -239,8 +256,9 @@ const FIM = GObject.registerClass({
 
 	//restart if matrixtrails are turned off while running
 	if (this.MATRIXTRAILSON && !this.MATRIXTRAILS) {
-	  this.MATRIXTRAILSON = false;
-	  this.reset().then( this.dropItems() );
+		this.MATRIXTRAILSON = false;
+		this.reset();
+		this.dropItems();
 	}
 
 	//update the FallItems
@@ -251,14 +269,14 @@ const FIM = GObject.registerClass({
 
     dropItems() {
       if (this.FALL3D == 0) { //in front
-      	this.pane3D = global.top_window_group; 
+      	this.pane3d = global.top_window_group; 
       } else {
       	//Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group 
-	this.pane3D = Main.layoutManager._backgroundGroup;
+	this.pane3d = Main.layoutManager._backgroundGroup;
       }
 
-      this.pane3D.add_child(this.ic);
-      this.pane3D.add_child(this.mc);
+      this.pane3d.add_child(this.ic);
+      this.pane3d.add_child(this.mc);
 
       //only create MAX_ITEMS number of FallItems
       for (let i=0; i < this.MAX_ITEMS; i++) {
@@ -273,7 +291,7 @@ const FIM = GObject.registerClass({
 		fi.fall();} );
     }
 
-    stopTimers() {
+    /*stopTimers() {
       //stop all of the timers
       return new Promise( resolve => {
       	this.ic.get_children()
@@ -285,6 +303,10 @@ const FIM = GObject.registerClass({
       				GLib.source_remove(fi.matAddID);
       				fi.matAddID = null;
       			    }
+			    if (fi.changeID) {
+			    	GLib.source_remove(fi.changeID);
+				fi.changeID = null;
+			    }
       			  } );
 	
       	this.mc.get_children()
@@ -293,19 +315,28 @@ const FIM = GObject.registerClass({
       			  } );
 	resolve('0');
       } );
-    }
+    }*/
 
     reset() {
+	//remove all of the FallItems and any matritems
+	this.ic.destroy_all_children();
+	this.mc.destroy_all_children();
+	
+	//remove containers from pane3d
+	this.pane3d.remove_child(this.ic);
+	this.pane3d.remove_child(this.mc);
+
 	//make sure the sources are removed before destroying anything
+	/*
     	this.stopTimers().then( () => {
 				//remove all of the FallItems
 				this.ic.destroy_all_children();
 				//remove any matritems
       				this.mc.destroy_all_children() } )
 			.then( () => {
-				//remove containers from pane3D
-				this.pane3D.remove_child(this.ic);
-				this.pane3D.remove_child(this.mc) } );
+				//remove containers from pane3d
+				this.pane3d.remove_child(this.ic);
+				this.pane3d.remove_child(this.mc) } );*/
     }
 
     toggle() {
@@ -414,6 +445,8 @@ const Extension = GObject.registerClass({
       //remove everything else
       this.fim.ic.destroy();
       this.fim.mc.destroy();
+      this.fim.pane3d = null;
+      this.fim.MATRIXTRAILSON = null;
       this.fim = null;
     }
   });
