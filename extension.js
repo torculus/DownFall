@@ -19,15 +19,18 @@
  */
 
 'use strict';
+import St from 'gi://St';
+import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
 
-const {St, Gio, GObject, GLib, Clutter} = imports.gi;
-const Main = imports.ui.main;
-const QuickSettings = imports.ui.quickSettings;
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js'
+import * as Main from 'resource:///org/gnome/shell/ui/main.js'
+import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js';
 const QuickSettingsMenu = Main.panel.statusArea.quickSettings;
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Utils = Me.imports.utils;
+import * as Utils from './utils.js';
 
 var FallItem = GObject.registerClass({
   GTypeName: 'FallItem',
@@ -316,9 +319,9 @@ const FIM = GObject.registerClass({
 
 const FeatureToggle = GObject.registerClass(
 class FeatureToggle extends QuickSettings.QuickToggle {
-    _init(fim) {
+    _init(extensionObject, fim) {
         super._init({
-	    title: 'DownFall',
+	    title: _('DownFall'),
             iconName: 'selection-mode-symbolic',
             toggleMode: true,
         });
@@ -326,7 +329,7 @@ class FeatureToggle extends QuickSettings.QuickToggle {
         this.fim = fim;
         
         // Binding the toggle to a GSettings key
-	this._settings = ExtensionUtils.getSettings();
+	this._settings = extensionObject.getSettings();
 
         this._settings.bind('feature-enabled',
             this, 'checked',
@@ -338,7 +341,7 @@ class FeatureToggle extends QuickSettings.QuickToggle {
 
 const FeatureIndicator = GObject.registerClass(
 class FeatureIndicator extends QuickSettings.SystemIndicator {
-    _init(fim) {
+    _init(extensionObject, fim) {
         super._init();
 
         this.fim = fim;
@@ -348,56 +351,32 @@ class FeatureIndicator extends QuickSettings.SystemIndicator {
         this._indicator.icon_name = 'selection-mode-symbolic';
 
         // Showing the indicator when the feature is enabled
-	this._settings = ExtensionUtils.getSettings();
+	this._settings = extensionObject.getSettings();
 
         this._settings.bind('feature-enabled',
             this._indicator, 'visible',
             Gio.SettingsBindFlags.DEFAULT);
         
-        // Create the toggle and associate it with the indicator, being sure to
-        // destroy it along with the indicator
-        this.quickSettingsItems.push(new FeatureToggle(this.fim));
-        
-        this.connect('destroy', () => {
-            this.quickSettingsItems.forEach(item => item.destroy());
-        });
-        
-        // Add the indicator to the panel and the toggle to the menu
-        QuickSettingsMenu._indicators.add_child(this);
-        QuickSettingsMenu._addItems(this.quickSettingsItems);
-    }
-    
-    // To add your toggle above another item, such as Background Apps, add it
-    // using the built-in function, then move them afterwards.
-    _addItems(items) {
-        QuickSettingsMenu._addItems(items);
-
-        for (const item of items) {
-            QuickSettingsMenu.menu._grid.set_child_below_sibling(item,
-                QuickSettingsMenu._backgroundApps.quickSettingsItems[0]);
-        }
     }
   });
 
-const Extension = GObject.registerClass({
-  GTypeName: 'Extension',
-  Properties: {},
-  Signals: {},
-  },
-  class Extension extends GObject.Object {
+export default class DFExtension extends Extension {
     _init() {
       super._init();
       this._indicator = null;
     }
 
     enable() {
-      this._settings = ExtensionUtils.getSettings();
+      this._settings = this.getSettings();
       this.fim = new FIM(this._settings);
 
-      this._indicator = new FeatureIndicator(this.fim);
+      this._indicator = new FeatureIndicator(this, this.fim);
+      this._indicator.quickSettingsItems.push(new FeatureToggle(this, this.fim));
+      Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
     }
 
     disable() {
+      this._indicator.quickSettingsItems.forEach(item => item.destroy());
       this._indicator.destroy();
       this._indicator = null;
 
@@ -412,8 +391,3 @@ const Extension = GObject.registerClass({
       this._settings = null;
     }
   });
-
-function init() {
-    ExtensionUtils.initTranslations(Me.metadata.uuid);
-    return new Extension();
-}

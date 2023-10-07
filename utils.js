@@ -18,7 +18,7 @@
  *
  */
 
-const GLib = imports.gi.GLib;
+import GLib from 'gi://GLib';
 
 function startEndPoints(direction, monitor, avgdrift, fallItem) {
     let startX;

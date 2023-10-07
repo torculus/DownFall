@@ -5,7 +5,7 @@
 - [ ] Add random colors for Firework flares
 
 ## 4.1.0 (Roadmap)
-- [ ] Port to GNOME 45 ESM
+- [x] Port to GNOME 45 ESM
 - [ ] Fix FallItems not showing on background layout
 
 ## 4.0.2

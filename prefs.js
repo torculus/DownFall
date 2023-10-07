@@ -18,16 +18,21 @@
  *
  */
 
-const {Gtk, Gio, Gdk, GLib} = imports.gi;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Utils = Me.imports.utils;
-const Config = imports.misc.config;
-const ExtensionUtils = imports.misc.extensionUtils;
+import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
+import Gdk from 'gi://Gdk';
+import GLib from 'gi://GLib';
 
-function fillPreferencesWindow(window) {
+import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+
+import * as Utils from './utils.js';
+import * as Config from 'resource:///org/gnome/Shell/Extensions/js/misc/config.js';
+
+export default class DFPreferences extends ExtensionPreferences {
+ fillPreferencesWindow(window) {
     window.search_enabled = true;
     let builder = Gtk.Builder.new();
-    builder.add_from_file(Me.dir.get_path() + '/prefs.ui');
+    builder.add_from_file(this.path + '/prefs.ui');
     let page1 = builder.get_object('appearance-page');
     let page2 = builder.get_object('behavior-page');
     let page3 = builder.get_object('sfx-page');
@@ -37,7 +42,7 @@ function fillPreferencesWindow(window) {
     window.add(page3);
     window.add(page4);
 
-    let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.downfall');
+    let settings = this.getSettings();
 
     //bind settings from prefs.xml to schema keys
     settings.bind('presets', builder.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -90,7 +95,7 @@ function fillPreferencesWindow(window) {
   	builder.get_object('matrix_switch').set_active( (Math.random() >= 0.5) );
   	builder.get_object('firework_switch').set_active( (Math.random() >= 0.5) );
     });
- 
+ }
 }
 
 function widget_schema(schemakey, widget, settings, buildable) {
@@ -180,8 +185,3 @@ function set_presets(preset, buildable) {
       buildable.get_object('flr_color').set_rgba(rgba3);
   }
 }
-
-function init() {
-}
-
-
