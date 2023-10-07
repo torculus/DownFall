@@ -179,20 +179,21 @@ var FallItem = GObject.registerClass({
     }
 
     stopTimers() {
-	//stop and remove the timeouts
-	for(source in [this.idleID, this.matAddID, this.changeID]) {
-		if(source) {
-			GLib.source_remove(source);
-			source = null;
-		}
-	}
+    	return new Promise( resolve => {
+		//stop and destroy the timeouts
+		GLib.Source.destroy(this?.changeID);
+		this.changeID = null;
+		GLib.Source.destroy(this?.idleID);
+		this.idleID = null;
+		GLib.Source.destroy(this?.matAddID);
+		this.matAddID = null;
+		
+		resolve('0');
+	} );
     }
 
     destroy() {
-	this.stopTimers();
-
-	//destroy the St.Label
-	super.destroy();
+	this.stopTimers().then(super.destroy());
     }
     
   });
@@ -291,52 +292,14 @@ const FIM = GObject.registerClass({
 		fi.fall();} );
     }
 
-    /*stopTimers() {
-      //stop all of the timers
-      return new Promise( resolve => {
-      	this.ic.get_children()
-      		.forEach( (fi) => { if (fi.idleID) {
-      				GLib.source_remove(fi.idleID);
-      			    	fi.IdleID = null;
-      			    }
-      			    if (fi.matAddID) {
-      				GLib.source_remove(fi.matAddID);
-      				fi.matAddID = null;
-      			    }
-			    if (fi.changeID) {
-			    	GLib.source_remove(fi.changeID);
-				fi.changeID = null;
-			    }
-      			  } );
-	
-      	this.mc.get_children()
-      		.forEach( (mi) => { GLib.source_remove(mi.matChangeID);
-      			    mi.matChangeID = null;
-      			  } );
-	resolve('0');
-      } );
-    }*/
-
     reset() {
-	//remove all of the FallItems and any matritems
-	this.ic.destroy_all_children();
-	this.mc.destroy_all_children();
-	
 	//remove containers from pane3d
-	this.pane3d.remove_child(this.ic);
-	this.pane3d.remove_child(this.mc);
-
-	//make sure the sources are removed before destroying anything
-	/*
-    	this.stopTimers().then( () => {
-				//remove all of the FallItems
-				this.ic.destroy_all_children();
-				//remove any matritems
-      				this.mc.destroy_all_children() } )
-			.then( () => {
-				//remove containers from pane3d
-				this.pane3d.remove_child(this.ic);
-				this.pane3d.remove_child(this.mc) } );*/
+	this?.pane3d.remove_child(this.ic);
+	this?.pane3d.remove_child(this.mc);
+	
+	//remove all of the FallItems and any matritems
+	this.ic.remove_all_children();
+	this.mc.remove_all_children();
     }
 
     toggle() {
@@ -438,8 +401,6 @@ const Extension = GObject.registerClass({
       this._indicator.destroy();
       this._indicator = null;
 
-      this._settings = null;
-
       this.fim.reset();
 
       //remove everything else
@@ -448,6 +409,7 @@ const Extension = GObject.registerClass({
       this.fim.pane3d = null;
       this.fim.MATRIXTRAILSON = null;
       this.fim = null;
+      this._settings = null;
     }
   });
 
