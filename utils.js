@@ -92,3 +92,5 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
     
     return [startX, startY, endX, endY];
 }
+
+export { startEndPoints };

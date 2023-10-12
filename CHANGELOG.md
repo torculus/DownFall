@@ -4,9 +4,9 @@
 - [ ] Add `EaseOut` animationmode for more realistic fireworks
 - [ ] Add random colors for Firework flares
 
-## 4.1.0 (Roadmap)
+## 4.1.0
 - [x] Port to GNOME 45 ESM
-- [ ] Fix FallItems not showing on background layout
+- [x] Fix FallItems not showing on background layout (needed `export { startEndPoints }` in `Utils.js`)
 
 ## 4.0.2
 - Moved `stopTimers()` to FallItems instead of FIM
