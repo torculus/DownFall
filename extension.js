@@ -390,4 +390,4 @@ export default class DFExtension extends Extension {
       this.fim = null;
       this._settings = null;
     }
-  });
+  };
