@@ -3,6 +3,10 @@
 ## 4.1.1 (Roadmap)
 - [ ] Add `EaseOut` animationmode for more realistic fireworks
 - [ ] Add random colors for Firework flares
+- Implement new presets
+    - Confetti
+    - Rain
+    - Fireflies
 
 ## 4.1.0
 - [x] Port to GNOME 45 ESM
