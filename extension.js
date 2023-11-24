@@ -58,9 +58,20 @@ var FallItem = GObject.registerClass({
     
     fall() {
       this.idleID = null;
-      this.monitor = (this.fim.MONITORS == 0) ? Main.layoutManager.currentMonitor
-      				    : Main.layoutManager.primaryMonitor;
-      
+
+      switch (this.fim.MONITORS) {
+        case 0:
+	  this.monitor = Main.layoutManager.currentMonitor;
+	  break;
+	case 1:
+	  this.monitor = Main.layoutManager.primaryMonitor;
+	  break;
+	default:
+	  this.monitor = (Main.layoutManager.monitors.length == 1)
+	  			? Main.layoutManager.primaryMonitor
+	  			: Main.layoutManager.monitors[GLib.random_int_range(0, Main.layoutManager.monitors.length-1)];
+      }
+
       //get coordinates for the start and end points
       let startEndpoints = Utils.startEndPoints(this.fim.DIRECTION, this.monitor, this.fim.AVG_DRIFT, this);
       let startX = startEndpoints[0];
@@ -232,7 +243,7 @@ const FIM = GObject.registerClass({
 
     	this.FALLFONT = this.settings.get_string('textfont');
     	
-    	this.MONITORS = this.settings.get_int('fallmon');
+    	this.MONITORS = this.settings.get_int('fallmon'); //0=current, 1=primary, 2=all
     	this.DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
     	this.MAX_ITEMS = this.settings.get_int('maxitems');
     	this.AVG_TIME = this.settings.get_int('falltime');

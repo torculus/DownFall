@@ -36,59 +36,62 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
     	var rand4 = GLib.random_int_range(-50,50)/100;
     }
     
-    if (direction == 0) { //Down
+    switch (direction) {
+      case 0: //Down
         startX = monitor.x + Math.floor(rand1 * (monitor.width - fallItem.width));
         startY = monitor.y - fallItem.height;
         endX = startX + Math.floor( rand2 * avgdrift * monitor.width);
-        endY = monitor.y + monitor.height - fallItem.height;
-        
-    } else if (direction == 1) { //Up
+        endY = monitor.y + monitor.height;// - fallItem.height;
+	break;
+      case 1: //Up
         startX = monitor.x + Math.floor(rand1 * (monitor.width - fallItem.width));
         startY = monitor.y + monitor.height - fallItem.height;
         endX = startX + Math.floor( rand2 * avgdrift * monitor.width);
         endY = monitor.y - fallItem.height;
-        
-    } else if (direction == 2) { //Right
+	break;
+      case 2: //Right
         startX = monitor.x - fallItem.width;
         startY = monitor.y + Math.floor(rand1 * (monitor.height - fallItem.height));
         endX = monitor.x + monitor.width - fallItem.width;
         endY = startY + Math.floor( rand2 * avgdrift * monitor.height);
-        
-    } else if (direction == 3) { //Left
+	break;
+      case 3: //Left
         startX = monitor.x + monitor.width - fallItem.width;
         startY = monitor.y + Math.floor(rand1 * (monitor.height - fallItem.height));
         endX = monitor.x - fallItem.width;
         endY = startY + Math.floor( rand2 * avgdrift * monitor.height);
-        
-    } else if (direction == 4) { //Up-Right
+	break;
+      case 4: //Up-Right
         startX = monitor.x + Math.floor( rand1 * avgdrift * monitor.width);
         startY = monitor.y + monitor.height + Math.floor( rand2 * avgdrift * monitor.height);
         endX = monitor.x + monitor.width - fallItem.width + Math.floor( rand3 * avgdrift * monitor.width);
         endY = monitor.y - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
-        
-    } else if (direction == 5) { //Up-Left
+	break;
+      case 5: //Up-Left
         startX = monitor.x + monitor.width - fallItem.width + Math.floor( rand1 * avgdrift * monitor.width);
         startY = monitor.y + monitor.height - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
         endX = monitor.x + Math.floor( rand3 * avgdrift * monitor.width);
         endY = monitor.y - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
-        
-    } else if (direction == 6) { //Down-Right
+	break;
+      case 6: //Down-Right
         startX = monitor.x + Math.floor( rand1 * avgdrift * monitor.width);
         startY = monitor.y - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
         endX = monitor.x + monitor.width - fallItem.width + Math.floor( rand3 * avgdrift * monitor.width);
         endY = monitor.y + monitor.height - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
-        
-    } else if (direction == 7) { //Down-Left
+	break;
+      case 7: //Down-Left
         startX = monitor.x + monitor.width - fallItem.width + Math.floor( rand1 * avgdrift * monitor.width);
         startY = monitor.y - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
         endX = monitor.x + Math.floor( rand3 * avgdrift * monitor.width);
         endY = monitor.y + monitor.height - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
-    } else { //Unpredictable
+	break;
+      default:  //Unpredictable
     	startX = monitor.width/2 + Math.floor(rand1 * (monitor.width - fallItem.width));
     	startY = monitor.height/2 + Math.floor(rand2 * (monitor.height - fallItem.height));
     	endX = startX + Math.floor( rand3 * avgdrift * monitor.width);
     	endY = startY + Math.floor(rand4 * avgdrift * (monitor.height - fallItem.height));
     }
+    
     
     return [startX, startY, endX, endY];
 }
