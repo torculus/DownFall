@@ -56,6 +56,8 @@
                   <item id="2" translatable="yes">Leaves</item>
                   <item id="3" translatable="yes">Matrix© rain</item>
                   <item id="4" translatable="yes">Fireworks</item>
+                  <item id="5" translatable="yes">Rain</item>
+                  <item id="6" translatable="yes">Fireflies</item>
                   </items>
               </object>
             </child>

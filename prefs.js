@@ -118,14 +118,17 @@ function widget_color(schemakey, widget, settings, buildable) {
   
   //bind text color to key
   buildable.get_object(widget).connect('notify::rgba', (button) => {
-            let rgba1 = button.get_rgba();
-            settings.set_string(schemakey, rgba1.to_string());
+            let rgba_1 = button.get_rgba();
+            settings.set_string(schemakey, rgba_1.to_string());
         });
 }
 
 function set_presets(preset, buildable) {
-  if (preset == "Snow") {
-      let rgba = new Gdk.RGBA();
+  let rgba = new Gdk.RGBA();
+  let rgba2 = new Gdk.RGBA();
+  let rgba3 = new Gdk.RGBA();
+  switch (preset) {
+    case "Snow":
       buildable.get_object('display_field').set_text("*,.");
       rgba.parse("White");
       buildable.get_object('text_color').set_rgba(rgba);
@@ -136,7 +139,8 @@ function set_presets(preset, buildable) {
       buildable.get_object('fall_drift').set_value(75);
       buildable.get_object('matrix_switch').set_active(false);
       buildable.get_object('firework_switch').set_active(false);
-  } else if (preset == "Leaves") {
+      break;
+    case "Leaves":
       buildable.get_object('display_field').set_text("🍁️,🍂️");
       buildable.get_object('fall_direc').set_active(6);
       buildable.get_object('max_items').set_value(40);
@@ -145,13 +149,12 @@ function set_presets(preset, buildable) {
       buildable.get_object('fall_drift').set_value(60);
       buildable.get_object('matrix_switch').set_active(false);
       buildable.get_object('firework_switch').set_active(false);
-  } else if (preset == "Matrix© rain") {
-      let rgba1 = new Gdk.RGBA();
-      let rgba2 = new Gdk.RGBA();
-      rgba1.parse("White");
+      break;
+    case "Matrix© rain":
+      rgba.parse("White");
       rgba2.parse("SpringGreen3");
       buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
-      buildable.get_object('text_color').set_rgba(rgba1);
+      buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_active(0);
       buildable.get_object('clutter_animmode').set_active(0); //LINEAR
       buildable.get_object('max_items').set_value(7);
@@ -162,15 +165,13 @@ function set_presets(preset, buildable) {
       buildable.get_object('mat_display').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
       buildable.get_object('mat_color').set_rgba(rgba2);
       buildable.get_object('firework_switch').set_active(false);
-  } else if (preset == "Fireworks") {
-      let rgba1 = new Gdk.RGBA();
-      let rgba2 = new Gdk.RGBA();
-      let rgba3 = new Gdk.RGBA();
-      rgba1.parse("Orange");
+      break;
+    case "Fireworks":
+      rgba.parse("Orange");
       rgba2.parse("Gray");
       rgba3.parse("Yellow");
       buildable.get_object('display_field').set_text("🔸️");
-      buildable.get_object('text_color').set_rgba(rgba1);
+      buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_active(1);
       buildable.get_object('clutter_animmode').set_active(2); //EASE_OUT_QUAD
       buildable.get_object('max_items').set_value(2);
@@ -183,5 +184,32 @@ function set_presets(preset, buildable) {
       buildable.get_object('firework_switch').set_active(true);
       buildable.get_object('flr_display').set_text("★");
       buildable.get_object('flr_color').set_rgba(rgba3);
+      break;
+    case "Rain":
+      buildable.get_object('display_field').set_text(".");
+      rgba.parse("Blue");
+      buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('fall_direc').set_active(0);
+      buildable.get_object('max_items').set_value(20);
+      buildable.get_object('fall_time').set_value(4);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(10);
+      buildable.get_object('matrix_switch').set_active(false);
+      buildable.get_object('firework_switch').set_active(false);
+      break;
+    case "Fireflies":
+      buildable.get_object('display_field').set_text("🟠");
+      rgba.parse("Orange");
+      buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('fall_direc').set_active(8);
+      buildable.get_object('max_items').set_value(20);
+      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(85);
+      buildable.get_object('matrix_switch').set_active(false);
+      buildable.get_object('firework_switch').set_active(false);
+      break;
+    default: //"Confetti"
+      //
   }
 }
