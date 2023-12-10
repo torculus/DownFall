@@ -221,19 +221,14 @@ const FIM = GObject.registerClass({
     _init(settings) {
         super._init();
     	this.settings = settings;
+	this.RUNNING = false;
 	this.MATRIXTRAILSON = false;
-   	
-    	this.ic = new Clutter.Actor(); //a place to store our FallItems
-    	this.mc = new Clutter.Actor(); //a place to store our matritems
-	this.pane3d = null;
 
     	this.settings.connect('changed', this.settingsChanged.bind(this));
-
-	this.loadSettings();
     }
 
     loadSettings() {
-    	this.ENABLED = this.settings.get_boolean('feature-enabled');
+    	this.START = this.settings.get_boolean('feature-enabled');
 
     	this.FALL3D = this.settings.get_int('fall3d');
 	this.ANIMATIONMODE = this.settings.get_int('clutteranimmode')+1;
@@ -269,20 +264,36 @@ const FIM = GObject.registerClass({
     settingsChanged() {
     	this.loadSettings();
 
-	//restart if matrixtrails are turned off while running
-	if (this.MATRIXTRAILSON && !this.MATRIXTRAILS) {
-		this.MATRIXTRAILSON = false;
-		this.reset();
-		this.dropItems();
+	if (this.RUNNING) { //already running
+		if (!this.START) { //turning off
+			this.stop();
+		} else { //updating existing FallItems
+			//restart if matrixtrails are turned off while running
+			if (this.MATRIXTRAILSON && !this.MATRIXTRAILS) {
+				this.MATRIXTRAILSON = false;
+				this.stop();
+				this.dropItems();
+			}
+
+			//update the FallItems
+			this.ic.get_children().forEach( (fi) => {
+				let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
+				fi.change(whichItem, this.FALLFONT, this.FALLCOLOR); } );
+		}
+	} else {
+		if (this.START) { //turning on
+			this.dropItems();
+		}
 	}
 
-	//update the FallItems
-	this.ic.get_children().forEach( (fi) => {
-		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
-		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR); } );
     }
 
     dropItems() {
+      this.RUNNING = true;
+      this.ic = new Clutter.Actor(); //a place to store our FallItems
+      this.mc = new Clutter.Actor(); //a place to store our matritems
+
+
       if (this.FALL3D == 0) { //in front
       	this.pane3d = global.top_window_group; 
       } else {
@@ -306,27 +317,23 @@ const FIM = GObject.registerClass({
 		fi.fall();} );
     }
 
-    reset() {
-	//remove containers from pane3d
+    stop() {
+	this.RUNNING = false;
+
+    	//remove containers from pane3d
 	this?.pane3d.remove_child(this.ic);
 	this?.pane3d.remove_child(this.mc);
-	
+
 	//remove all of the FallItems and any matritems
 	this.ic.remove_all_children();
 	this.mc.remove_all_children();
+
+	this.ic.destroy();
+	this.mc.destroy();
+	this.MATRIXTRAILSON = false;
     }
 
-    toggle() {
-      this.loadSettings();
-
-      if (this.ENABLED) {
-        this.dropItems();
-      } else {
-      	this.reset();
-      }
-    }
-
-  });
+});
 
 const FeatureToggle = GObject.registerClass(
 class FeatureToggle extends QuickSettings.QuickToggle {
@@ -346,9 +353,9 @@ class FeatureToggle extends QuickSettings.QuickToggle {
             this, 'checked',
             Gio.SettingsBindFlags.DEFAULT);
 	
-	this.connect('clicked', this.fim.toggle.bind(this.fim));
+  	this.connect('clicked', this.fim.settingsChanged.bind(this.fim));
     }
-  });
+});
 
 const FeatureIndicator = GObject.registerClass(
 class FeatureIndicator extends QuickSettings.SystemIndicator {
@@ -367,9 +374,8 @@ class FeatureIndicator extends QuickSettings.SystemIndicator {
         this._settings.bind('feature-enabled',
             this._indicator, 'visible',
             Gio.SettingsBindFlags.DEFAULT);
-        
     }
-  });
+});
 
 export default class DFExtension extends Extension {
     _init() {
@@ -382,23 +388,21 @@ export default class DFExtension extends Extension {
       this.fim = new FIM(this._settings);
 
       this._indicator = new FeatureIndicator(this, this.fim);
-      this._indicator.quickSettingsItems.push(new FeatureToggle(this, this.fim));
+      this.featToggle = new FeatureToggle(this, this.fim);
+      this._indicator.quickSettingsItems.push(this.featToggle);
       Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
     }
 
     disable() {
+      this.featToggle.set_checked(false); //make sure the toggle button is off
       this._indicator.quickSettingsItems.forEach(item => item.destroy());
       this._indicator.destroy();
       this._indicator = null;
 
-      this.fim.reset();
+      this.fim.stop();
 
       //remove everything else
-      this.fim.ic.destroy();
-      this.fim.mc.destroy();
-      this.fim.pane3d = null;
-      this.fim.MATRIXTRAILSON = null;
       this.fim = null;
       this._settings = null;
     }
-  };
+};
