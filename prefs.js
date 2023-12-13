@@ -186,20 +186,20 @@ function set_presets(preset, buildable) {
       buildable.get_object('flr_color').set_rgba(rgba3);
       break;
     case "Rain":
-      buildable.get_object('display_field').set_text(".");
-      rgba.parse("Blue");
+      buildable.get_object('display_field').set_text(".,💧");
+      rgba.parse("Cyan");
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_active(0);
       buildable.get_object('max_items').set_value(20);
-      buildable.get_object('fall_time').set_value(4);
+      buildable.get_object('fall_time').set_value(3);
       buildable.get_object('fall_rot').set_value(0);
-      buildable.get_object('fall_drift').set_value(10);
+      buildable.get_object('fall_drift').set_value(5);
       buildable.get_object('matrix_switch').set_active(false);
       buildable.get_object('firework_switch').set_active(false);
       break;
     case "Fireflies":
-      buildable.get_object('display_field').set_text("🟠");
-      rgba.parse("Orange");
+      buildable.get_object('display_field').set_text("●");
+      rgba.parse("GreenYellow");
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_active(8);
       buildable.get_object('max_items').set_value(20);

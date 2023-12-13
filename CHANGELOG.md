@@ -1,16 +1,20 @@
 # Change Log
 
-## 4.1.1 (Roadmap)
+## Roadmap
 - [ ] Add `EaseOut` animationmode for more realistic fireworks
 - [ ] Add random colors for Firework flares
-- Implement new presets
-    - Confetti
+
+## 4.1.1
+- ***New feature***: Allow falling on all monitors (fixed #10)
+- Changed default "Down" to move FallItems off screen (#10)
+- Reworked enable/disable logic (#9)
+- Implement new presets (#11)
     - Rain
     - Fireflies
 
 ## 4.1.0
-- [x] Port to GNOME 45 ESM
-- [x] Fix FallItems not showing on background layout (needed `export { startEndPoints }` in `Utils.js`)
+- Port to GNOME 45 ESM
+- Fix FallItems not showing on background layout (needed `export { startEndPoints }` in `Utils.js`)
 
 ## 4.0.2
 - Moved `stopTimers()` to FallItems instead of FIM
