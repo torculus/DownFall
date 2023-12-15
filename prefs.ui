@@ -374,7 +374,7 @@
             <property name="title" translatable="yes">Version</property>
             <child>
               <object class="GtkLabel">
-		<property name="label">4.1.1</property>
+		<property name="label">4.1.2</property>
               </object>
             </child>
           </object>

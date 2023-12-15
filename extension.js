@@ -69,7 +69,7 @@ var FallItem = GObject.registerClass({
 	default:
 	  this.monitor = (Main.layoutManager.monitors.length == 1)
 	  			? Main.layoutManager.primaryMonitor
-	  			: Main.layoutManager.monitors[GLib.random_int_range(0, Main.layoutManager.monitors.length-1)];
+	  			: Main.layoutManager.monitors[GLib.random_int_range(0, Main.layoutManager.monitors.length)];
       }
 
       //get coordinates for the start and end points

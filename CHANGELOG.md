@@ -4,6 +4,9 @@
 - [ ] Add `EaseOut` animationmode for more realistic fireworks
 - [ ] Add random colors for Firework flares
 
+## 4.1.2
+- Bugfix: #10 not working on all monitors
+
 ## 4.1.1
 - ***New feature***: Allow falling on all monitors (fixed #10)
 - Changed default "Down" to move FallItems off screen (#10)
