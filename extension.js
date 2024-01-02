@@ -49,7 +49,7 @@ var FallItem = GObject.registerClass({
 
     change(text, fontstring, color) {
       //don't style on each iteration of fall()
-      this.set_style(`color: ${color}`);
+      this.set_style(`color: ${color}; text-shadow: 0 0 5px red`);
 
       this.get_clutter_text().set_font_name(fontstring);
       

@@ -45,21 +45,21 @@ export default class DFPreferences extends ExtensionPreferences {
     let settings = this.getSettings();
 
     //bind settings from prefs.xml to schema keys
-    settings.bind('presets', builder.get_object('presets'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('presets', builder.get_object('presets'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textfont', builder.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('fallmon', builder.get_object('fall_monitor'), 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('falldirec', builder.get_object('fall_direc'), 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('fall3d', builder.get_object('fall_3d'), 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('clutteranimmode', builder.get_object('clutter_animmode'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('fallmon', builder.get_object('fall_monitor'), 'selected', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('falldirec', builder.get_object('fall_direc'), 'selected', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('fall3d', builder.get_object('fall_3d'), 'selected', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('clutteranimmode', builder.get_object('clutter_animmode'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('maxitems', builder.get_object('max_items'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('falltime', builder.get_object('fall_time'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('fallrot', builder.get_object('fall_rot'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('falldrift', builder.get_object('fall_drift'), 'value', Gio.SettingsBindFlags.DEFAULT);
 
-    settings.bind('matrixtrails', builder.get_object('matrix_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matrixtrails', builder.get_object('matrix_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matfont', builder.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
 
-    settings.bind('fireworks', builder.get_object('firework_switch'), 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('fireworks', builder.get_object('firework_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrfont', builder.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
 
     //set up text entries
@@ -73,27 +73,26 @@ export default class DFPreferences extends ExtensionPreferences {
     widget_color('flrcolor', 'flr_color', settings, builder);
 
     //bind presets to specific values
-    builder.get_object('presets').connect('changed', (presets) => {
-    	let preset = presets.get_active_text();
-  	set_presets(preset, builder);
+    builder.get_object('presets').connect('notify::selected-item', () => {
+  	set_presets(builder.get_object('presets').get_selected_item().toString(), builder);
     });
 
     //bind random button to random values
     builder.get_object('random_button').connect('clicked', () => {
     	let rgba = new Gdk.RGBA();
   	
-  	builder.get_object('presets').set_active(0);
+  	builder.get_object('presets').set_selected(0);
   	builder.get_object('display_field').set_text( String.fromCharCode(Math.floor(Math.random() * (65536))) );
   	let color = "\#" + Math.floor(Math.random()*16777215).toString(16);
   	rgba.parse( color );
   	builder.get_object('text_color').set_rgba(rgba);
-  	builder.get_object('fall_direc').set_active(GLib.random_int_range(0,8));
+  	builder.get_object('fall_direc').set_selected(GLib.random_int_range(0,8));
   	builder.get_object('max_items').set_value(GLib.random_int_range(1,40));
   	builder.get_object('fall_time').set_value(GLib.random_int_range(2,20));
   	builder.get_object('fall_rot').set_value(GLib.random_int_range(0,360));
   	builder.get_object('fall_drift').set_value(GLib.random_int_range(0,100));
-  	builder.get_object('matrix_switch').set_active( (Math.random() >= 0.5) );
-  	builder.get_object('firework_switch').set_active( (Math.random() >= 0.5) );
+  	builder.get_object('matrix_switch').set_enable_expansion( (Math.random() >= 0.5) );
+  	builder.get_object('firework_switch').set_enable_expansion( (Math.random() >= 0.5) );
     });
  }
 }
@@ -104,7 +103,7 @@ function widget_schema(schemakey, widget, settings, buildable) {
   buildable.get_object(widget).set_text(disptext);
   
   //bind schemakey to widget changes
-  buildable.get_object(widget).connect('notify::text', (entry) => {
+  buildable.get_object(widget).connect('changed', (entry) => {
   	let typed = entry.get_text().split(',');
   	settings.set_strv(schemakey, typed);
   });
@@ -132,39 +131,39 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text("*,.");
       rgba.parse("White");
       buildable.get_object('text_color').set_rgba(rgba);
-      buildable.get_object('fall_direc').set_active(7);
+      buildable.get_object('fall_direc').set_selected(7);
       buildable.get_object('max_items').set_value(40);
       buildable.get_object('fall_time').set_value(7);
       buildable.get_object('fall_rot').set_value(45);
       buildable.get_object('fall_drift').set_value(75);
-      buildable.get_object('matrix_switch').set_active(false);
-      buildable.get_object('firework_switch').set_active(false);
+      buildable.get_object('matrix_switch').set_enable_expansion(false);
+      buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case "Leaves":
       buildable.get_object('display_field').set_text("🍁️,🍂️");
-      buildable.get_object('fall_direc').set_active(6);
+      buildable.get_object('fall_direc').set_selected(6);
       buildable.get_object('max_items').set_value(40);
       buildable.get_object('fall_time').set_value(10);
       buildable.get_object('fall_rot').set_value(60);
       buildable.get_object('fall_drift').set_value(60);
-      buildable.get_object('matrix_switch').set_active(false);
-      buildable.get_object('firework_switch').set_active(false);
+      buildable.get_object('matrix_switch').set_enable_expansion(false);
+      buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case "Matrix© rain":
       rgba.parse("White");
       rgba2.parse("SpringGreen3");
       buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
       buildable.get_object('text_color').set_rgba(rgba);
-      buildable.get_object('fall_direc').set_active(0);
-      buildable.get_object('clutter_animmode').set_active(0); //LINEAR
+      buildable.get_object('fall_direc').set_selected(0);
+      buildable.get_object('clutter_animmode').set_selected(0); //LINEAR
       buildable.get_object('max_items').set_value(7);
       buildable.get_object('fall_time').set_value(7);
       buildable.get_object('fall_rot').set_value(0);
       buildable.get_object('fall_drift').set_value(0);
-      buildable.get_object('matrix_switch').set_active(true);
+      buildable.get_object('matrix_switch').set_enable_expansion(true);
       buildable.get_object('mat_display').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
       buildable.get_object('mat_color').set_rgba(rgba2);
-      buildable.get_object('firework_switch').set_active(false);
+      buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case "Fireworks":
       rgba.parse("Orange");
@@ -172,16 +171,16 @@ function set_presets(preset, buildable) {
       rgba3.parse("Yellow");
       buildable.get_object('display_field').set_text("🔸️");
       buildable.get_object('text_color').set_rgba(rgba);
-      buildable.get_object('fall_direc').set_active(1);
-      buildable.get_object('clutter_animmode').set_active(2); //EASE_OUT_QUAD
+      buildable.get_object('fall_direc').set_selected(1);
+      buildable.get_object('clutter_animmode').set_selected(2); //EASE_OUT_QUAD
       buildable.get_object('max_items').set_value(2);
       buildable.get_object('fall_time').set_value(3);
       buildable.get_object('fall_rot').set_value(0);
       buildable.get_object('fall_drift').set_value(30);
-      buildable.get_object('matrix_switch').set_active(true);
+      buildable.get_object('matrix_switch').set_enable_expansion(true);
       buildable.get_object('mat_display').set_text(".");
       buildable.get_object('mat_color').set_rgba(rgba2);
-      buildable.get_object('firework_switch').set_active(true);
+      buildable.get_object('firework_switch').set_enable_expansion(true);
       buildable.get_object('flr_display').set_text("★");
       buildable.get_object('flr_color').set_rgba(rgba3);
       break;
@@ -189,27 +188,36 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text(".,💧");
       rgba.parse("Cyan");
       buildable.get_object('text_color').set_rgba(rgba);
-      buildable.get_object('fall_direc').set_active(0);
+      buildable.get_object('fall_direc').set_selected(0);
       buildable.get_object('max_items').set_value(20);
       buildable.get_object('fall_time').set_value(3);
       buildable.get_object('fall_rot').set_value(0);
       buildable.get_object('fall_drift').set_value(5);
-      buildable.get_object('matrix_switch').set_active(false);
-      buildable.get_object('firework_switch').set_active(false);
+      buildable.get_object('matrix_switch').set_enable_expansion(false);
+      buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case "Fireflies":
       buildable.get_object('display_field').set_text("●");
       rgba.parse("GreenYellow");
       buildable.get_object('text_color').set_rgba(rgba);
-      buildable.get_object('fall_direc').set_active(8);
+      buildable.get_object('fall_direc').set_selected(8);
       buildable.get_object('max_items').set_value(20);
       buildable.get_object('fall_time').set_value(7);
       buildable.get_object('fall_rot').set_value(0);
       buildable.get_object('fall_drift').set_value(85);
-      buildable.get_object('matrix_switch').set_active(false);
-      buildable.get_object('firework_switch').set_active(false);
+      buildable.get_object('matrix_switch').set_enable_expansion(false);
+      buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     default: //"Confetti"
-      //
+      buildable.get_object('display_field').set_text(preset);
+      rgba.parse("GreenYellow");
+      buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('fall_direc').set_selected(8);
+      buildable.get_object('max_items').set_value(20);
+      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('fall_rot').set_value(0);
+      buildable.get_object('fall_drift').set_value(85);
+      buildable.get_object('matrix_switch').set_enable_expansion(false);
+      buildable.get_object('firework_switch').set_enable_expansion(false);
   }
 }
