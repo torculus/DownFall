@@ -39,6 +39,7 @@
                   <item translatable="yes">Fireworks</item>
                   <item translatable="yes">Rain</item>
                   <item translatable="yes">Fireflies</item>
+                  <item translatable="yes">Lava Lamp</item>
                 </items>
               </object>
             </property>
@@ -52,7 +53,7 @@
         </child>
         <child>
           <object class="AdwEntryRow" id="display_field">
-            <property name="title" translatable="yes">Text to Display (Separate items with commas, type ":" to search emojis)</property>
+            <property name="title" translatable="yes">Text to Display (Comma-separated, type ":" to search emojis)</property>
             <property name="activates-default">TRUE</property>
             <property name="enable-emoji-completion">TRUE</property>
             <property name="input-hints">TRUE</property>
@@ -80,8 +81,8 @@
           </object>
         </child>
         <child>
-          <object class="AdwExpanderRow">
-            <property name="title" translatable="yes">Text Shadow</property>
+          <object class="AdwExpanderRow" id="text_shad">
+            <property name="title" translatable="yes">Box Shadow</property>
             <property name="show-enable-switch" translatable="yes">true</property>
             <child>
               <object class="AdwSpinRow" id="text_shad_x">
@@ -89,7 +90,7 @@
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">0</property>
-                    <property name="upper">10</property>
+                    <property name="upper">100</property>
                     <property name="value">1</property>
                     <property name="page-increment">1</property>
                     <property name="step-increment">1</property>
@@ -103,7 +104,7 @@
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">0</property>
-                    <property name="upper">10</property>
+                    <property name="upper">100</property>
                     <property name="value">1</property>
                     <property name="page-increment">1</property>
                     <property name="step-increment">1</property>
@@ -117,7 +118,7 @@
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="lower">0</property>
-                    <property name="upper">10</property>
+                    <property name="upper">100</property>
                     <property name="value">1</property>
                     <property name="page-increment">1</property>
                     <property name="step-increment">1</property>
@@ -335,8 +336,8 @@
               </object>
             </child>
             <child>
-              <object class="AdwExpanderRow">
-                <property name="title" translatable="yes">Matrix© trails text shadow</property>
+              <object class="AdwExpanderRow" id="mat_shad">
+                <property name="title" translatable="yes">Matrix© trails box shadow</property>
                 <property name="show-enable-switch" translatable="yes">true</property>
                 <child>
                   <object class="AdwSpinRow" id="mat_shad_x">
@@ -344,7 +345,7 @@
                     <property name="adjustment">
                       <object class="GtkAdjustment">
                         <property name="lower">0</property>
-                        <property name="upper">10</property>
+                        <property name="upper">100</property>
                         <property name="value">1</property>
                         <property name="page-increment">1</property>
                         <property name="step-increment">1</property>
@@ -358,7 +359,7 @@
                     <property name="adjustment">
                       <object class="GtkAdjustment">
                         <property name="lower">0</property>
-                        <property name="upper">10</property>
+                        <property name="upper">100</property>
                         <property name="value">1</property>
                         <property name="page-increment">1</property>
                         <property name="step-increment">1</property>
@@ -368,11 +369,11 @@
                 </child>
                 <child>
                   <object class="AdwSpinRow" id="mat_shad_blur">
-                    <property name="title">Shadow y offset (px)</property>
+                    <property name="title">Shadow blur (px)</property>
                     <property name="adjustment">
                       <object class="GtkAdjustment">
                         <property name="lower">0</property>
-                        <property name="upper">10</property>
+                        <property name="upper">100</property>
                         <property name="value">1</property>
                         <property name="page-increment">1</property>
                         <property name="step-increment">1</property>
@@ -432,8 +433,8 @@
               </object>
             </child>
             <child>
-              <object class="AdwExpanderRow">
-                <property name="title" translatable="yes">Firework flares text shadow</property>
+              <object class="AdwExpanderRow" id="flr_shad">
+                <property name="title" translatable="yes">Firework flares box shadow</property>
                 <property name="show-enable-switch" translatable="yes">true</property>
                 <child>
                   <object class="AdwSpinRow" id="flr_shad_x">
@@ -441,7 +442,7 @@
                     <property name="adjustment">
                       <object class="GtkAdjustment">
                         <property name="lower">0</property>
-                        <property name="upper">10</property>
+                        <property name="upper">100</property>
                         <property name="value">1</property>
                         <property name="page-increment">1</property>
                         <property name="step-increment">1</property>
@@ -455,7 +456,7 @@
                     <property name="adjustment">
                       <object class="GtkAdjustment">
                         <property name="lower">0</property>
-                        <property name="upper">10</property>
+                        <property name="upper">100</property>
                         <property name="value">1</property>
                         <property name="page-increment">1</property>
                         <property name="step-increment">1</property>
@@ -465,11 +466,11 @@
                 </child>
                 <child>
                   <object class="AdwSpinRow" id="flr_shad_blur">
-                    <property name="title">Shadow y offset (px)</property>
+                    <property name="title">Shadow blur (px)</property>
                     <property name="adjustment">
                       <object class="GtkAdjustment">
                         <property name="lower">0</property>
-                        <property name="upper">10</property>
+                        <property name="upper">100</property>
                         <property name="value">1</property>
                         <property name="page-increment">1</property>
                         <property name="step-increment">1</property>

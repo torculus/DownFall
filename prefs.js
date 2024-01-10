@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2023 Benjamin S Osenbach
+ * Copyright (C) 2019-2024 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -47,6 +47,7 @@ export default class DFPreferences extends ExtensionPreferences {
     //bind settings from prefs.xml to schema keys
     settings.bind('presets', builder.get_object('presets'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textfont', builder.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('textshad', builder.get_object('text_shad'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshadx', builder.get_object('text_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshady', builder.get_object('text_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshadblur', builder.get_object('text_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -61,12 +62,14 @@ export default class DFPreferences extends ExtensionPreferences {
 
     settings.bind('matrixtrails', builder.get_object('matrix_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matfont', builder.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matshad', builder.get_object('mat_shad'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshadx', builder.get_object('mat_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshady', builder.get_object('mat_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshadblur', builder.get_object('mat_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
 
     settings.bind('fireworks', builder.get_object('firework_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrfont', builder.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('flrshad', builder.get_object('flr_shad'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshadx', builder.get_object('flr_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshady', builder.get_object('flr_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshadblur', builder.get_object('flr_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -143,6 +146,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text("*,.");
       rgba.parse("White");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(7);
       buildable.get_object('max_items').set_value(40);
       buildable.get_object('fall_time').set_value(7);
@@ -153,6 +157,7 @@ function set_presets(preset, buildable) {
       break;
     case 2: //"Leaves"
       buildable.get_object('display_field').set_text("🍁️,🍂️");
+      buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(6);
       buildable.get_object('max_items').set_value(40);
       buildable.get_object('fall_time').set_value(10);
@@ -166,6 +171,9 @@ function set_presets(preset, buildable) {
       rgba2.parse("SpringGreen3");
       buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_shad').set_enable_expansion(true);
+      buildable.get_object('text_shad_blur').set_value(15);
+      buildable.get_object('text_shad_color').set_rgba(rgba2);
       buildable.get_object('fall_direc').set_selected(0);
       buildable.get_object('clutter_animmode').set_selected(0); //LINEAR
       buildable.get_object('max_items').set_value(7);
@@ -174,7 +182,10 @@ function set_presets(preset, buildable) {
       buildable.get_object('fall_drift').set_value(0);
       buildable.get_object('matrix_switch').set_enable_expansion(true);
       buildable.get_object('mat_display').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
-      buildable.get_object('mat_color').set_rgba(rgba2);
+      buildable.get_object('mat_color').set_rgba(rgba);
+      buildable.get_object('mat_shad').set_enable_expansion(true);
+      buildable.get_object('mat_shad_blur').set_value(15);
+      buildable.get_object('mat_shad_color').set_rgba(rgba2);
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case 4: //"Fireworks"
@@ -183,6 +194,7 @@ function set_presets(preset, buildable) {
       rgba3.parse("Yellow");
       buildable.get_object('display_field').set_text("🔸️");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(1);
       buildable.get_object('clutter_animmode').set_selected(2); //EASE_OUT_QUAD
       buildable.get_object('max_items').set_value(2);
@@ -192,14 +204,21 @@ function set_presets(preset, buildable) {
       buildable.get_object('matrix_switch').set_enable_expansion(true);
       buildable.get_object('mat_display').set_text(".");
       buildable.get_object('mat_color').set_rgba(rgba2);
+      buildable.get_object('mat_shad').set_enable_expansion(true);
+      buildable.get_object('mat_shad_blur').set_value(18);
+      buildable.get_object('mat_shad_color').set_rgba(rgba);
       buildable.get_object('firework_switch').set_enable_expansion(true);
       buildable.get_object('flr_display').set_text("★");
       buildable.get_object('flr_color').set_rgba(rgba3);
+      buildable.get_object('flr_shad').set_enable_expansion(true);
+      buildable.get_object('flr_shad_blur').set_value(100);
+      buildable.get_object('flr_shad_color').set_rgba(rgba);
       break;
     case 5: //"Rain"
       buildable.get_object('display_field').set_text(".,💧");
       rgba.parse("Cyan");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(0);
       buildable.get_object('max_items').set_value(20);
       buildable.get_object('fall_time').set_value(3);
@@ -212,6 +231,9 @@ function set_presets(preset, buildable) {
       buildable.get_object('display_field').set_text("●");
       rgba.parse("GreenYellow");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_shad').set_enable_expansion(true);
+      buildable.get_object('text_shad_blur').set_value(50);
+      buildable.get_object('text_shad_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_selected(8);
       buildable.get_object('max_items').set_value(20);
       buildable.get_object('fall_time').set_value(7);
@@ -220,16 +242,21 @@ function set_presets(preset, buildable) {
       buildable.get_object('matrix_switch').set_enable_expansion(false);
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
-    default: //"Confetti"
-      buildable.get_object('display_field').set_text(preset);
-      rgba.parse("GreenYellow");
+    case 7: //"Lava Lamp"
+      buildable.get_object('display_field').set_text("●");
+      rgba.parse("White");
+      rgba2.parse("Red");
       buildable.get_object('text_color').set_rgba(rgba);
-      buildable.get_object('fall_direc').set_selected(8);
-      buildable.get_object('max_items').set_value(20);
-      buildable.get_object('fall_time').set_value(7);
+      buildable.get_object('text_shad').set_enable_expansion(true);
+      buildable.get_object('text_shad_blur').set_value(100);
+      buildable.get_object('text_shad_color').set_rgba(rgba2);
+      buildable.get_object('fall_direc').set_selected(1);
+      buildable.get_object('max_items').set_value(8);
+      buildable.get_object('fall_time').set_value(60);
       buildable.get_object('fall_rot').set_value(0);
       buildable.get_object('fall_drift').set_value(85);
       buildable.get_object('matrix_switch').set_enable_expansion(false);
       buildable.get_object('firework_switch').set_enable_expansion(false);
+      break;
   }
 }

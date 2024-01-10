@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2023 Benjamin S Osenbach
+ * Copyright (C) 2019-2024 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -44,6 +44,12 @@
   		<description>Display text font</description>
   	</key>
   	
+  	<key type="b" name="textshad">
+  		<default>false</default>
+  		<summary>Display text shadow</summary>
+  		<description>Display text shadow</description>
+  	</key>
+
   	<key type="i" name="textshadx">
   		<default>0</default>
   		<summary>Display text shadow (x)</summary>
@@ -144,6 +150,12 @@
   		<description>Matrix text font</description>
   	</key>
   	
+  	<key type="b" name="matshad">
+  		<default>false</default>
+  		<summary>Matrix text shadow</summary>
+  		<description>Matrix text shadow</description>
+  	</key>
+
   	<key type="i" name="matshadx">
   		<default>0</default>
   		<summary>Matrix text shadow (x)</summary>
@@ -190,6 +202,12 @@
   		<default>"Sans 20"</default>
   		<summary>Flare text font</summary>
   		<description>Flare text font</description>
+  	</key>
+
+  	<key type="b" name="flrshad">
+  		<default>false</default>
+  		<summary>Flare text shadow</summary>
+  		<description>Flare text shadow</description>
   	</key>
 
   	<key type="i" name="flrshadx">
