@@ -1,5 +1,5 @@
 /* DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2023 Benjamin S Osenbach
+ * Copyright (C) 2019-2024 Benjamin S Osenbach
  *
  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
  *
@@ -47,9 +47,10 @@ var FallItem = GObject.registerClass({
       this.matAddID = null;
     }
 
-    change(text, fontstring, color) {
+    change(text, fontstring, color, shadow) {
       //don't style on each iteration of fall()
-      this.set_style(`color: ${color}`);
+      this.set_style(`color: ${color};
+      			box-shadow: ${shadow}`);
 
       this.get_clutter_text().set_font_name(fontstring);
       
@@ -122,7 +123,7 @@ var FallItem = GObject.registerClass({
       for(var i=0; i<n; i++) {
       	let matritem = new FallItem(this.fim);
 	this.fim.mc.add_child(matritem);
-	matritem.change(this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ], this.fim.MATFONT, this.fim.MATCOLOR);
+	matritem.change(this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ], this.fim.MATFONT, this.fim.MATCOLOR, this.fim.MATSHADOW);
 
 	matritem.hide();
 
@@ -171,7 +172,8 @@ var FallItem = GObject.registerClass({
     	  
     	  this.fim.pane3d.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
-    	  flare.set_style(`color:${this.fim.FLRCOLOR}`);
+    	  flare.set_style(`color:${this.fim.FLRCOLOR}
+	  			box-shadow:${this.fim.FLRSHADOW}`);
       	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
     	  flare.set_text( this.fim.FLRDISP[ GLib.random_int_range(0, this.fim.FLRDISP.length) ] );
     	  
@@ -237,6 +239,12 @@ const FIM = GObject.registerClass({
     	this.FALLCOLOR = this.settings.get_string('textcolor');
 
     	this.FALLFONT = this.settings.get_string('textfont');
+
+	if (this.settings.get_boolean('textshad')) {
+	  this.FALLSHADOW = `${this.settings.get_int('textshadx')}px ${this.settings.get_int('textshady')}px ${this.settings.get_int('textshadblur')}px ${this.settings.get_string('textshadcolor')}`;
+	} else {
+	  this.FALLSHADOW = `none`;
+	}
     	
     	this.MONITORS = this.settings.get_int('fallmon'); //0=current, 1=primary, 2=all
     	this.DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
@@ -250,6 +258,11 @@ const FIM = GObject.registerClass({
 	  this.MATDISP = this.settings.get_strv("matdisplay");
     	  this.MATCOLOR = this.settings.get_string('matcolor');
 	  this.MATFONT = this.settings.get_string('matfont');
+	  if (this.settings.get_boolean('matshad')) {
+	    this.MATSHADOW = `${this.settings.get_int('matshadx')}px ${this.settings.get_int('matshady')}px ${this.settings.get_int('matshadblur')}px ${this.settings.get_string('matshadcolor')}`;
+	  } else {
+	    this.MATSHADOW = `none`;
+	  }
 	  this.MATRIXTRAILSON = true;
 	}
 
@@ -258,6 +271,11 @@ const FIM = GObject.registerClass({
     	  this.FLRDISP = this.settings.get_strv("flrdisplay");
     	  this.FLRCOLOR = this.settings.get_string('flrcolor');
     	  this.FLRFONT = this.settings.get_string('flrfont');
+	  if (this.settings.get_boolean('flrshad')) {
+	    this.FLRSHADOW = `${this.settings.get_int('flrshadx')}px ${this.settings.get_int('flrshady')}px ${this.settings.get_int('flrshadblur')}px ${this.settings.get_string('flrshadcolor')}`;
+	  } else {
+	    this.FLRSHADOW = `none`;
+	  }
     	}
     }
 
@@ -278,7 +296,7 @@ const FIM = GObject.registerClass({
 			//update the FallItems
 			this.ic.get_children().forEach( (fi) => {
 				let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
-				fi.change(whichItem, this.FALLFONT, this.FALLCOLOR); } );
+				fi.change(whichItem, this.FALLFONT, this.FALLCOLOR, this.FALLSHADOW); } );
 		}
 	} else {
 		if (this.START) { //turning on
@@ -313,7 +331,7 @@ const FIM = GObject.registerClass({
       //make it rain
       this.ic.get_children().forEach( (fi) => {
 		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
-		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR);
+		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR, this.FALLSHADOW);
 		fi.fall();} );
     }
 

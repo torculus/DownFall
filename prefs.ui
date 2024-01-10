@@ -1,42 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- DownFall – Gnome Shell Extension
- * Copyright (C) 2019-2022 Benjamin S Osenbach
- *
- * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+  * Copyright (C) 2019-2024 Benjamin S Osenbach
+  *
+  * Inspired by Let It Snow (https://github.com/offlineric/gsnow).
+  *
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <interface domain="DownFall">
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkAdjustment" id="drift_adjust">
-    <property name="upper">100</property>
-    <property name="step-increment">1</property>
-  </object>
-  <object class="GtkAdjustment" id="max_adjust">
-    <property name="lower">1</property>
-    <property name="upper">100</property>
-    <property name="step-increment">1</property>
-  </object>
-  <object class="GtkAdjustment" id="rot_adjust">
-    <property name="upper">1800</property>
-    <property name="step-increment">1</property>
-  </object>
-  <object class="GtkAdjustment" id="time_adjust">
-    <property name="lower">2</property>
-    <property name="upper">20</property>
-    <property name="step-increment">1</property>
-  </object>
   <object class="AdwPreferencesPage" id="appearance-page">
     <property name="name">appearance</property>
     <property name="title" translatable="yes">Appearance</property>
@@ -45,41 +27,40 @@
       <object class="AdwPreferencesGroup" id="g1">
         <property name="title" translatable="yes">Falling Appearance</property>
         <child>
-          <object class="AdwActionRow" id="r11">
+          <object class="AdwComboRow" id="presets">
             <property name="title" translatable="yes">Presets</property>
-            <child>
-              <object class="GtkComboBoxText" id="presets">
-                <property name="valign">center</property>
+            <property name="model">
+              <object class="GtkStringList">
                 <items>
-                  <item id="0" translatable="yes"> </item>
-                  <item id="1" translatable="yes">Snow</item>
-                  <item id="2" translatable="yes">Leaves</item>
-                  <item id="3" translatable="yes">Matrix© rain</item>
-                  <item id="4" translatable="yes">Fireworks</item>
-                  <item id="5" translatable="yes">Rain</item>
-                  <item id="6" translatable="yes">Fireflies</item>
-                  </items>
+                  <item translatable="yes">(none)</item>
+                  <item translatable="yes">Snow</item>
+                  <item translatable="yes">Leaves</item>
+                  <item translatable="yes">Matrix© rain</item>
+                  <item translatable="yes">Fireworks</item>
+                  <item translatable="yes">Rain</item>
+                  <item translatable="yes">Fireflies</item>
+                  <item translatable="yes">Lava Lamp</item>
+                </items>
+              </object>
+            </property>
+            <child>
+              <object class="GtkButton" id="random_button">
+                <property name="label">Random</property>
+                <property name="valign">center</property>
               </object>
             </child>
-	    <child>
-	      <object class="GtkButton" id="random_button">
-	        <property name="label">Random</property>
-                <property name="valign">center</property>
-	      </object>
-	    </child>
           </object>
         </child>
-        
         <child>
           <object class="AdwEntryRow" id="display_field">
-            <property name="title" translatable="yes">Text to Display (Separate items with commas, type ":" to search emojis)</property>
-            <property name="enable_emoji_completion">1</property>
-            <property name="input_hints">1</property>
+            <property name="title" translatable="yes">Text to Display (Comma-separated, type ":" to search emojis)</property>
+            <property name="activates-default">TRUE</property>
+            <property name="enable-emoji-completion">TRUE</property>
+            <property name="input-hints">TRUE</property>
           </object>
         </child>
-        
         <child>
-          <object class="AdwActionRow" id="r13">
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Text Color</property>
             <child>
               <object class="GtkColorButton" id="text_color">
@@ -88,9 +69,8 @@
             </child>
           </object>
         </child>
-        
         <child>
-          <object class="AdwActionRow" id="r14">
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Text Font</property>
             <child>
               <object class="GtkFontButton" id="text_font">
@@ -100,11 +80,67 @@
             </child>
           </object>
         </child>
-        
+        <child>
+          <object class="AdwExpanderRow" id="text_shad">
+            <property name="title" translatable="yes">Box Shadow</property>
+            <property name="show-enable-switch" translatable="yes">true</property>
+            <child>
+              <object class="AdwSpinRow" id="text_shad_x">
+                <property name="title">Shadow x offset (px)</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">0</property>
+                    <property name="upper">100</property>
+                    <property name="value">1</property>
+                    <property name="page-increment">1</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow" id="text_shad_y">
+                <property name="title">Shadow y offset (px)</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">0</property>
+                    <property name="upper">100</property>
+                    <property name="value">1</property>
+                    <property name="page-increment">1</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSpinRow" id="text_shad_blur">
+                <property name="title">Shadow blur radius (px)</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">0</property>
+                    <property name="upper">100</property>
+                    <property name="value">1</property>
+                    <property name="page-increment">1</property>
+                    <property name="step-increment">1</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Shadow color</property>
+                <child>
+                  <object class="GtkColorButton" id="text_shad_color">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>
-  
   <object class="AdwPreferencesPage" id="behavior-page">
     <property name="name">behavior</property>
     <property name="title" translatable="yes">Behavior</property>
@@ -112,156 +148,154 @@
     <child>
       <object class="AdwPreferencesGroup" id="g2">
         <property name="title" translatable="yes">Falling Behavior</property>
-
         <child>
-          <object class="AdwActionRow" id="r21">
+          <object class="AdwComboRow" id="fall_monitor">
             <property name="title" translatable="yes">Fall on</property>
-            <child>
-              <object class="GtkComboBoxText" id="fall_monitor">
-                <property name="valign">center</property>
+            <property name="model">
+              <object class="GtkStringList">
                 <items>
-                  <item id="0" translatable="yes">Current monitor</item>
-                  <item id="1" translatable="yes">Primary monitor</item>
-                  <item id="2" translatable="yes">All monitors</item>
+                  <item translatable="yes">Current monitor</item>
+                  <item translatable="yes">Primary monitor</item>
+                  <item translatable="yes">All monitors</item>
                 </items>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-        
         <child>
-          <object class="AdwActionRow" id="r22">
+          <object class="AdwComboRow" id="fall_direc">
             <property name="title" translatable="yes">Fall Direction</property>
-            <child>
-              <object class="GtkComboBoxText" id="fall_direc">
-                <property name="valign">center</property>
+            <property name="model">
+              <object class="GtkStringList">
                 <items>
-                  <item id="0" translatable="yes">Down (↓)</item>
-                  <item id="1" translatable="yes">Up (↑)</item>
-                  <item id="2" translatable="yes">Right (→)</item>
-                  <item id="3" translatable="yes">Left (←)</item>
-                  <item id="4" translatable="yes">Up-right (↗)</item>
-                  <item id="5" translatable="yes">Up-left (↖)</item>
-                  <item id="6" translatable="yes">Down-right (↘)</item>
-                  <item id="7" translatable="yes">Down-left (↙)</item>
-                  <item id="8" translatable="yes">Unpredictable (??)</item>
+                  <item translatable="yes">Down (↓)</item>
+                  <item translatable="yes">Up (↑)</item>
+                  <item translatable="yes">Right (→)</item>
+                  <item translatable="yes">Left (←)</item>
+                  <item translatable="yes">Up-right (↗)</item>
+                  <item translatable="yes">Up-left (↖)</item>
+                  <item translatable="yes">Down-right (↘)</item>
+                  <item translatable="yes">Down-left (↙)</item>
+                  <item translatable="yes">Unpredictable (??)</item>
                 </items>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-
         <child>
-          <object class="AdwActionRow" id="r23">
+          <object class="AdwComboRow" id="fall_3d">
             <property name="title" translatable="yes">Fall 3D depth</property>
-            <child>
-              <object class="GtkComboBoxText" id="fall_3d">
-                <property name="valign">center</property>
+            <property name="model">
+              <object class="GtkStringList">
                 <items>
-                  <item id="0" translatable="yes">In front of windows</item>
-                  <item id="1" translatable="yes">Behind windows</item>
+                  <item translatable="yes">In front of windows</item>
+                  <item translatable="yes">Behind windows</item>
                 </items>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-
-       <child>
-          <object class="AdwActionRow" id="r24">
-            <property name="title" translatable="yes">Clutter AnimationMode</property>
-            <child>
-              <object class="GtkComboBoxText" id="clutter_animmode">
-                <property name="valign">center</property>
-                <items>
-                  <item id="1" translatable="yes">LINEAR</item>
-                  <item id="2" translatable="yes">EASE_IN_QUAD</item>
-                  <item id="3" translatable="yes">EASE_OUT_QUAD</item>
-                  <item id="4" translatable="yes">EASE_IN_OUT_QUAD</item>
-                  <item id="5" translatable="yes">EASE_IN_CUBIC</item>
-                  <item id="6" translatable="yes">EASE_OUT_CUBIC</item>
-                  <item id="7" translatable="yes">EASE_IN_OUT_CUBIC</item>
-                  <item id="8" translatable="yes">EASE_IN_QUART</item>
-                  <item id="9" translatable="yes">EASE_OUT_QUART</item>
-                  <item id="10" translatable="yes">EASE_IN_OUT_QUART</item>
-                  <item id="11" translatable="yes">EASE_IN_QUINT</item>
-                  <item id="12" translatable="yes">EASE_OUT_QUINT</item>
-                  <item id="13" translatable="yes">EASE_IN_OUT_QUINT</item>
-                  <item id="14" translatable="yes">EASE_IN_SINE</item>
-                  <item id="15" translatable="yes">EASE_OUT_SINE</item>
-                  <item id="16" translatable="yes">EASE_IN_OUT_SINE</item>
-                  <item id="17" translatable="yes">EASE_IN_EXPO</item>
-                  <item id="18" translatable="yes">EASE_OUT_EXPO</item>
-                  <item id="19" translatable="yes">EASE_IN_OUT_EXPO</item>
-                  <item id="20" translatable="yes">EASE_IN_CIRC</item>
-                  <item id="21" translatable="yes">EASE_OUT_CIRC</item>
-                  <item id="22" translatable="yes">EASE_IN_OUT_CIRC</item>
-                  <item id="23" translatable="yes">EASE_IN_ELASTIC</item>
-                  <item id="24" translatable="yes">EASE_OUT_ELASTIC</item>
-                  <item id="25" translatable="yes">EASE_IN_OUT_ELASTIC</item>
-                  <item id="26" translatable="yes">EASE_IN_BACK</item>
-                  <item id="27" translatable="yes">EASE_OUT_BACK</item>
-                  <item id="28" translatable="yes">EASE_IN_OUT_BACK</item>
-                  <item id="29" translatable="yes">EASE_IN_BOUNCE</item>
-                  <item id="30" translatable="yes">EASE_OUT_BOUNCE</item>
-                  <item id="31" translatable="yes">EASE_IN_OUT_BOUNCE</item>
-                </items>
-              </object>
-            </child>
-          </object>
-        </child>
-
         <child>
-          <object class="AdwActionRow" id="r25">
+          <object class="AdwComboRow" id="clutter_animmode">
+            <property name="title" translatable="yes">Fall Direction</property>
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item translatable="yes">LINEAR</item>
+                  <item translatable="yes">EASE_IN_QUAD</item>
+                  <item translatable="yes">EASE_OUT_QUAD</item>
+                  <item translatable="yes">EASE_IN_OUT_QUAD</item>
+                  <item translatable="yes">EASE_IN_CUBIC</item>
+                  <item translatable="yes">EASE_OUT_CUBIC</item>
+                  <item translatable="yes">EASE_IN_OUT_CUBIC</item>
+                  <item translatable="yes">EASE_IN_QUART</item>
+                  <item translatable="yes">EASE_OUT_QUART</item>
+                  <item translatable="yes">EASE_IN_OUT_QUART</item>
+                  <item translatable="yes">EASE_IN_QUINT</item>
+                  <item translatable="yes">EASE_OUT_QUINT</item>
+                  <item translatable="yes">EASE_IN_OUT_QUINT</item>
+                  <item translatable="yes">EASE_IN_SINE</item>
+                  <item translatable="yes">EASE_OUT_SINE</item>
+                  <item translatable="yes">EASE_IN_OUT_SINE</item>
+                  <item translatable="yes">EASE_IN_EXPO</item>
+                  <item translatable="yes">EASE_OUT_EXPO</item>
+                  <item translatable="yes">EASE_IN_OUT_EXPO</item>
+                  <item translatable="yes">EASE_IN_CIRC</item>
+                  <item translatable="yes">EASE_OUT_CIRC</item>
+                  <item translatable="yes">EASE_IN_OUT_CIRC</item>
+                  <item translatable="yes">EASE_IN_ELASTIC</item>
+                  <item translatable="yes">EASE_OUT_ELASTIC</item>
+                  <item translatable="yes">EASE_IN_OUT_ELASTIC</item>
+                  <item translatable="yes">EASE_IN_BACK</item>
+                  <item translatable="yes">EASE_OUT_BACK</item>
+                  <item translatable="yes">EASE_IN_OUT_BACK</item>
+                  <item translatable="yes">EASE_IN_BOUNCE</item>
+                  <item translatable="yes">EASE_OUT_BOUNCE</item>
+                  <item translatable="yes">EASE_IN_OUT_BOUNCE</item>
+                </items>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwSpinRow" id="max_items">
             <property name="title" translatable="yes">Maximum number of items (high values risk freezing)</property>
-            <child>
-              <object class="GtkSpinButton" id="max_items">
-                <property name="valign">center</property>
-                <property name="adjustment">max_adjust</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">1</property>
+                <property name="upper">100</property>
+                <property name="value">1</property>
+                <property name="page-increment">1</property>
+                <property name="step-increment">1</property>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-
         <child>
-          <object class="AdwActionRow" id="r26">
+          <object class="AdwSpinRow" id="fall_time">
             <property name="title" translatable="yes">Average Fall Time (seconds)</property>
-            <child>
-              <object class="GtkSpinButton" id="fall_time">
-                <property name="valign">center</property>
-                <property name="adjustment">time_adjust</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">2</property>
+                <property name="upper">60</property>
+                <property name="value">1</property>
+                <property name="page-increment">1</property>
+                <property name="step-increment">1</property>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-        
         <child>
-          <object class="AdwActionRow" id="r27">
+          <object class="AdwSpinRow" id="fall_rot">
             <property name="title" translatable="yes">Average Fall Rotation (degrees)</property>
-            <child>
-              <object class="GtkSpinButton" id="fall_rot">
-                <property name="valign">center</property>
-                <property name="adjustment">rot_adjust</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">0</property>
+                <property name="upper">1800</property>
+                <property name="value">1</property>
+                <property name="page-increment">1</property>
+                <property name="step-increment">1</property>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-        
         <child>
-          <object class="AdwActionRow" id="r28">
+          <object class="AdwSpinRow" id="fall_drift">
             <property name="title" translatable="yes">Average Fall Drift (percentage)</property>
-            <child>
-              <object class="GtkSpinButton" id="fall_drift">
-                <property name="valign">center</property>
-                <property name="adjustment">drift_adjust</property>
+            <property name="adjustment">
+              <object class="GtkAdjustment">
+                <property name="lower">1</property>
+                <property name="upper">100</property>
+                <property name="value">1</property>
+                <property name="page-increment">1</property>
+                <property name="step-increment">1</property>
               </object>
-            </child>
+            </property>
           </object>
         </child>
-        
       </object>
     </child>
   </object>
-  
   <object class="AdwPreferencesPage" id="sfx-page">
     <property name="name">specialfx</property>
     <property name="title" translatable="yes">Special Effects</property>
@@ -270,98 +304,197 @@
       <object class="AdwPreferencesGroup" id="matrixtrails">
         <property name="title" translatable="yes">Matrix© trails</property>
         <child>
-          <object class="AdwActionRow" id="r31">
+          <object class="AdwExpanderRow" id="matrix_switch">
             <property name="title" translatable="yes">Show Matrix© trails</property>
+            <property name="show-enable-switch" translatable="yes">true</property>
             <child>
-              <object class="GtkSwitch" id="matrix_switch">
-                <property name="valign">center</property>
+              <object class="AdwEntryRow" id="mat_display">
+                <property name="title" translatable="yes">Matrix© trails text (Separate items with commas, type ":" to search emojis)</property>
+                <property name="enable_emoji_completion">1</property>
+                <property name="input_hints">1</property>
               </object>
             </child>
-          </object>
-        </child>
-        
-        <child>
-          <object class="AdwEntryRow" id="mat_display">
-            <property name="title" translatable="yes">Matrix© trails text (Separate items with commas, type ":" to search emojis)</property>
-            <property name="enable_emoji_completion">1</property>
-            <property name="input_hints">1</property>
-          </object>
-        </child>
- 
-        <child>
-          <object class="AdwActionRow" id="r33">
-            <property name="title" translatable="yes">Matrix© trails Color</property>
             <child>
-              <object class="GtkColorButton" id="mat_color">
-                <property name="valign">center</property>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Matrix© trails Color</property>
+                <child>
+                  <object class="GtkColorButton" id="mat_color">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
-          </object>
-        </child>
-        
-        <child>
-          <object class="AdwActionRow" id="r34">
-            <property name="title" translatable="yes">Matrix© trails Font</property>
             <child>
-              <object class="GtkFontButton" id="mat_font">
-                <property name="valign">center</property>
-                <property name="font">Sans 12</property>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Matrix© trails Font</property>
+                <child>
+                  <object class="GtkFontButton" id="mat_font">
+                    <property name="valign">center</property>
+                    <property name="font">Sans 12</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwExpanderRow" id="mat_shad">
+                <property name="title" translatable="yes">Matrix© trails box shadow</property>
+                <property name="show-enable-switch" translatable="yes">true</property>
+                <child>
+                  <object class="AdwSpinRow" id="mat_shad_x">
+                    <property name="title">Shadow x offset (px)</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0</property>
+                        <property name="upper">100</property>
+                        <property name="value">1</property>
+                        <property name="page-increment">1</property>
+                        <property name="step-increment">1</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSpinRow" id="mat_shad_y">
+                    <property name="title">Shadow y offset (px)</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0</property>
+                        <property name="upper">100</property>
+                        <property name="value">1</property>
+                        <property name="page-increment">1</property>
+                        <property name="step-increment">1</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSpinRow" id="mat_shad_blur">
+                    <property name="title">Shadow blur (px)</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0</property>
+                        <property name="upper">100</property>
+                        <property name="value">1</property>
+                        <property name="page-increment">1</property>
+                        <property name="step-increment">1</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Shadow color</property>
+                    <child>
+                      <object class="GtkColorButton" id="mat_shad_color">
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
       </object>
     </child>
-    
     <child>
       <object class="AdwPreferencesGroup" id="fireworkflares">
         <property name="title" translatable="yes">Firework Flares</property>
         <child>
-          <object class="AdwActionRow" id="r35">
+          <object class="AdwExpanderRow" id="firework_switch">
             <property name="title" translatable="yes">Show Firework Flares</property>
+            <property name="show-enable-switch" translatable="yes">true</property>
             <child>
-              <object class="GtkSwitch" id="firework_switch">
-                <property name="valign">center</property>
+              <object class="AdwEntryRow" id="flr_display">
+                <property name="title" translatable="yes">Firework Flares text (Separate items with commas, type ":" to search emojis)</property>
+                <property name="enable_emoji_completion">1</property>
+                <property name="input_hints">1</property>
               </object>
             </child>
-          </object>
-        </child>
-
-        <child>
-          <object class="AdwEntryRow" id="flr_display">
-            <property name="title" translatable="yes">Firework Flares text (Separate items with commas, type ":" to search emojis)</property>
-            <property name="enable_emoji_completion">1</property>
-            <property name="input_hints">1</property>
-          </object>
-        </child>
-        
-        <child>
-          <object class="AdwActionRow" id="r37">
-            <property name="title" translatable="yes">Firework Flares Color</property>
             <child>
-              <object class="GtkColorButton" id="flr_color">
-                <property name="valign">center</property>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes">Firework Flares Color</property>
+                <child>
+                  <object class="GtkColorButton" id="flr_color">
+                    <property name="valign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
-          </object>
-        </child>
-        
-        <child>
-          <object class="AdwActionRow" id="r38">
-            <property name="title" translatable="yes"> Font</property>
             <child>
-              <object class="GtkFontButton" id="flr_font">
-                <property name="valign">center</property>
-                <property name="font">Sans 12</property>
+              <object class="AdwActionRow">
+                <property name="title" translatable="yes"> Font</property>
+                <child>
+                  <object class="GtkFontButton" id="flr_font">
+                    <property name="valign">center</property>
+                    <property name="font">Sans 12</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwExpanderRow" id="flr_shad">
+                <property name="title" translatable="yes">Firework flares box shadow</property>
+                <property name="show-enable-switch" translatable="yes">true</property>
+                <child>
+                  <object class="AdwSpinRow" id="flr_shad_x">
+                    <property name="title">Shadow x offset (px)</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0</property>
+                        <property name="upper">100</property>
+                        <property name="value">1</property>
+                        <property name="page-increment">1</property>
+                        <property name="step-increment">1</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSpinRow" id="flr_shad_y">
+                    <property name="title">Shadow y offset (px)</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0</property>
+                        <property name="upper">100</property>
+                        <property name="value">1</property>
+                        <property name="page-increment">1</property>
+                        <property name="step-increment">1</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSpinRow" id="flr_shad_blur">
+                    <property name="title">Shadow blur (px)</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="lower">0</property>
+                        <property name="upper">100</property>
+                        <property name="value">1</property>
+                        <property name="page-increment">1</property>
+                        <property name="step-increment">1</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Shadow color</property>
+                    <child>
+                      <object class="GtkColorButton" id="flr_shad_color">
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
       </object>
     </child>
-    
   </object>
-
   <object class="AdwPreferencesPage" id="about-page">
     <property name="name">about</property>
     <property name="title" translatable="yes">About</property>
@@ -370,53 +503,41 @@
       <object class="AdwPreferencesGroup" id="g4">
         <property name="title" translatable="yes">About</property>
         <child>
-          <object class="AdwActionRow" id="r4">
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Version</property>
-            <child>
-              <object class="GtkLabel">
-		<property name="label">4.1.2</property>
-              </object>
-            </child>
+            <property name="subtitle" translatable="yes">4.1.2</property>
           </object>
         </child>
-
         <child>
-          <object class="AdwActionRow" id="r5">
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Developer</property>
-            <child>
-              <object class="GtkLabel">
-		<property name="label">Ben Osenbach</property>
-              </object>
-            </child>
+            <property name="subtitle" translatable="yes">Ben Osenbach</property>
           </object>
         </child>
-
         <child>
-          <object class="AdwActionRow" id="r6">
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">Website</property>
             <child>
               <object class="GtkLinkButton">
-	        <property name="label" translatable="yes">https://extensions.gnome.org/extension/3539/downfall/</property>
-		<property name="receives-default">1</property>
-		<property name="uri">https://extensions.gnome.org/extension/3539/downfall/</property>
+                <property name="label" translatable="yes">https://extensions.gnome.org/extension/3539/downfall/</property>
+                <property name="receives-default">1</property>
+                <property name="uri">https://extensions.gnome.org/extension/3539/downfall/</property>
               </object>
             </child>
           </object>
         </child>
-
         <child>
-          <object class="AdwActionRow" id="r7">
+          <object class="AdwActionRow">
             <property name="title" translatable="yes">GitHub</property>
             <child>
               <object class="GtkLinkButton">
-	        <property name="label" translatable="yes">https://github.com/torculus/DownFall/</property>
-		<property name="receives-default">1</property>
-		<property name="uri">https://github.com/torculus/DownFall/</property>
+                <property name="label" translatable="yes">https://github.com/torculus/DownFall/</property>
+                <property name="receives-default">1</property>
+                <property name="uri">https://github.com/torculus/DownFall/</property>
               </object>
             </child>
           </object>
         </child>
-
       </object>
     </child>
   </object>
