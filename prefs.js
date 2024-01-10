@@ -47,6 +47,9 @@ export default class DFPreferences extends ExtensionPreferences {
     //bind settings from prefs.xml to schema keys
     settings.bind('presets', builder.get_object('presets'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textfont', builder.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('textshadx', builder.get_object('text_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('textshady', builder.get_object('text_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('textshadblur', builder.get_object('text_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('fallmon', builder.get_object('fall_monitor'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('falldirec', builder.get_object('fall_direc'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('fall3d', builder.get_object('fall_3d'), 'selected', Gio.SettingsBindFlags.DEFAULT);
@@ -58,9 +61,15 @@ export default class DFPreferences extends ExtensionPreferences {
 
     settings.bind('matrixtrails', builder.get_object('matrix_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matfont', builder.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matshadx', builder.get_object('mat_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matshady', builder.get_object('mat_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matshadblur', builder.get_object('mat_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
 
     settings.bind('fireworks', builder.get_object('firework_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrfont', builder.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('flrshadx', builder.get_object('flr_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('flrshady', builder.get_object('flr_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('flrshadblur', builder.get_object('flr_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
 
     //set up text entries
     widget_schema('falltext', 'display_field', settings, builder);
@@ -69,12 +78,15 @@ export default class DFPreferences extends ExtensionPreferences {
 
     //set up color entries
     widget_color('textcolor', 'text_color', settings, builder);
+    widget_color('textshadcolor', 'text_shad_color', settings, builder);
     widget_color('matcolor', 'mat_color', settings, builder);
+    widget_color('matshadcolor', 'mat_shad_color', settings, builder);
     widget_color('flrcolor', 'flr_color', settings, builder);
+    widget_color('flrshadcolor', 'flr_shad_color', settings, builder);
 
     //bind presets to specific values
-    builder.get_object('presets').connect('notify::selected-item', () => {
-  	set_presets(builder.get_object('presets').get_selected_item().toString(), builder);
+    builder.get_object('presets').connect('notify::selected', () => {
+  	set_presets(builder.get_object('presets').get_selected(), builder);
     });
 
     //bind random button to random values
@@ -127,7 +139,7 @@ function set_presets(preset, buildable) {
   let rgba2 = new Gdk.RGBA();
   let rgba3 = new Gdk.RGBA();
   switch (preset) {
-    case "Snow":
+    case 1: //"Snow"
       buildable.get_object('display_field').set_text("*,.");
       rgba.parse("White");
       buildable.get_object('text_color').set_rgba(rgba);
@@ -139,7 +151,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('matrix_switch').set_enable_expansion(false);
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
-    case "Leaves":
+    case 2: //"Leaves"
       buildable.get_object('display_field').set_text("🍁️,🍂️");
       buildable.get_object('fall_direc').set_selected(6);
       buildable.get_object('max_items').set_value(40);
@@ -149,7 +161,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('matrix_switch').set_enable_expansion(false);
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
-    case "Matrix© rain":
+    case 3: //"Matrix© rain"
       rgba.parse("White");
       rgba2.parse("SpringGreen3");
       buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
@@ -165,7 +177,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('mat_color').set_rgba(rgba2);
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
-    case "Fireworks":
+    case 4: //"Fireworks"
       rgba.parse("Orange");
       rgba2.parse("Gray");
       rgba3.parse("Yellow");
@@ -184,7 +196,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('flr_display').set_text("★");
       buildable.get_object('flr_color').set_rgba(rgba3);
       break;
-    case "Rain":
+    case 5: //"Rain"
       buildable.get_object('display_field').set_text(".,💧");
       rgba.parse("Cyan");
       buildable.get_object('text_color').set_rgba(rgba);
@@ -196,7 +208,7 @@ function set_presets(preset, buildable) {
       buildable.get_object('matrix_switch').set_enable_expansion(false);
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
-    case "Fireflies":
+    case 6: //"Fireflies"
       buildable.get_object('display_field').set_text("●");
       rgba.parse("GreenYellow");
       buildable.get_object('text_color').set_rgba(rgba);
