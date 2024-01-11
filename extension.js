@@ -49,8 +49,7 @@ var FallItem = GObject.registerClass({
 
     change(text, fontstring, color, shadow) {
       //don't style on each iteration of fall()
-      this.set_style(`color: ${color};
-      			box-shadow: ${shadow}`);
+      this.set_style(`color: ${color}; ${shadow}`);
 
       this.get_clutter_text().set_font_name(fontstring);
       
@@ -172,8 +171,7 @@ var FallItem = GObject.registerClass({
     	  
     	  this.fim.pane3d.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
-    	  flare.set_style(`color:${this.fim.FLRCOLOR}
-	  			box-shadow:${this.fim.FLRSHADOW}`);
+    	  flare.set_style(`color:${this.fim.FLRCOLOR}; ${this.fim.FLRSHADOW}`);
       	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
     	  flare.set_text( this.fim.FLRDISP[ GLib.random_int_range(0, this.fim.FLRDISP.length) ] );
     	  
@@ -241,9 +239,16 @@ const FIM = GObject.registerClass({
     	this.FALLFONT = this.settings.get_string('textfont');
 
 	if (this.settings.get_boolean('textshad')) {
-	  this.FALLSHADOW = `${this.settings.get_int('textshadx')}px ${this.settings.get_int('textshady')}px ${this.settings.get_int('textshadblur')}px ${this.settings.get_string('textshadcolor')}`;
+	  switch (this.settings.get_int('textshadtype')) {
+	    case 0:
+	      this.FALLSHADOW = `box-shadow: ${this.settings.get_int('textshadx')}px ${this.settings.get_int('textshady')}px ${this.settings.get_int('textshadblur')}px ${this.settings.get_string('textshadcolor')}`;
+	      break;
+	    case 1:
+	      this.FALLSHADOW = `text-shadow: ${this.settings.get_int('textshadx')}px ${this.settings.get_int('textshady')}px ${this.settings.get_int('textshadblur')}px ${this.settings.get_string('textshadcolor')}`;
+	      break;
+	  }
 	} else {
-	  this.FALLSHADOW = `none`;
+	  this.FALLSHADOW = ``;
 	}
     	
     	this.MONITORS = this.settings.get_int('fallmon'); //0=current, 1=primary, 2=all
@@ -259,9 +264,16 @@ const FIM = GObject.registerClass({
     	  this.MATCOLOR = this.settings.get_string('matcolor');
 	  this.MATFONT = this.settings.get_string('matfont');
 	  if (this.settings.get_boolean('matshad')) {
-	    this.MATSHADOW = `${this.settings.get_int('matshadx')}px ${this.settings.get_int('matshady')}px ${this.settings.get_int('matshadblur')}px ${this.settings.get_string('matshadcolor')}`;
+	    switch (this.settings.get_int('matshadtype')) {
+	      case 0:
+	        this.MATSHADOW = `box-shadow: ${this.settings.get_int('matshadx')}px ${this.settings.get_int('matshady')}px ${this.settings.get_int('matshadblur')}px ${this.settings.get_string('matshadcolor')}`;
+	        break;
+	      case 1:
+	        this.MATSHADOW = `text-shadow: ${this.settings.get_int('matshadx')}px ${this.settings.get_int('matshady')}px ${this.settings.get_int('matshadblur')}px ${this.settings.get_string('matshadcolor')}`;
+	        break;
+	    }
 	  } else {
-	    this.MATSHADOW = `none`;
+	    this.MATSHADOW = ``;
 	  }
 	  this.MATRIXTRAILSON = true;
 	}
@@ -272,9 +284,16 @@ const FIM = GObject.registerClass({
     	  this.FLRCOLOR = this.settings.get_string('flrcolor');
     	  this.FLRFONT = this.settings.get_string('flrfont');
 	  if (this.settings.get_boolean('flrshad')) {
-	    this.FLRSHADOW = `${this.settings.get_int('flrshadx')}px ${this.settings.get_int('flrshady')}px ${this.settings.get_int('flrshadblur')}px ${this.settings.get_string('flrshadcolor')}`;
+	    switch (this.settings.get_int('flrshadtype')) {
+	      case 0:
+	        this.FLRSHADOW = `box-shadow: ${this.settings.get_int('flrshadx')}px ${this.settings.get_int('flrshady')}px ${this.settings.get_int('flrshadblur')}px ${this.settings.get_string('flrshadcolor')}`;
+	        break;
+	      case 1:
+	        this.FLRSHADOW = `text-shadow: ${this.settings.get_int('flrshadx')}px ${this.settings.get_int('flrshady')}px ${this.settings.get_int('flrshadblur')}px ${this.settings.get_string('flrshadcolor')}`;
+	        break;
+	    }
 	  } else {
-	    this.FLRSHADOW = `none`;
+	    this.FLRSHADOW = ``;
 	  }
     	}
     }

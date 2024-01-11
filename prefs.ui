@@ -82,8 +82,21 @@
         </child>
         <child>
           <object class="AdwExpanderRow" id="text_shad">
-            <property name="title" translatable="yes">Box Shadow</property>
+            <property name="title" translatable="yes">Text Shadow</property>
             <property name="show-enable-switch" translatable="yes">true</property>
+	    <child>
+	      <object class="AdwComboRow" id="text_shad_type">
+	        <property name="title" translatable="yes">Shadow type</property>
+		<property name="model">
+		  <object class="GtkStringList">
+		    <items>
+		      <item translatable="yes">Box shadow</item>
+		      <item translatable="yes">Text shadow</item>
+		    </items>
+		  </object>
+		</property>
+	      </object>
+	    </child>
             <child>
               <object class="AdwSpinRow" id="text_shad_x">
                 <property name="title">Shadow x offset (px)</property>
@@ -197,7 +210,7 @@
         </child>
         <child>
           <object class="AdwComboRow" id="clutter_animmode">
-            <property name="title" translatable="yes">Fall Direction</property>
+            <property name="title" translatable="yes">Clutter Animation Mode</property>
             <property name="model">
               <object class="GtkStringList">
                 <items>
@@ -239,7 +252,8 @@
         </child>
         <child>
           <object class="AdwSpinRow" id="max_items">
-            <property name="title" translatable="yes">Maximum number of items (high values risk freezing)</property>
+            <property name="title" translatable="yes">Maximum number of items</property>
+            <property name="subtitle" translatable="yes">Warning: high values risk freezing</property>
             <property name="adjustment">
               <object class="GtkAdjustment">
                 <property name="lower">1</property>
@@ -309,7 +323,7 @@
             <property name="show-enable-switch" translatable="yes">true</property>
             <child>
               <object class="AdwEntryRow" id="mat_display">
-                <property name="title" translatable="yes">Matrix© trails text (Separate items with commas, type ":" to search emojis)</property>
+                <property name="title" translatable="yes">Matrix© trails Text (Comma-separated, type ":" to search emojis)</property>
                 <property name="enable_emoji_completion">1</property>
                 <property name="input_hints">1</property>
               </object>
@@ -337,8 +351,21 @@
             </child>
             <child>
               <object class="AdwExpanderRow" id="mat_shad">
-                <property name="title" translatable="yes">Matrix© trails box shadow</property>
+                <property name="title" translatable="yes">Matrix© trails Shadow</property>
                 <property name="show-enable-switch" translatable="yes">true</property>
+		<child>
+		  <object class="AdwComboRow" id="mat_shad_type">
+		    <property name="title" translatable="yes">Shadow type</property>
+		    <property name="model">
+		      <object class="GtkStringList">
+		        <items>
+		          <item translatable="yes">Box shadow</item>
+			  <item translatable="yes">Text shadow</item>
+		        </items>
+		      </object>
+		    </property>
+		  </object>
+	        </child>
                 <child>
                   <object class="AdwSpinRow" id="mat_shad_x">
                     <property name="title">Shadow x offset (px)</property>
@@ -406,7 +433,7 @@
             <property name="show-enable-switch" translatable="yes">true</property>
             <child>
               <object class="AdwEntryRow" id="flr_display">
-                <property name="title" translatable="yes">Firework Flares text (Separate items with commas, type ":" to search emojis)</property>
+                <property name="title" translatable="yes">Firework Flares Text (Comma-separated, type ":" to search emojis)</property>
                 <property name="enable_emoji_completion">1</property>
                 <property name="input_hints">1</property>
               </object>
@@ -423,7 +450,7 @@
             </child>
             <child>
               <object class="AdwActionRow">
-                <property name="title" translatable="yes"> Font</property>
+                <property name="title" translatable="yes">Firework Flares Font</property>
                 <child>
                   <object class="GtkFontButton" id="flr_font">
                     <property name="valign">center</property>
@@ -434,8 +461,21 @@
             </child>
             <child>
               <object class="AdwExpanderRow" id="flr_shad">
-                <property name="title" translatable="yes">Firework flares box shadow</property>
+                <property name="title" translatable="yes">Firework Flares Shadow</property>
                 <property name="show-enable-switch" translatable="yes">true</property>
+		<child>
+		  <object class="AdwComboRow" id="flr_shad_type">
+		    <property name="title" translatable="yes">Shadow type</property>
+		    <property name="model">
+		      <object class="GtkStringList">
+		        <items>
+		          <item translatable="yes">Box shadow</item>
+			  <item translatable="yes">Text shadow</item>
+		        </items>
+		      </object>
+		    </property>
+		  </object>
+	        </child>
                 <child>
                   <object class="AdwSpinRow" id="flr_shad_x">
                     <property name="title">Shadow x offset (px)</property>

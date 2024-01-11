@@ -48,6 +48,7 @@ export default class DFPreferences extends ExtensionPreferences {
     settings.bind('presets', builder.get_object('presets'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textfont', builder.get_object('text_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshad', builder.get_object('text_shad'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('textshadtype', builder.get_object('text_shad_type'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshadx', builder.get_object('text_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshady', builder.get_object('text_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('textshadblur', builder.get_object('text_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -63,6 +64,7 @@ export default class DFPreferences extends ExtensionPreferences {
     settings.bind('matrixtrails', builder.get_object('matrix_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matfont', builder.get_object('mat_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshad', builder.get_object('mat_shad'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('matshadtype', builder.get_object('mat_shad_type'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshadx', builder.get_object('mat_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshady', builder.get_object('mat_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('matshadblur', builder.get_object('mat_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);
@@ -70,6 +72,7 @@ export default class DFPreferences extends ExtensionPreferences {
     settings.bind('fireworks', builder.get_object('firework_switch'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrfont', builder.get_object('flr_font'), 'font', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshad', builder.get_object('flr_shad'), 'enable-expansion', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('flrshadtype', builder.get_object('flr_shad_type'), 'selected', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshadx', builder.get_object('flr_shad_x'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshady', builder.get_object('flr_shad_y'), 'value', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('flrshadblur', builder.get_object('flr_shad_blur'), 'value', Gio.SettingsBindFlags.DEFAULT);

@@ -50,6 +50,12 @@
   		<description>Display text shadow</description>
   	</key>
 
+  	<key type="i" name="textshadtype">
+  		<default>0</default>
+  		<summary>Text shadow type</summary>
+  		<description>Text shadow type</description>
+  	</key>
+
   	<key type="i" name="textshadx">
   		<default>0</default>
   		<summary>Display text shadow (x)</summary>
@@ -156,6 +162,12 @@
   		<description>Matrix text shadow</description>
   	</key>
 
+  	<key type="i" name="matshadtype">
+  		<default>0</default>
+  		<summary>Matrix shadow type</summary>
+  		<description>Matrix shadow type</description>
+  	</key>
+
   	<key type="i" name="matshadx">
   		<default>0</default>
   		<summary>Matrix text shadow (x)</summary>
@@ -208,6 +220,12 @@
   		<default>false</default>
   		<summary>Flare text shadow</summary>
   		<description>Flare text shadow</description>
+  	</key>
+
+  	<key type="i" name="flrshadtype">
+  		<default>0</default>
+  		<summary>Flare shadow type</summary>
+  		<description>Flare shadow type</description>
   	</key>
 
   	<key type="i" name="flrshadx">
