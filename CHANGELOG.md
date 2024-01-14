@@ -4,6 +4,12 @@
 - [ ] Add `EaseOut` animationmode for more realistic fireworks
 - [ ] Add random colors for Firework flares
 
+## 4.2.0
+- Prefs window and widgets migrated completely to `libadwaita`
+- ***New feature:*** text shadows
+- Use `GLib.rand_int_range()` in direction instead of custom implementation
+- Adjusted all presets to make them more realistic
+
 ## 4.1.2
 - Bugfix: #10 not working on all monitors
 

@@ -39,7 +39,7 @@
   	</key>
   	
   	<key type="s" name="textfont">
-  		<default>"Sans 20"</default>
+  		<default>"Sans Regular 20"</default>
   		<summary>Display text font</summary>
   		<description>Display text font</description>
   	</key>
@@ -151,7 +151,7 @@
   	</key>
   	
   	<key type="s" name="matfont">
-  		<default>"Sans 20"</default>
+  		<default>"Sans Regular 20"</default>
   		<summary>Matrix text font</summary>
   		<description>Matrix text font</description>
   	</key>
@@ -211,7 +211,7 @@
   	</key>
   	
   	<key type="s" name="flrfont">
-  		<default>"Sans 20"</default>
+  		<default>"Sans Regular 20"</default>
   		<summary>Flare text font</summary>
   		<description>Flare text font</description>
   	</key>

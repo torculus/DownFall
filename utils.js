@@ -26,70 +26,68 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
     let endX;
     let endY;
     
-    if (direction < 4) {
-    	var rand1 = GLib.random_int_range(0,100)/100;
-    	var rand2 = GLib.random_int_range(-100,100)/100;
-    } else {
-    	var rand1 = GLib.random_int_range(-50,50)/100;
-    	var rand2 = GLib.random_int_range(-50,50)/100;
-    	var rand3 = GLib.random_int_range(-50,50)/100;
-    	var rand4 = GLib.random_int_range(-50,50)/100;
+    let aw = Math.floor(avgdrift * monitor.width);
+    let ah = Math.floor(avgdrift * monitor.height);
+
+    if (direction > 4) {
+    	var aw_2 = Math.floor(aw/2);
+    	var ah_2 = Math.floor(ah/2);
     }
-    
+
     switch (direction) {
       case 0: //Down
-        startX = monitor.x + Math.floor(rand1 * (monitor.width - fallItem.width));
-        startY = monitor.y - fallItem.height;
-        endX = startX + Math.floor( rand2 * avgdrift * monitor.width);
-        endY = monitor.y + monitor.height;// - fallItem.height;
+        startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
+        startY = monitor.y;
+        endX = startX + GLib.random_int_range(0, aw);
+        endY = monitor.y + monitor.height;
 	break;
       case 1: //Up
-        startX = monitor.x + Math.floor(rand1 * (monitor.width - fallItem.width));
-        startY = monitor.y + monitor.height - fallItem.height;
-        endX = startX + Math.floor( rand2 * avgdrift * monitor.width);
-        endY = monitor.y - fallItem.height;
+        startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
+        startY = monitor.y + monitor.height;
+        endX = startX + GLib.random_int_range(0, aw);
+        endY = monitor.y;
 	break;
       case 2: //Right
-        startX = monitor.x - fallItem.width;
-        startY = monitor.y + Math.floor(rand1 * (monitor.height - fallItem.height));
-        endX = monitor.x + monitor.width - fallItem.width;
-        endY = startY + Math.floor( rand2 * avgdrift * monitor.height);
+        startX = monitor.x;
+        startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
+        endX = monitor.x + monitor.width;
+        endY = startY + GLib.random_int_range(0, ah);
 	break;
       case 3: //Left
-        startX = monitor.x + monitor.width - fallItem.width;
-        startY = monitor.y + Math.floor(rand1 * (monitor.height - fallItem.height));
-        endX = monitor.x - fallItem.width;
-        endY = startY + Math.floor( rand2 * avgdrift * monitor.height);
+        startX = monitor.x + monitor.width;
+        startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
+        endX = monitor.x;
+        endY = startY + GLib.random_int_range(0, ah);
 	break;
       case 4: //Up-Right
-        startX = monitor.x + Math.floor( rand1 * avgdrift * monitor.width);
-        startY = monitor.y + monitor.height + Math.floor( rand2 * avgdrift * monitor.height);
-        endX = monitor.x + monitor.width - fallItem.width + Math.floor( rand3 * avgdrift * monitor.width);
-        endY = monitor.y - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
+        startX = monitor.x + GLib.random_int_range(-aw_2, aw_2);
+        startY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2);
+        endX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2);
+        endY = monitor.y + GLib.random_int_range(-ah_2, ah_2);
 	break;
       case 5: //Up-Left
-        startX = monitor.x + monitor.width - fallItem.width + Math.floor( rand1 * avgdrift * monitor.width);
-        startY = monitor.y + monitor.height - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
-        endX = monitor.x + Math.floor( rand3 * avgdrift * monitor.width);
-        endY = monitor.y - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
+        startX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2);
+        startY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2);
+        endX = monitor.x + GLib.random_int_range(-aw_2, aw_2);
+        endY = monitor.y + GLib.random_int_range(-ah_2, ah_2);
 	break;
       case 6: //Down-Right
-        startX = monitor.x + Math.floor( rand1 * avgdrift * monitor.width);
-        startY = monitor.y - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
-        endX = monitor.x + monitor.width - fallItem.width + Math.floor( rand3 * avgdrift * monitor.width);
-        endY = monitor.y + monitor.height - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
+        startX = monitor.x + GLib.random_int_range(-aw_2, aw_2);
+        startY = monitor.y + GLib.random_int_range(-ah_2, ah_2);
+        endX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2);
+        endY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2);
 	break;
       case 7: //Down-Left
-        startX = monitor.x + monitor.width - fallItem.width + Math.floor( rand1 * avgdrift * monitor.width);
-        startY = monitor.y - fallItem.height + Math.floor( rand2 * avgdrift * monitor.height);
-        endX = monitor.x + Math.floor( rand3 * avgdrift * monitor.width);
-        endY = monitor.y + monitor.height - fallItem.height + Math.floor( rand4 * avgdrift * monitor.height);
+        startX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2);
+        startY = monitor.y + GLib.random_int_range(-ah_2, ah_2);
+        endX = monitor.x + GLib.random_int_range(-aw_2, aw_2);
+        endY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2);
 	break;
       default:  //Unpredictable
-    	startX = monitor.width/2 + Math.floor(rand1 * (monitor.width - fallItem.width));
-    	startY = monitor.height/2 + Math.floor(rand2 * (monitor.height - fallItem.height));
-    	endX = startX + Math.floor( rand3 * avgdrift * monitor.width);
-    	endY = startY + Math.floor(rand4 * avgdrift * (monitor.height - fallItem.height));
+    	startX = Math.floor(monitor.width/2) + GLib.random_int_range(-aw_2, aw_2);
+    	startY = Math.floor(monitor.height/2) + GLib.random_int_range(-ah_2, ah_2);
+    	endX = startX + GLib.random_int_range(-aw_2, aw_2);
+    	endY = startY + GLib.random_int_range(-ah_2, ah_2);
     }
     
     

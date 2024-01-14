@@ -73,9 +73,13 @@
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Text Font</property>
             <child>
-              <object class="GtkFontButton" id="text_font">
+              <object class="GtkFontDialogButton" id="text_font">
                 <property name="valign">center</property>
-                <property name="font">Sans 12</property>
+                <property name="level">3</property>
+                <property name="use_font">1</property>
+                <property name="dialog">
+		  <object class="GtkFontDialog"></object>
+		</property>
               </object>
             </child>
           </object>
@@ -298,7 +302,7 @@
             <property name="title" translatable="yes">Average Fall Drift (percentage)</property>
             <property name="adjustment">
               <object class="GtkAdjustment">
-                <property name="lower">1</property>
+                <property name="lower">0</property>
                 <property name="upper">100</property>
                 <property name="value">1</property>
                 <property name="page-increment">1</property>
@@ -342,9 +346,13 @@
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Matrix© trails Font</property>
                 <child>
-                  <object class="GtkFontButton" id="mat_font">
+                  <object class="GtkFontDialogButton" id="mat_font">
                     <property name="valign">center</property>
-                    <property name="font">Sans 12</property>
+		    <property name="level">3</property>
+		    <property name="use_font">1</property>
+		    <property name="dialog">
+		      <object class="GtkFontDialog"></object>
+		    </property>
                   </object>
                 </child>
               </object>
@@ -452,9 +460,13 @@
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Firework Flares Font</property>
                 <child>
-                  <object class="GtkFontButton" id="flr_font">
+                  <object class="GtkFontDialogButton" id="flr_font">
                     <property name="valign">center</property>
-                    <property name="font">Sans 12</property>
+		    <property name="level">3</property>
+		    <property name="use_font">1</property>
+		    <property name="dialog">
+		      <object class="GtkFontDialog"></object>
+		    </property>
                   </object>
                 </child>
               </object>
@@ -545,7 +557,7 @@
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Version</property>
-            <property name="subtitle" translatable="yes">4.1.2</property>
+            <property name="subtitle" translatable="yes">4.2.0</property>
           </object>
         </child>
         <child>
