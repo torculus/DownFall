@@ -25,10 +25,10 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
     let startY;
     let endX;
     let endY;
-    
+
     let aw = Math.floor(avgdrift * monitor.width);
     let ah = Math.floor(avgdrift * monitor.height);
-
+    
     if (direction > 4) {
     	var aw_2 = Math.floor(aw/2);
     	var ah_2 = Math.floor(ah/2);
@@ -38,26 +38,26 @@ function startEndPoints(direction, monitor, avgdrift, fallItem) {
       case 0: //Down
         startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
         startY = monitor.y;
-        endX = startX + GLib.random_int_range(0, aw);
+        endX = startX + GLib.random_int_range(-aw, aw);
         endY = monitor.y + monitor.height;
 	break;
       case 1: //Up
         startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
         startY = monitor.y + monitor.height;
-        endX = startX + GLib.random_int_range(0, aw);
-        endY = monitor.y;
+        endX = startX + GLib.random_int_range(-aw, aw);
+        endY = monitor.y - fallItem.height;
 	break;
       case 2: //Right
         startX = monitor.x;
         startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
         endX = monitor.x + monitor.width;
-        endY = startY + GLib.random_int_range(0, ah);
+        endY = startY + GLib.random_int_range(-ah, ah);
 	break;
       case 3: //Left
         startX = monitor.x + monitor.width;
         startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
-        endX = monitor.x;
-        endY = startY + GLib.random_int_range(0, ah);
+        endX = monitor.x - fallItem.width;
+        endY = startY + GLib.random_int_range(-ah, ah);
 	break;
       case 4: //Up-Right
         startX = monitor.x + GLib.random_int_range(-aw_2, aw_2);

@@ -163,8 +163,8 @@ function set_presets(preset, buildable) {
   let rgba3 = new Gdk.RGBA();
   switch (preset) {
     case 1: //"Snow"
-      buildable.get_object('display_field').set_text("*,.");
       rgba.parse("White");
+      buildable.get_object('display_field').set_text("*,.");
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(7);
@@ -226,6 +226,8 @@ function set_presets(preset, buildable) {
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(0);
+      buildable.get_object('text_shad_x').set_value(0);
+      buildable.get_object('text_shad_y').set_value(0);
       buildable.get_object('text_shad_blur').set_value(35);
       buildable.get_object('text_shad_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_selected(1);
@@ -239,6 +241,8 @@ function set_presets(preset, buildable) {
       buildable.get_object('mat_color').set_rgba(rgba2);
       buildable.get_object('mat_shad').set_enable_expansion(true);
       buildable.get_object('mat_shad_type').set_selected(1);
+      buildable.get_object('mat_shad_x').set_value(0);
+      buildable.get_object('mat_shad_y').set_value(0);
       buildable.get_object('mat_shad_blur').set_value(5);
       buildable.get_object('mat_shad_color').set_rgba(rgba3);
       buildable.get_object('firework_switch').set_enable_expansion(true);
@@ -252,8 +256,8 @@ function set_presets(preset, buildable) {
       buildable.get_object('flr_shad_color').set_rgba(rgba);
       break;
     case 5: //"Rain"
-      buildable.get_object('display_field').set_text(".,💧");
       rgba.parse("Cyan");
+      buildable.get_object('display_field').set_text(".,💧");
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(0);
@@ -266,11 +270,13 @@ function set_presets(preset, buildable) {
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case 6: //"Fireflies"
-      buildable.get_object('display_field').set_text("●");
       rgba.parse("GreenYellow");
+      buildable.get_object('display_field').set_text("●");
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(0);
+      buildable.get_object('text_shad_x').set_value(0);
+      buildable.get_object('text_shad_y').set_value(0);
       buildable.get_object('text_shad_blur').set_value(50);
       buildable.get_object('text_shad_color').set_rgba(rgba);
       buildable.get_object('fall_direc').set_selected(8);
@@ -283,12 +289,15 @@ function set_presets(preset, buildable) {
       buildable.get_object('firework_switch').set_enable_expansion(false);
       break;
     case 7: //"Lava Lamp"
-      buildable.get_object('display_field').set_text("●");
       rgba.parse("Orange");
       rgba2.parse("Red");
+      buildable.get_object('display_field').set_text("●");
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 120"));
       buildable.get_object('text_color').set_rgba(rgba);
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(1);
+      buildable.get_object('text_shad_x').set_value(0);
+      buildable.get_object('text_shad_y').set_value(0);
       buildable.get_object('text_shad_blur').set_value(25);
       buildable.get_object('text_shad_color').set_rgba(rgba2);
       buildable.get_object('fall_direc').set_selected(1);
