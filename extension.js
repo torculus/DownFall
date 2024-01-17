@@ -358,15 +358,15 @@ const FIM = GObject.registerClass({
 	this.RUNNING = false;
 
     	//remove containers from pane3d
-	this?.pane3d.remove_child(this.ic);
-	this?.pane3d.remove_child(this.mc);
+	this.pane3d?.remove_child(this.ic);
+	this.pane3d?.remove_child(this.mc);
 
 	//remove all of the FallItems and any matritems
-	this.ic.remove_all_children();
-	this.mc.remove_all_children();
+	this.ic?.remove_all_children();
+	this.mc?.remove_all_children();
 
-	this.ic.destroy();
-	this.mc.destroy();
+	this.ic?.destroy();
+	this.mc?.destroy();
 	this.MATRIXTRAILSON = false;
     }
 
