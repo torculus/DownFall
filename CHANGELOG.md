@@ -1,9 +1,5 @@
 # Change Log
 
-## Roadmap
-- [ ] Add `EaseOut` animationmode for more realistic fireworks
-- [ ] Add random colors for Firework flares
-
 ## 4.2.0
 - Prefs window and widgets migrated completely to `libadwaita`
 - ***New feature:*** text shadows

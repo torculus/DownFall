@@ -166,6 +166,7 @@ function set_presets(preset, buildable) {
       rgba.parse("White");
       buildable.get_object('display_field').set_text("*,.");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 20"));
       buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(7);
       buildable.get_object('clutter_animmode').set_selected(2);
@@ -178,6 +179,7 @@ function set_presets(preset, buildable) {
       break;
     case 2: //"Leaves"
       buildable.get_object('display_field').set_text("🍁️,🍂️");
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 20"));
       buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(6);
       buildable.get_object('clutter_animmode').set_selected(2);
@@ -193,6 +195,7 @@ function set_presets(preset, buildable) {
       rgba2.parse("SpringGreen3");
       buildable.get_object('display_field').set_text("ﾊ,ﾐ,ﾋ,ｰ,ｳ,ｼ,ﾅ,ﾓ,ﾆ,ｻ,ﾜ,ﾂ,ｵ,ﾘ,ｱ,ﾎ,ﾃ,ﾏ,ｹ,ﾒ,ｴ,ｶ,ｷ,ﾑ,ﾕ,ﾗ,ｾ,ﾈ,ｽ,ﾀ,ﾇ,ﾍ");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 20"));
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(1);
       buildable.get_object('text_shad_x').set_value(0);
@@ -224,6 +227,7 @@ function set_presets(preset, buildable) {
       rgba4.parse("Yellow");
       buildable.get_object('display_field').set_text(".");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 20"));
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(0);
       buildable.get_object('text_shad_x').set_value(0);
@@ -259,6 +263,7 @@ function set_presets(preset, buildable) {
       rgba.parse("Cyan");
       buildable.get_object('display_field').set_text(".,💧");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 20"));
       buildable.get_object('text_shad').set_enable_expansion(false);
       buildable.get_object('fall_direc').set_selected(0);
       buildable.get_object('clutter_animmode').set_selected(0); //LINEAR
@@ -273,6 +278,7 @@ function set_presets(preset, buildable) {
       rgba.parse("GreenYellow");
       buildable.get_object('display_field').set_text("●");
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 20"));
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(0);
       buildable.get_object('text_shad_x').set_value(0);
@@ -292,8 +298,8 @@ function set_presets(preset, buildable) {
       rgba.parse("Orange");
       rgba2.parse("Red");
       buildable.get_object('display_field').set_text("●");
-      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 120"));
       buildable.get_object('text_color').set_rgba(rgba);
+      buildable.get_object('text_font').set_font_desc(Pango.font_description_from_string("Sans Regular 120"));
       buildable.get_object('text_shad').set_enable_expansion(true);
       buildable.get_object('text_shad_type').set_selected(1);
       buildable.get_object('text_shad_x').set_value(0);
