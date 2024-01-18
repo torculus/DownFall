@@ -1,6 +1,11 @@
 # Change Log
 
 ## 4.2.0
+- Attempt fix for "`this.pane3d` is null"
+- Update README with instructions for enabling the extension
+- Update README video
+
+## 4.2.0
 - Prefs window and widgets migrated completely to `libadwaita`
 - ***New feature:*** text shadows
 - Use `GLib.rand_int_range()` in direction instead of custom implementation
