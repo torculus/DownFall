@@ -5,7 +5,7 @@ https://github.com/torculus/DownFall/assets/20175597/7ddf2eed-fa5c-40ff-8a1d-f99
 
 DownFall is inspired by projects like [Xsnow](https://sourceforge.net/projects/xsnow/), [gsnow](https://extensions.gnome.org/extension/1156/gsnow/), and [Let it snow](https://bitbucket.org/matban/let-it-snow/src/master/), but with support for arbitrary text or Unicode emojis
 
-## Enabling
+> [!IMPORTANT]
 Enabling the extension puts a toggle switch in the GNOME QuickSettings menu. Click the toggle switch to start/stop the extension. Configuration is currently done through the extension's settings menu
 
 ## Configuration
