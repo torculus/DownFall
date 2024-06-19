@@ -26,7 +26,6 @@ import Pango from 'gi://Pango';
 
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import * as Utils from './utils.js';
 import * as Config from 'resource:///org/gnome/Shell/Extensions/js/misc/config.js';
 
 export default class DFPreferences extends ExtensionPreferences {

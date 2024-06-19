@@ -1,6 +1,10 @@
 # Change Log
 
 ## 4.2.0
+- Move `Utils.startEndPoints()` inside `FallItem`
+- Remove `utils.js`
+
+## 4.2.0
 - Attempt fix for "`this.pane3d` is null"
 - Update README with instructions for enabling the extension
 - Update README video

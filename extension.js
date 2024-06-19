@@ -30,8 +30,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js';
 const QuickSettingsMenu = Main.panel.statusArea.quickSettings;
 
-import * as Utils from './utils.js';
-
 var FallItem = GObject.registerClass({
   GTypeName: 'FallItem',
   Properties: {},
@@ -73,44 +71,104 @@ var FallItem = GObject.registerClass({
       }
 
       //get coordinates for the start and end points
-      let startEndpoints = Utils.startEndPoints(this.fim.DIRECTION, this.monitor, this.fim.AVG_DRIFT, this);
-      let startX = startEndpoints[0];
-      let startY = startEndpoints[1];
-      let endX = startEndpoints[2];
-      let endY = startEndpoints[3];
+      let aw = Math.floor(this.fim.AVG_DRIFT * this.monitor.width);
+      let ah = Math.floor(this.fim.AVG_DRIFT * this.monitor.height);
+      this.setpoints(this.monitor, aw, ah);
       
       if (this.fim.FIREWORKS) {
       	//end in the middle
       	let alpha = GLib.random_int_range(33,50)/100;
-      	endX = Math.floor(alpha*startX + (1-alpha)*endX);
-      	endY = Math.floor(alpha*startY + (1-alpha)*endY);
-      	this.endX = endX; this.endY = endY;
+      	this.endX = Math.floor(alpha*this.startX + (1-alpha)*this.endX);
+      	this.endY = Math.floor(alpha*this.startY + (1-alpha)*this.endY);
       }
       
       let time = (this.fim.AVG_TIME + GLib.random_int_range(-1,1)) * 1000;
       let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * this.fim.AVG_ROT);
       
-      this.set_position(startX, startY);
+      this.set_position(this.startX, this.startY);
       
       this.show();
       
       if (this.fim.MATRIXTRAILS) {
 	if (!this.trailson) { //only add on first fall
-	  this.matrixtrail(startX, startY, endX, endY, time);
+	  this.matrixtrail(this.startX, this.startY, this.endX, this.endY, time);
 	} else {
 	  this.matAddID = null;
 	}
       }
       
       this.ease({
-      	x : endX,
-      	y : endY,
+      	x : this.endX,
+      	y : this.endY,
       	duration : time,
       	mode : this.fim.ANIMATIONMODE,
       	rotation_angle_z : rotation,
       	onComplete : () => {this.finish()}
       });
       
+    }
+
+    setpoints(monitor, aw, ah) {
+	if (this.fim.DIRECTION > 4) {
+		var aw_2 = Math.floor(aw/2);
+		var ah_2 = Math.floor(ah/2);
+	}
+
+	switch (this.fim.DIRECTION) {
+	  case 0: //Down (↓)
+	    this.startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
+	    this.startY = monitor.y;
+	    this.endX = this.startX + GLib.random_int_range(-aw, aw+2);
+	    this.endY = monitor.y + monitor.height;
+	    break;
+	  case 1: //Up (↑)
+            this.startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
+            this.startY = monitor.y + monitor.height;
+            this.endX = this.startX + GLib.random_int_range(-aw, aw+2);
+            this.endY = monitor.y - this.height;
+	    break;
+          case 2: //Right (→)
+            this.startX = monitor.x;
+            this.startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
+            this.endX = monitor.x + monitor.width;
+            this.endY = this.startY + GLib.random_int_range(-ah, ah+2);
+	    break;
+          case 3: //Left (←)
+            this.startX = monitor.x + monitor.width;
+            this.startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
+            this.endX = monitor.x - this.width;
+            this.endY = this.startY + GLib.random_int_range(-ah, ah+2);
+	    break;
+          case 4: //Up-Right (↗)
+            this.startX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
+            this.startY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
+            this.endX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
+            this.endY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
+	    break;
+          case 5: //Up-Left (↖)
+            this.startX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
+            this.startY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
+            this.endX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
+            this.endY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
+	    break;
+          case 6: //Down-Right (↘)
+            this.startX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
+            this.startY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
+            this.endX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
+            this.endY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
+	    break;
+          case 7: //Down-Left (↙)
+            this.startX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
+            this.startY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
+            this.endX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
+            this.endY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
+	    break;
+          default: //Unpredictable (??)
+    	    this.startX = Math.floor(monitor.width/2) + GLib.random_int_range(-aw_2, aw_2+2);
+    	    this.startY = Math.floor(monitor.height/2) + GLib.random_int_range(-ah_2, ah_2+2);
+    	    this.endX = this.startX + GLib.random_int_range(-aw_2, aw_2+2);
+    	    this.endY = this.startY + GLib.random_int_range(-ah_2, ah_2+2);
+        }
     }
 
     matrixtrail(startX, startY, endX, endY, time) {

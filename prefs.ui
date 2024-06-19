@@ -557,7 +557,7 @@
         <child>
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Version</property>
-            <property name="subtitle" translatable="yes">4.2.1</property>
+            <property name="subtitle" translatable="yes">4.3.0</property>
           </object>
         </child>
         <child>
