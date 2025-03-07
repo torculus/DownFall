@@ -1,5 +1,9 @@
 # Change Log
 
+## 4.3.1
+- Replace `GtkColorButton` with `GtkColorDialogButton`
+- Add GNOME 48 support
+
 ## 4.3.0
 - Move `Utils.startEndPoints()` inside `FallItem`
 - Remove `utils.js`
