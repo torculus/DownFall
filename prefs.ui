@@ -63,8 +63,11 @@
           <object class="AdwActionRow">
             <property name="title" translatable="yes">Text Color</property>
             <child>
-              <object class="GtkColorButton" id="text_color">
+              <object class="GtkColorDialogButton" id="text_color">
                 <property name="valign">center</property>
+		<property name="dialog">
+		  <object class="GtkColorDialog"></object>
+		</property>
               </object>
             </child>
           </object>
@@ -147,8 +150,11 @@
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Shadow color</property>
                 <child>
-                  <object class="GtkColorButton" id="text_shad_color">
+                  <object class="GtkColorDialogButton" id="text_shad_color">
                     <property name="valign">center</property>
+		    <property name="dialog">
+		      <object class="GtkColorDialog"></object>
+		    </property>
                   </object>
                 </child>
               </object>
@@ -336,8 +342,11 @@
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Matrix© trails Color</property>
                 <child>
-                  <object class="GtkColorButton" id="mat_color">
+                  <object class="GtkColorDialogButton" id="mat_color">
                     <property name="valign">center</property>
+		    <property name="dialog">
+		      <object class="GtkColorDialog"></object>
+		    </property>
                   </object>
                 </child>
               </object>
@@ -420,8 +429,11 @@
                   <object class="AdwActionRow">
                     <property name="title">Shadow color</property>
                     <child>
-                      <object class="GtkColorButton" id="mat_shad_color">
+                      <object class="GtkColorDialogButton" id="mat_shad_color">
                         <property name="valign">center</property>
+			<property name="dialog">
+			  <object class="GtkColorDialog"></object>
+			</property>
                       </object>
                     </child>
                   </object>
@@ -450,8 +462,11 @@
               <object class="AdwActionRow">
                 <property name="title" translatable="yes">Firework Flares Color</property>
                 <child>
-                  <object class="GtkColorButton" id="flr_color">
+                  <object class="GtkColorDialogButton" id="flr_color">
                     <property name="valign">center</property>
+		    <property name="dialog">
+		      <object class="GtkColorDialog"></object>
+		    </property>
                   </object>
                 </child>
               </object>
@@ -534,8 +549,11 @@
                   <object class="AdwActionRow">
                     <property name="title">Shadow color</property>
                     <child>
-                      <object class="GtkColorButton" id="flr_shad_color">
+                      <object class="GtkColorDialogButton" id="flr_shad_color">
                         <property name="valign">center</property>
+			<property name="dialog">
+			  <object class="GtkColorDialog"></object>
+			</property>
                       </object>
                     </child>
                   </object>
