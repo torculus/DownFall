@@ -1,6 +1,13 @@
 # Change Log
 
+## 4.4.0
+- Target GNOME 50+
+- Migrate `ease()` to `easeAsync()`
+- Use QuickSettings PopupMenu to easily get to preferences
+- Update all files to reflect 2026
+
 ## 4.3.1
+- Last release for GNOME 49 and earlier
 - Replace `GtkColorButton` with `GtkColorDialogButton`
 - Add GNOME 48 support
 
