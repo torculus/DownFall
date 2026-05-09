@@ -24,7 +24,6 @@ import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
-import Cogl from 'gi://Cogl';
 
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
@@ -49,11 +48,9 @@ var FallItem = GObject.registerClass({
 
     change(text, fontstring, color, shadow) {
       //don't style on each iteration of fall()
-      this.set_text(text);
-      this.get_clutter_text().set_color(color);
+      this.set_style(`color: ${color}; ${shadow}`);
       this.get_clutter_text().set_font_name(fontstring);
-      //this.set_style(`color: ${color.to_string().substring(0,7)}`);
-      //this.set_style(`${shadow}`);
+      this.set_text(text);
     }
     
     fall() {
@@ -99,14 +96,14 @@ var FallItem = GObject.registerClass({
 	}
       }
       
-      this.easeAsync({
+      this.ease({
       	x : this.endX,
       	y : this.endY,
       	duration : time,
       	mode : this.fim.ANIMATIONMODE,
       	rotation_angle_z : rotation,
       	onComplete : () => {this.finish()}
-      }).catch((err) => {});
+      });
       
     }
 
@@ -231,18 +228,17 @@ var FallItem = GObject.registerClass({
     	  this.fim.pane3d.add_child(flare);
     	  flare.set_position(this.endX, this.endY);
       	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
-      	  flare.get_clutter_text().set_color(this.fim.FLRCOLOR);
-    	  flare.set_style(`${this.fim.FLRSHADOW}`);
+	  flare.set_style(`color: ${this.fim.FLRCOLOR}; ${this.fim.FLRSHADOW}`);
     	  flare.set_text( this.fim.FLRDISP[ GLib.random_int_range(0, this.fim.FLRDISP.length) ] );
     	  
-    	  flare.easeAsync({
+    	  flare.ease({
     	    x : this.endX + Math.cos(angle)*speed/100 * this.monitor.width,
     	    y : this.endY + Math.sin(angle)*speed/100 * this.monitor.height + 1,
     	    duration : 2000,
 	    opacity: 0,
     	    mode : Clutter.AnimationMode.EASE_OUT_EXPO,
     	    onComplete : () => {flare.destroy()}
-	  }).catch((err) => {});
+	  });
     	  
     	}
       }
@@ -283,13 +279,6 @@ const FIM = GObject.registerClass({
     	this.settings = settings;
 	this.RUNNING = false;
 	this.MATRIXTRAILSON = false;
-
-    	this.FALLCOLOR = Cogl.Color.init_from_hsl(0, 1, 0.5); //works, but white
-    	//this.FALLCOLOR = new Cogl.Color({ red: 255, green: 0, blue: 0, alpha: 255 }); //works, but white
-    	this.MATCOLOR = new Cogl.Color({red: 0, green: 0, blue: 0}); //black
-    	this.FLRCOLOR = new Cogl.Color({red: 0, green: 0, blue: 0}); //black
-
-    	this.settings.connect('changed', this.settingsChanged.bind(this));
     }
 
     loadSettings() {
@@ -299,7 +288,7 @@ const FIM = GObject.registerClass({
 	this.ANIMATIONMODE = this.settings.get_int('clutteranimmode')+1;
 
     	this.FALLITEMS = this.settings.get_strv("falltext");
-	//this.changeColor(this.settings.get_string('textcolor'), this.FALLCOLOR);
+	this.FALLCOLOR = this.settings.get_string('textcolor');
 
     	this.FALLFONT = this.settings.get_string('textfont');
 
@@ -326,7 +315,7 @@ const FIM = GObject.registerClass({
     	this.MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
     	if (this.MATRIXTRAILS) {
 	  this.MATDISP = this.settings.get_strv("matdisplay");
-	  this.changeColor(this.settings.get_string('matcolor'), this.MATCOLOR);
+	  this.MATCOLOR = this.settings.get_string('matcolor');
 	  this.MATFONT = this.settings.get_string('matfont');
 	  if (this.settings.get_boolean('matshad')) {
 	    switch (this.settings.get_int('matshadtype')) {
@@ -346,7 +335,7 @@ const FIM = GObject.registerClass({
     	this.FIREWORKS = this.settings.get_boolean('fireworks');
     	if (this.FIREWORKS) {
     	  this.FLRDISP = this.settings.get_strv("flrdisplay");
-	  this.changeColor(this.settings.get_string('flrcolor'), this.FLRCOLOR);
+	  this.FLRCOLOR = this.settings.get_string('flrcolor');
     	  this.FLRFONT = this.settings.get_string('flrfont');
 	  if (this.settings.get_boolean('flrshad')) {
 	    switch (this.settings.get_int('flrshadtype')) {
@@ -434,22 +423,6 @@ const FIM = GObject.registerClass({
 	this.mc?.destroy();
 	this.MATRIXTRAILSON = false;
     }
-
-    changeColor(colorstring, myCoglColor) {
-    	let tc = new Cogl.Color({red: 0, green: 0, blue: 0});
-    	let temp = tc.from_string(colorstring);
-
-	// default to black if parsing fails
-	if (!ok) {
-		myCoglColor.init_from_4f(0, 0, 0, 1);
-	} else {
-		myCoglColor.init_from_4f(temp[1].red / 255,
-					temp[1].green / 255,
-					temp[1].blue / 255,
-					temp[1].alpha);
-	}
-    }
-
 });
 
 const FeatureToggle = GObject.registerClass(
@@ -508,6 +481,7 @@ export default class DFExtension extends Extension {
     enable() {
       this._settings = this.getSettings();
       this.fim = new FIM(this._settings);
+      this._settings.connect('changed', this.fim.settingsChanged.bind(this.fim));
 
       this._indicator = new FeatureIndicator(this, this.fim);
       this.featToggle = new FeatureToggle(this, this.fim);
@@ -517,11 +491,13 @@ export default class DFExtension extends Extension {
 
     disable() {
       this.featToggle.set_checked(false); //make sure the toggle button is off
+      this.featToggle.destroy();
       this._indicator.quickSettingsItems.forEach(item => item.destroy());
       this._indicator.destroy();
       this._indicator = null;
 
       this.fim.stop();
+      this._settings.disconnect('changed');
 
       //remove everything else
       this.fim = null;

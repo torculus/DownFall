@@ -1,5 +1,8 @@
 # Change Log
 
+## 4.4.1
+- Revert `Cogl.Color` to `set_style`
+
 ## 4.4.0
 - Target GNOME 50+
 - Migrate `ease()` to `easeAsync()`
