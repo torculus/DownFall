@@ -2,6 +2,7 @@
 
 ## 4.4.1
 - Revert `Cogl.Color` to `set_style`
+- Revert `easeAsync()`
 
 ## 4.4.0
 - Target GNOME 50+
