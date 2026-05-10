@@ -18,23 +18,24 @@
  *
  */
 
-'use strict';
-import St from 'gi://St';
-import Gio from 'gi://Gio';
-import GObject from 'gi://GObject';
-import GLib from 'gi://GLib';
-import Clutter from 'gi://Clutter';
+"use strict";
+import St from "gi://St";
+import Gio from "gi://Gio";
+import GObject from "gi://GObject";
+import GLib from "gi://GLib";
+import Clutter from "gi://Clutter";
 
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js'
-import * as Main from 'resource:///org/gnome/shell/ui/main.js'
-import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
-import * as QuickSettings from 'resource:///org/gnome/shell/ui/quickSettings.js';
+import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
+import * as Main from "resource:///org/gnome/shell/ui/main.js";
+import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js";
+import * as QuickSettings from "resource:///org/gnome/shell/ui/quickSettings.js";
 const QuickSettingsMenu = Main.panel.statusArea.quickSettings;
 
-var FallItem = GObject.registerClass({
-  GTypeName: 'FallItem',
-  Properties: {},
-  Signals: {},
+var FallItem = GObject.registerClass(
+  {
+    GTypeName: "FallItem",
+    Properties: {},
+    Signals: {},
   },
   class FallItem extends St.Label {
     _init(fim) {
@@ -52,331 +53,412 @@ var FallItem = GObject.registerClass({
       this.get_clutter_text().set_font_name(fontstring);
       this.set_text(text);
     }
-    
+
     fall() {
       this.idleID = null;
 
       switch (this.fim.MONITORS) {
         case 0:
-	  this.monitor = Main.layoutManager.currentMonitor;
-	  break;
-	case 1:
-	  this.monitor = Main.layoutManager.primaryMonitor;
-	  break;
-	default:
-	  this.monitor = (Main.layoutManager.monitors.length == 1)
-	  			? Main.layoutManager.primaryMonitor
-	  			: Main.layoutManager.monitors[GLib.random_int_range(0, Main.layoutManager.monitors.length)];
+          this.monitor = Main.layoutManager.currentMonitor;
+          break;
+        case 1:
+          this.monitor = Main.layoutManager.primaryMonitor;
+          break;
+        default:
+          this.monitor =
+            Main.layoutManager.monitors.length == 1
+              ? Main.layoutManager.primaryMonitor
+              : Main.layoutManager.monitors[
+                  GLib.random_int_range(0, Main.layoutManager.monitors.length)
+                ];
       }
 
       //get coordinates for the start and end points
       let aw = Math.floor(this.fim.AVG_DRIFT * this.monitor.width);
       let ah = Math.floor(this.fim.AVG_DRIFT * this.monitor.height);
       this.setpoints(this.monitor, aw, ah);
-      
+
       if (this.fim.FIREWORKS) {
-      	//end in the middle
-      	let alpha = GLib.random_int_range(33,50)/100;
-      	this.endX = Math.floor(alpha*this.startX + (1-alpha)*this.endX);
-      	this.endY = Math.floor(alpha*this.startY + (1-alpha)*this.endY);
+        //end in the middle
+        let alpha = GLib.random_int_range(33, 50) / 100;
+        this.endX = Math.floor(alpha * this.startX + (1 - alpha) * this.endX);
+        this.endY = Math.floor(alpha * this.startY + (1 - alpha) * this.endY);
       }
-      
-      let time = (this.fim.AVG_TIME + GLib.random_int_range(-1,1)) * 1000;
-      let rotation = Math.floor( GLib.random_int_range(-50,50)/100 * this.fim.AVG_ROT);
-      
+
+      let time = (this.fim.AVG_TIME + GLib.random_int_range(-1, 1)) * 1000;
+      let rotation = Math.floor(
+        (GLib.random_int_range(-50, 50) / 100) * this.fim.AVG_ROT,
+      );
+
       this.set_position(this.startX, this.startY);
-      
+
       this.show();
-      
+
       if (this.fim.MATRIXTRAILS) {
-	if (!this.trailson) { //only add on first fall
-	  this.matrixtrail(this.startX, this.startY, this.endX, this.endY, time);
-	} else {
-	  this.matAddID = null;
-	}
+        if (!this.trailson) {
+          //only add on first fall
+          this.matrixtrail(
+            this.startX,
+            this.startY,
+            this.endX,
+            this.endY,
+            time,
+          );
+        } else {
+          this.matAddID = null;
+        }
       }
-      
+
       this.ease({
-      	x : this.endX,
-      	y : this.endY,
-      	duration : time,
-      	mode : this.fim.ANIMATIONMODE,
-      	rotation_angle_z : rotation,
-      	onComplete : () => {this.finish()}
+        x: this.endX,
+        y: this.endY,
+        duration: time,
+        mode: this.fim.ANIMATIONMODE,
+        rotation_angle_z: rotation,
+        onComplete: () => {
+          this.finish();
+        },
       });
-      
     }
 
     setpoints(monitor, aw, ah) {
-	if (this.fim.DIRECTION > 4) {
-		var aw_2 = Math.floor(aw/2);
-		var ah_2 = Math.floor(ah/2);
-	}
+      if (this.fim.DIRECTION > 4) {
+        var aw_2 = Math.floor(aw / 2);
+        var ah_2 = Math.floor(ah / 2);
+      }
 
-	switch (this.fim.DIRECTION) {
-	  case 0: //Down (↓)
-	    this.startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
-	    this.startY = monitor.y;
-	    this.endX = this.startX + GLib.random_int_range(-aw, aw+2);
-	    this.endY = monitor.y + monitor.height;
-	    break;
-	  case 1: //Up (↑)
-            this.startX = GLib.random_int_range(monitor.x, monitor.x + monitor.width);
-            this.startY = monitor.y + monitor.height;
-            this.endX = this.startX + GLib.random_int_range(-aw, aw+2);
-            this.endY = monitor.y - this.height;
-	    break;
-          case 2: //Right (→)
-            this.startX = monitor.x;
-            this.startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
-            this.endX = monitor.x + monitor.width;
-            this.endY = this.startY + GLib.random_int_range(-ah, ah+2);
-	    break;
-          case 3: //Left (←)
-            this.startX = monitor.x + monitor.width;
-            this.startY = GLib.random_int_range(monitor.y, monitor.y + monitor.height);
-            this.endX = monitor.x - this.width;
-            this.endY = this.startY + GLib.random_int_range(-ah, ah+2);
-	    break;
-          case 4: //Up-Right (↗)
-            this.startX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
-            this.startY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
-            this.endX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
-            this.endY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
-	    break;
-          case 5: //Up-Left (↖)
-            this.startX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
-            this.startY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
-            this.endX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
-            this.endY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
-	    break;
-          case 6: //Down-Right (↘)
-            this.startX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
-            this.startY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
-            this.endX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
-            this.endY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
-	    break;
-          case 7: //Down-Left (↙)
-            this.startX = monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2+2);
-            this.startY = monitor.y + GLib.random_int_range(-ah_2, ah_2+2);
-            this.endX = monitor.x + GLib.random_int_range(-aw_2, aw_2+2);
-            this.endY = monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2+2);
-	    break;
-          default: //Unpredictable (??)
-    	    this.startX = Math.floor(monitor.width/2) + GLib.random_int_range(-aw_2, aw_2+2);
-    	    this.startY = Math.floor(monitor.height/2) + GLib.random_int_range(-ah_2, ah_2+2);
-    	    this.endX = this.startX + GLib.random_int_range(-aw_2, aw_2+2);
-    	    this.endY = this.startY + GLib.random_int_range(-ah_2, ah_2+2);
-        }
+      switch (this.fim.DIRECTION) {
+        case 0: //Down (↓)
+          this.startX = GLib.random_int_range(
+            monitor.x,
+            monitor.x + monitor.width,
+          );
+          this.startY = monitor.y;
+          this.endX = this.startX + GLib.random_int_range(-aw, aw + 2);
+          this.endY = monitor.y + monitor.height;
+          break;
+        case 1: //Up (↑)
+          this.startX = GLib.random_int_range(
+            monitor.x,
+            monitor.x + monitor.width,
+          );
+          this.startY = monitor.y + monitor.height;
+          this.endX = this.startX + GLib.random_int_range(-aw, aw + 2);
+          this.endY = monitor.y - this.height;
+          break;
+        case 2: //Right (→)
+          this.startX = monitor.x;
+          this.startY = GLib.random_int_range(
+            monitor.y,
+            monitor.y + monitor.height,
+          );
+          this.endX = monitor.x + monitor.width;
+          this.endY = this.startY + GLib.random_int_range(-ah, ah + 2);
+          break;
+        case 3: //Left (←)
+          this.startX = monitor.x + monitor.width;
+          this.startY = GLib.random_int_range(
+            monitor.y,
+            monitor.y + monitor.height,
+          );
+          this.endX = monitor.x - this.width;
+          this.endY = this.startY + GLib.random_int_range(-ah, ah + 2);
+          break;
+        case 4: //Up-Right (↗)
+          this.startX = monitor.x + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.startY =
+            monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2 + 2);
+          this.endX =
+            monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.endY = monitor.y + GLib.random_int_range(-ah_2, ah_2 + 2);
+          break;
+        case 5: //Up-Left (↖)
+          this.startX =
+            monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.startY =
+            monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2 + 2);
+          this.endX = monitor.x + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.endY = monitor.y + GLib.random_int_range(-ah_2, ah_2 + 2);
+          break;
+        case 6: //Down-Right (↘)
+          this.startX = monitor.x + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.startY = monitor.y + GLib.random_int_range(-ah_2, ah_2 + 2);
+          this.endX =
+            monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.endY =
+            monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2 + 2);
+          break;
+        case 7: //Down-Left (↙)
+          this.startX =
+            monitor.x + monitor.width + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.startY = monitor.y + GLib.random_int_range(-ah_2, ah_2 + 2);
+          this.endX = monitor.x + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.endY =
+            monitor.y + monitor.height + GLib.random_int_range(-ah_2, ah_2 + 2);
+          break;
+        default: //Unpredictable (??)
+          this.startX =
+            Math.floor(monitor.width / 2) +
+            GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.startY =
+            Math.floor(monitor.height / 2) +
+            GLib.random_int_range(-ah_2, ah_2 + 2);
+          this.endX = this.startX + GLib.random_int_range(-aw_2, aw_2 + 2);
+          this.endY = this.startY + GLib.random_int_range(-ah_2, ah_2 + 2);
+      }
     }
 
     matrixtrail(startX, startY, endX, endY, time) {
       this.trailson = true;
 
       //get number of steps between (startX,startY) and (endX,endY)
-      let n = Math.ceil( Math.max( Math.abs(endX-startX)/this.width, Math.abs(endY-startY)/this.height ) );
-      
-      for(var i=0; i<n; i++) {
-      	let matritem = new FallItem(this.fim);
-	this.fim.mc.add_child(matritem);
-	matritem.change(this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ], this.fim.MATFONT, this.fim.MATCOLOR, this.fim.MATSHADOW);
+      let n = Math.ceil(
+        Math.max(
+          Math.abs(endX - startX) / this.width,
+          Math.abs(endY - startY) / this.height,
+        ),
+      );
 
-	matritem.hide();
+      for (var i = 0; i < n; i++) {
+        let matritem = new FallItem(this.fim);
+        this.fim.mc.add_child(matritem);
+        matritem.change(
+          this.fim.MATDISP[GLib.random_int_range(0, this.fim.MATDISP.length)],
+          this.fim.MATFONT,
+          this.fim.MATCOLOR,
+          this.fim.MATSHADOW,
+        );
 
-	//show a new Matrix trail character every `time/n` milliseconds
-	//stop making new matritems after 1st fall
-	this.matAddID = GLib.timeout_add_once(GLib.PRIORITY_LOW, time*(1+i)/n, () => {
-		//set the matritem at the current FallItem position
-		let pos = this.get_position();
-      		matritem.set_position(pos[0], pos[1]);
-		matritem.show();
-		
-		matritem.changeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
-			matritem.hide();
+        matritem.hide();
 
-			//move and change the matritem after `time` milliseconds
-			let pos = this.get_position();
-			matritem.set_position(pos[0], pos[1]);
-			matritem.set_text( this.fim.MATDISP[ GLib.random_int_range(0, this.fim.MATDISP.length) ] );
-			matritem.show();
-			return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
-		});
-	});
+        //show a new Matrix trail character every `time/n` milliseconds
+        //stop making new matritems after 1st fall
+        this.matAddID = GLib.timeout_add_once(
+          GLib.PRIORITY_LOW,
+          (time * (1 + i)) / n,
+          () => {
+            //set the matritem at the current FallItem position
+            let pos = this.get_position();
+            matritem.set_position(pos[0], pos[1]);
+            matritem.show();
 
-	this.changeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
-		//change the FallItem text ONCE every "time" milliseconds
-		this.set_text( this.fim.FALLITEMS[ GLib.random_int_range(0, this.fim.FALLITEMS.length) ] );
-		return GLib.SOURCE_CONTINUE;
-	});
+            matritem.changeID = GLib.timeout_add(
+              GLib.PRIORITY_LOW,
+              time,
+              () => {
+                matritem.hide();
 
+                //move and change the matritem after `time` milliseconds
+                let pos = this.get_position();
+                matritem.set_position(pos[0], pos[1]);
+                matritem.set_text(
+                  this.fim.MATDISP[
+                    GLib.random_int_range(0, this.fim.MATDISP.length)
+                  ],
+                );
+                matritem.show();
+                return GLib.SOURCE_CONTINUE; //stopped on 'destroy' signal
+              },
+            );
+          },
+        );
+
+        this.changeID = GLib.timeout_add(GLib.PRIORITY_LOW, time, () => {
+          //change the FallItem text ONCE every "time" milliseconds
+          this.set_text(
+            this.fim.FALLITEMS[
+              GLib.random_int_range(0, this.fim.FALLITEMS.length)
+            ],
+          );
+          return GLib.SOURCE_CONTINUE;
+        });
       }
-
     }
-    
+
     finish() {
       this.hide();
-      
-      if (this.fim.FIREWORKS) {
-      	//explode
-      	for (let n=0; n<6; n++) {
-      	  let flare = new St.Label();
-    	  //let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
 
-	  let angle = GLib.random_double_range(0, 6.28);
-	  let speed = GLib.random_int_range(30, 70);
-    	  
-    	  this.fim.pane3d.add_child(flare);
-    	  flare.set_position(this.endX, this.endY);
-      	  flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
-	  flare.set_style(`color: ${this.fim.FLRCOLOR}; ${this.fim.FLRSHADOW}`);
-    	  flare.set_text( this.fim.FLRDISP[ GLib.random_int_range(0, this.fim.FLRDISP.length) ] );
-    	  
-    	  flare.ease({
-    	    x : this.endX + Math.cos(angle)*speed/100 * this.monitor.width,
-    	    y : this.endY + Math.sin(angle)*speed/100 * this.monitor.height + 1,
-    	    duration : 2000,
-	    opacity: 0,
-    	    mode : Clutter.AnimationMode.EASE_OUT_EXPO,
-    	    onComplete : () => {flare.destroy()}
-	  });
-    	  
-    	}
+      if (this.fim.FIREWORKS) {
+        //explode
+        for (let n = 0; n < 6; n++) {
+          let flare = new St.Label();
+          //let flcolor = "#" + Math.floor(Math.random()*16777215).toString(16);
+
+          let angle = GLib.random_double_range(0, 6.28);
+          let speed = GLib.random_int_range(30, 70);
+
+          this.fim.pane3d.add_child(flare);
+          flare.set_position(this.endX, this.endY);
+          flare.get_clutter_text().set_font_name(this.fim.FLRFONT);
+          flare.set_style(`color: ${this.fim.FLRCOLOR}; ${this.fim.FLRSHADOW}`);
+          flare.set_text(
+            this.fim.FLRDISP[GLib.random_int_range(0, this.fim.FLRDISP.length)],
+          );
+
+          flare.ease({
+            x:
+              this.endX +
+              ((Math.cos(angle) * speed) / 100) * this.monitor.width,
+            y:
+              this.endY +
+              ((Math.sin(angle) * speed) / 100) * this.monitor.height +
+              1,
+            duration: 2000,
+            opacity: 0,
+            mode: Clutter.AnimationMode.EASE_OUT_EXPO,
+            onComplete: () => {
+              flare.destroy();
+            },
+          });
+        }
       }
-      
-      //reset the FallItem after a delay (reduces CPU load)    
-      this.idleID = GLib.idle_add_once(GLib.PRIORITY_LOW,
-      			() => {this.fall()});
+
+      //reset the FallItem after a delay (reduces CPU load)
+      this.idleID = GLib.idle_add_once(GLib.PRIORITY_LOW, () => {
+        this.fall();
+      });
     }
 
     stopTimers() {
-    	return new Promise( resolve => {
-		//stop and destroy the timeouts
-		GLib.Source.destroy(this?.changeID);
-		this.changeID = null;
-		GLib.Source.destroy(this?.idleID);
-		this.idleID = null;
-		GLib.Source.destroy(this?.matAddID);
-		this.matAddID = null;
-		
-		resolve('0');
-	} );
+      return new Promise((resolve) => {
+        //stop and destroy the timeouts
+        GLib.Source.destroy(this?.changeID);
+        this.changeID = null;
+        GLib.Source.destroy(this?.idleID);
+        this.idleID = null;
+        GLib.Source.destroy(this?.matAddID);
+        this.matAddID = null;
+
+        resolve("0");
+      });
     }
 
     destroy() {
-	this.stopTimers().then(super.destroy());
+      this.stopTimers().then(super.destroy());
     }
-    
-  });
+  },
+);
 
-const FIM = GObject.registerClass({
-  GTypeName: 'FIM',
-  Properties: {},
-  Signals: {},
+const FIM = GObject.registerClass(
+  {
+    GTypeName: "FIM",
+    Properties: {},
+    Signals: {},
   },
   class FIM extends GObject.Object {
     _init(settings) {
-        super._init();
-    	this.settings = settings;
-	this.RUNNING = false;
-	this.MATRIXTRAILSON = false;
+      super._init();
+      this.settings = settings;
+      this.RUNNING = false;
+      this.MATRIXTRAILSON = false;
     }
 
     loadSettings() {
-    	this.START = this.settings.get_boolean('feature-enabled');
+      this.START = this.settings.get_boolean("feature-enabled");
 
-    	this.FALL3D = this.settings.get_int('fall3d');
-	this.ANIMATIONMODE = this.settings.get_int('clutteranimmode')+1;
+      this.FALL3D = this.settings.get_int("fall3d");
+      this.ANIMATIONMODE = this.settings.get_int("clutteranimmode") + 1;
 
-    	this.FALLITEMS = this.settings.get_strv("falltext");
-	this.FALLCOLOR = this.settings.get_string('textcolor');
+      this.FALLITEMS = this.settings.get_strv("falltext");
+      this.FALLCOLOR = this.settings.get_string("textcolor");
 
-    	this.FALLFONT = this.settings.get_string('textfont');
+      this.FALLFONT = this.settings.get_string("textfont");
 
-	if (this.settings.get_boolean('textshad')) {
-	  switch (this.settings.get_int('textshadtype')) {
-	    case 0:
-	      this.FALLSHADOW = `box-shadow: ${this.settings.get_int('textshadx')}px ${this.settings.get_int('textshady')}px ${this.settings.get_int('textshadblur')}px ${this.settings.get_string('textshadcolor')}`;
-	      break;
-	    case 1:
-	      this.FALLSHADOW = `text-shadow: ${this.settings.get_int('textshadx')}px ${this.settings.get_int('textshady')}px ${this.settings.get_int('textshadblur')}px ${this.settings.get_string('textshadcolor')}`;
-	      break;
-	  }
-	} else {
-	  this.FALLSHADOW = ``;
-	}
-    	
-    	this.MONITORS = this.settings.get_int('fallmon'); //0=current, 1=primary, 2=all
-    	this.DIRECTION = this.settings.get_int('falldirec'); //0=Down, 1=Up, 2=Right, 3=Left
-    	this.MAX_ITEMS = this.settings.get_int('maxitems');
-    	this.AVG_TIME = this.settings.get_int('falltime');
-    	this.AVG_ROT = this.settings.get_int('fallrot');
-    	this.AVG_DRIFT = this.settings.get_int('falldrift')/100; //decimal percentage (e.g. 0.43)
-    	
-    	this.MATRIXTRAILS = this.settings.get_boolean('matrixtrails');
-    	if (this.MATRIXTRAILS) {
-	  this.MATDISP = this.settings.get_strv("matdisplay");
-	  this.MATCOLOR = this.settings.get_string('matcolor');
-	  this.MATFONT = this.settings.get_string('matfont');
-	  if (this.settings.get_boolean('matshad')) {
-	    switch (this.settings.get_int('matshadtype')) {
-	      case 0:
-	        this.MATSHADOW = `box-shadow: ${this.settings.get_int('matshadx')}px ${this.settings.get_int('matshady')}px ${this.settings.get_int('matshadblur')}px ${this.settings.get_string('matshadcolor')}`;
-	        break;
-	      case 1:
-	        this.MATSHADOW = `text-shadow: ${this.settings.get_int('matshadx')}px ${this.settings.get_int('matshady')}px ${this.settings.get_int('matshadblur')}px ${this.settings.get_string('matshadcolor')}`;
-	        break;
-	    }
-	  } else {
-	    this.MATSHADOW = ``;
-	  }
-	  this.MATRIXTRAILSON = true;
-	}
+      if (this.settings.get_boolean("textshad")) {
+        switch (this.settings.get_int("textshadtype")) {
+          case 0:
+            this.FALLSHADOW = `box-shadow: ${this.settings.get_int("textshadx")}px ${this.settings.get_int("textshady")}px ${this.settings.get_int("textshadblur")}px ${this.settings.get_string("textshadcolor")}`;
+            break;
+          case 1:
+            this.FALLSHADOW = `text-shadow: ${this.settings.get_int("textshadx")}px ${this.settings.get_int("textshady")}px ${this.settings.get_int("textshadblur")}px ${this.settings.get_string("textshadcolor")}`;
+            break;
+        }
+      } else {
+        this.FALLSHADOW = ``;
+      }
 
-    	this.FIREWORKS = this.settings.get_boolean('fireworks');
-    	if (this.FIREWORKS) {
-    	  this.FLRDISP = this.settings.get_strv("flrdisplay");
-	  this.FLRCOLOR = this.settings.get_string('flrcolor');
-    	  this.FLRFONT = this.settings.get_string('flrfont');
-	  if (this.settings.get_boolean('flrshad')) {
-	    switch (this.settings.get_int('flrshadtype')) {
-	      case 0:
-	        this.FLRSHADOW = `box-shadow: ${this.settings.get_int('flrshadx')}px ${this.settings.get_int('flrshady')}px ${this.settings.get_int('flrshadblur')}px ${this.settings.get_string('flrshadcolor')}`;
-	        break;
-	      case 1:
-	        this.FLRSHADOW = `text-shadow: ${this.settings.get_int('flrshadx')}px ${this.settings.get_int('flrshady')}px ${this.settings.get_int('flrshadblur')}px ${this.settings.get_string('flrshadcolor')}`;
-	        break;
-	    }
-	  } else {
-	    this.FLRSHADOW = ``;
-	  }
-    	}
+      this.MONITORS = this.settings.get_int("fallmon"); //0=current, 1=primary, 2=all
+      this.DIRECTION = this.settings.get_int("falldirec"); //0=Down, 1=Up, 2=Right, 3=Left
+      this.MAX_ITEMS = this.settings.get_int("maxitems");
+      this.AVG_TIME = this.settings.get_int("falltime");
+      this.AVG_ROT = this.settings.get_int("fallrot");
+      this.AVG_DRIFT = this.settings.get_int("falldrift") / 100; //decimal percentage (e.g. 0.43)
+
+      this.MATRIXTRAILS = this.settings.get_boolean("matrixtrails");
+      if (this.MATRIXTRAILS) {
+        this.MATDISP = this.settings.get_strv("matdisplay");
+        this.MATCOLOR = this.settings.get_string("matcolor");
+        this.MATFONT = this.settings.get_string("matfont");
+        if (this.settings.get_boolean("matshad")) {
+          switch (this.settings.get_int("matshadtype")) {
+            case 0:
+              this.MATSHADOW = `box-shadow: ${this.settings.get_int("matshadx")}px ${this.settings.get_int("matshady")}px ${this.settings.get_int("matshadblur")}px ${this.settings.get_string("matshadcolor")}`;
+              break;
+            case 1:
+              this.MATSHADOW = `text-shadow: ${this.settings.get_int("matshadx")}px ${this.settings.get_int("matshady")}px ${this.settings.get_int("matshadblur")}px ${this.settings.get_string("matshadcolor")}`;
+              break;
+          }
+        } else {
+          this.MATSHADOW = ``;
+        }
+        this.MATRIXTRAILSON = true;
+      }
+
+      this.FIREWORKS = this.settings.get_boolean("fireworks");
+      if (this.FIREWORKS) {
+        this.FLRDISP = this.settings.get_strv("flrdisplay");
+        this.FLRCOLOR = this.settings.get_string("flrcolor");
+        this.FLRFONT = this.settings.get_string("flrfont");
+        if (this.settings.get_boolean("flrshad")) {
+          switch (this.settings.get_int("flrshadtype")) {
+            case 0:
+              this.FLRSHADOW = `box-shadow: ${this.settings.get_int("flrshadx")}px ${this.settings.get_int("flrshady")}px ${this.settings.get_int("flrshadblur")}px ${this.settings.get_string("flrshadcolor")}`;
+              break;
+            case 1:
+              this.FLRSHADOW = `text-shadow: ${this.settings.get_int("flrshadx")}px ${this.settings.get_int("flrshady")}px ${this.settings.get_int("flrshadblur")}px ${this.settings.get_string("flrshadcolor")}`;
+              break;
+          }
+        } else {
+          this.FLRSHADOW = ``;
+        }
+      }
     }
 
     settingsChanged() {
-    	this.loadSettings();
+      this.loadSettings();
 
-	if (this.RUNNING) { //already running
-		if (!this.START) { //turning off
-			this.stop();
-		} else { //updating existing FallItems
-			//restart if matrixtrails are turned off while running
-			if (this.MATRIXTRAILSON && !this.MATRIXTRAILS) {
-				this.MATRIXTRAILSON = false;
-				this.stop();
-				this.dropItems();
-			}
+      if (this.RUNNING) {
+        //already running
+        if (!this.START) {
+          //turning off
+          this.stop();
+        } else {
+          //updating existing FallItems
+          //restart if matrixtrails are turned off while running
+          if (this.MATRIXTRAILSON && !this.MATRIXTRAILS) {
+            this.MATRIXTRAILSON = false;
+            this.stop();
+            this.dropItems();
+          }
 
-			//update the FallItems
-			this.ic.get_children().forEach( (fi) => {
-				let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
-				fi.change(whichItem, this.FALLFONT, this.FALLCOLOR, this.FALLSHADOW); } );
-		}
-	} else {
-		if (this.START) { //turning on
-			this.dropItems();
-		}
-	}
-
+          //update the FallItems
+          this.ic.get_children().forEach((fi) => {
+            let whichItem =
+              this.FALLITEMS[GLib.random_int_range(0, this.FALLITEMS.length)];
+            fi.change(
+              whichItem,
+              this.FALLFONT,
+              this.FALLCOLOR,
+              this.FALLSHADOW,
+            );
+          });
+        }
+      } else {
+        if (this.START) {
+          //turning on
+          this.dropItems();
+        }
+      }
     }
 
     dropItems() {
@@ -384,123 +466,141 @@ const FIM = GObject.registerClass({
       this.ic = new Clutter.Actor(); //a place to store our FallItems
       this.mc = new Clutter.Actor(); //a place to store our matritems
 
-
-      if (this.FALL3D == 0) { //in front
-      	this.pane3d = global.top_window_group; 
+      if (this.FALL3D == 0) {
+        //in front
+        this.pane3d = global.top_window_group;
       } else {
-      	//Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group 
-	this.pane3d = Main.layoutManager._backgroundGroup;
+        //Main.uiGroup, Main.overviewGroup, Main.screenShieldGroup, Main.modalDialogGroup, global.window_group, global.top_window_group
+        this.pane3d = Main.layoutManager._backgroundGroup;
       }
 
       this.pane3d.add_child(this.ic);
       this.pane3d.add_child(this.mc);
 
       //only create MAX_ITEMS number of FallItems
-      for (let i=0; i < this.MAX_ITEMS; i++) {
-      	let newFi = new FallItem(this);
-      	this.ic.add_child(newFi);
+      for (let i = 0; i < this.MAX_ITEMS; i++) {
+        let newFi = new FallItem(this);
+        this.ic.add_child(newFi);
       }
-      
+
       //make it rain
-      this.ic.get_children().forEach( (fi) => {
-		let whichItem = this.FALLITEMS[ GLib.random_int_range(0, this.FALLITEMS.length) ];
-		fi.change(whichItem, this.FALLFONT, this.FALLCOLOR, this.FALLSHADOW);
-		fi.fall();} );
+      this.ic.get_children().forEach((fi) => {
+        let whichItem =
+          this.FALLITEMS[GLib.random_int_range(0, this.FALLITEMS.length)];
+        fi.change(whichItem, this.FALLFONT, this.FALLCOLOR, this.FALLSHADOW);
+        fi.fall();
+      });
     }
 
     stop() {
-	this.RUNNING = false;
+      this.RUNNING = false;
 
-    	//remove containers from pane3d
-	this.pane3d?.remove_child(this.ic);
-	this.pane3d?.remove_child(this.mc);
+      //remove containers from pane3d
+      this.pane3d?.remove_child(this.ic);
+      this.pane3d?.remove_child(this.mc);
 
-	//remove all of the FallItems and any matritems
-	this.ic?.remove_all_children();
-	this.mc?.remove_all_children();
+      //remove all of the FallItems and any matritems
+      this.ic?.remove_all_children();
+      this.mc?.remove_all_children();
 
-	this.ic?.destroy();
-	this.mc?.destroy();
-	this.MATRIXTRAILSON = false;
+      this.ic?.destroy();
+      this.mc?.destroy();
+      this.MATRIXTRAILSON = false;
     }
-});
+  },
+);
 
 const FeatureToggle = GObject.registerClass(
-class FeatureToggle extends QuickSettings.QuickMenuToggle {
+  class FeatureToggle extends QuickSettings.QuickMenuToggle {
     _init(extensionObject, fim) {
-        super._init({
-	    title: _('DownFall'),
-            iconName: 'selection-mode-symbolic',
-            toggleMode: true,
-        });
+      super._init({
+        title: _("DownFall"),
+        iconName: "selection-mode-symbolic",
+        toggleMode: true,
+      });
 
-        this.fim = fim;
-        
-	this.menu.setHeader('selection-mode-symbolic', _('DownFall'));
-	
-	this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-	const settingsItem = this.menu.addAction('Open Settings', () => extensionObject.openPreferences());
-	
-        // Binding the toggle to a GSettings key
-	this._settings = extensionObject.getSettings();
+      this.fim = fim;
 
-        this._settings.bind('feature-enabled',
-            this, 'checked',
-            Gio.SettingsBindFlags.DEFAULT);
-	
-  	this.connect('clicked', this.fim.settingsChanged.bind(this.fim));
+      this.menu.setHeader("selection-mode-symbolic", _("DownFall"));
+
+      this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+      const settingsItem = this.menu.addAction("Open Settings", () =>
+        extensionObject.openPreferences(),
+      );
+
+      // Binding the toggle to a GSettings key
+      this._settings = extensionObject.getSettings();
+
+      this._settings.bind(
+        "feature-enabled",
+        this,
+        "checked",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
+
+      this.connect("clicked", this.fim.settingsChanged.bind(this.fim));
     }
-});
+  },
+);
 
 const FeatureIndicator = GObject.registerClass(
-class FeatureIndicator extends QuickSettings.SystemIndicator {
+  class FeatureIndicator extends QuickSettings.SystemIndicator {
     _init(extensionObject, fim) {
-        super._init();
+      super._init();
 
-        this.fim = fim;
+      this.fim = fim;
 
-        // Create the icon for the indicator
-        this._indicator = this._addIndicator();
-        this._indicator.icon_name = 'selection-mode-symbolic';
+      // Create the icon for the indicator
+      this._indicator = this._addIndicator();
+      this._indicator.icon_name = "selection-mode-symbolic";
 
-        // Showing the indicator when the feature is enabled
-	this._settings = extensionObject.getSettings();
+      // Showing the indicator when the feature is enabled
+      this._settings = extensionObject.getSettings();
 
-        this._settings.bind('feature-enabled',
-            this._indicator, 'visible',
-            Gio.SettingsBindFlags.DEFAULT);
+      this._settings.bind(
+        "feature-enabled",
+        this._indicator,
+        "visible",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
     }
-});
+  },
+);
 
 export default class DFExtension extends Extension {
-    _init() {
-      super._init();
-      this._indicator = null;
-    }
+  _init() {
+    super._init();
+    this._indicator = null;
+  }
 
-    enable() {
-      this._settings = this.getSettings();
-      this.fim = new FIM(this._settings);
-      this._settings.connect('changed', this.fim.settingsChanged.bind(this.fim));
+  enable() {
+    this._settings = this.getSettings();
+    this.fim = new FIM(this._settings);
+    const settingsChangedId = this._settings.connect(
+      "changed",
+      this.fim.settingsChanged.bind(this.fim),
+    );
 
-      this._indicator = new FeatureIndicator(this, this.fim);
-      this.featToggle = new FeatureToggle(this, this.fim);
-      this._indicator.quickSettingsItems.push(this.featToggle);
-      Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
-    }
+    this._indicator = new FeatureIndicator(this, this.fim);
+    this.featToggle = new FeatureToggle(this, this.fim);
+    this._indicator.quickSettingsItems.push(this.featToggle);
+    Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
+  }
 
-    disable() {
-      this.featToggle.set_checked(false); //make sure the toggle button is off
-      this.featToggle.destroy();
-      this._indicator.quickSettingsItems.forEach(item => item.destroy());
-      this._indicator.destroy();
-      this._indicator = null;
+  disable() {
+    this.featToggle.set_checked(false); //make sure the toggle button is off
+    this.featToggle.destroy();
+    this.featToggle = null;
 
-      this.fim.stop();
-      this._settings.disconnect('changed');
+    this._indicator.quickSettingsItems.forEach((item) => item.destroy());
+    this._indicator.destroy();
+    this._indicator = null;
 
-      //remove everything else
-      this.fim = null;
-      this._settings = null;
-    }
-};
+    this.fim.stop();
+    if (settingsChangedId) this._settings.disconnect(settingsChangedId);
+
+    //remove everything else
+    this.fim = null;
+    this._settings = null;
+  }
+}
